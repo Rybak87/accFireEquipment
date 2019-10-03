@@ -133,7 +133,6 @@
             this.btnAdd.TabIndex = 2;
             this.btnAdd.Text = "Добавить";
             this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // btnEdit
             // 
@@ -143,7 +142,6 @@
             this.btnEdit.TabIndex = 2;
             this.btnEdit.Text = "Изменить";
             this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.BtnEdit_Click);
             // 
             // btnRemove
             // 
@@ -153,7 +151,6 @@
             this.btnRemove.TabIndex = 2;
             this.btnRemove.Text = "Удалить";
             this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.BtnRemove_Click);
             // 
             // TypeFireCabinetToolStripMenuItem
             // 

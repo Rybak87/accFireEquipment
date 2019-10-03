@@ -49,9 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\AccExtinguisherContext.cs" />
+    <Compile Include="Logic\BLContext.cs" />
+    <Compile Include="Logic\newEssenseController.cs" />
     <Compile Include="Logic\EssenseController.cs" />
     <Compile Include="Logic\PropAttribute.cs" />
+    <Compile Include="Logic\Repository.cs" />
     <Compile Include="Model\Extinguisher.cs" />
     <Compile Include="Model\FireCabinet.cs" />
     <Compile Include="Model\Hose.cs" />

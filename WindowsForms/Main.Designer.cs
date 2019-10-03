@@ -43,6 +43,7 @@
             this.treeViewDB.Name = "treeViewDB";
             this.treeViewDB.Size = new System.Drawing.Size(290, 665);
             this.treeViewDB.TabIndex = 0;
+            this.treeViewDB.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TreeViewDB_MouseDoubleClick);
             this.treeViewDB.MouseDown += new System.Windows.Forms.MouseEventHandler(this.TreeViewDB_MouseDown);
             // 
             // menuStrip1

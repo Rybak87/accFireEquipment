@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,22 +11,22 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
-    public partial class WorkEssense : Form
+    public partial class WorkEssense2<T> : Form where T : class,new()
     {
-        EssenseControl essControl;
         public Dictionary<PropertyInfo, Control> ControlsData { get; private set; }
-        public WorkEssense(EssenseControl essControl)
+        private newEssenseControl<T> essControl;
+        public WorkEssense2(newEssenseControl<T> essControl)
         {
             InitializeComponent();
             this.essControl = essControl;
         }
-        public WorkEssense()
-        {
-            InitializeComponent();
-        }
+        //public WorkEssense2()
+        //{
+        //    InitializeComponent();
+        //}
         private void AddEssense_Load(object sender, EventArgs e)
         {
-            ControlsData = CreateControls(essControl.EssenseType);
+            ControlsData = CreateControls(typeof(T));
             GetPropEssense(ControlsData);
         }
         private void GetPropEssense(Dictionary<PropertyInfo, Control> controlsData)
@@ -36,32 +37,32 @@ namespace WindowsForms
                 {
                     case "TextBox":
                         {
-                            item.Value.Text = (string)item.Key.GetValue(essControl.essense);
+                            item.Value.Text = (string)item.Key.GetValue(essControl.currEssense);
                             break;
                         }
                     case "ComboBox":
                         {
-                            ((ComboBox)item.Value).SelectedItem = item.Key.GetValue(essControl.essense);
+                            ((ComboBox)item.Value).SelectedItem = item.Key.GetValue(essControl.currEssense);
                             break;
                         }
                     case "CheckBox":
                         {
-                            ((CheckBox)item.Value).Checked = (bool)item.Key.GetValue(essControl.essense);
+                            ((CheckBox)item.Value).Checked = (bool)item.Key.GetValue(essControl.currEssense);
                             break;
                         }
                     case "NumericUpDown":
                         {
-                            ((NumericUpDown)item.Value).Value = (int)item.Key.GetValue(essControl.essense);
+                            ((NumericUpDown)item.Value).Value = (int)item.Key.GetValue(essControl.currEssense);
                             break;
                         }
                     case "NumericUpDownDecimal":
                         {
-                            ((NumericUpDown)item.Value).Value = (decimal)((double)item.Key.GetValue(essControl.essense));
+                            ((NumericUpDown)item.Value).Value = (decimal)((double)item.Key.GetValue(essControl.currEssense));
                             break;
                         }
                     case "DateTimePicker":
                         {
-                            ((DateTimePicker)item.Value).Value = (DateTime)item.Key.GetValue(essControl.essense);
+                            ((DateTimePicker)item.Value).Value = (DateTime)item.Key.GetValue(essControl.currEssense);
                             break;
                         }
                     case "Image":
@@ -170,28 +171,13 @@ namespace WindowsForms
             return propControlsData;
         }
 
-        //private IEnumerable<PropAttribute> GetPropAttributes(Type myType)
-        //{
-        //    //foreach (PropertyInfo prop in myType.GetProperties())
-        //    //{
-        //    //    foreach (var item in prop.GetCustomAttributes())
-        //    //    {
-        //    //        if (item.GetType() == typeof(PropAttribute))
-        //    //        {
-        //    //            yield return (PropAttribute)item;
-        //    //        }
-        //    //    }
-        //    //}
-        //    return (IEnumerable<PropAttribute>)myType.GetProperties().Select(p => p.GetCustomAttributes()).Where(ca => ca.GetType() == typeof(PropAttribute));
-        //}
-
-        private void NewFileDialog(object sender, EventArgs e, EssenseControl essControl, PropertyInfo prop)
+        private void NewFileDialog<T>(object sender, EventArgs e, newEssenseControl<T> essControl, PropertyInfo prop) where T : class,new()
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 var data = File.ReadAllBytes(dialog.FileName);
-                prop.SetValue(essControl.essense, data);
+                prop.SetValue(essControl.currEssense, data);
             }
         }
 

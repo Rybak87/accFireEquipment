@@ -8,76 +8,64 @@ using System.Collections;
 
 namespace BL
 {
-    public class EssenseControl
+    public class newEssenseControl<T> where T : class, new()
     {
+        DbSet<T> table;
         public BLContext db = new BLContext();
-        public DbSet collEssenses;
-        public object essense;
-        public bool IsLoad
-        {
-            get => collEssenses != null;
-        }
 
-        
+        public T currEssense;
+        public newEssenseControl()
+        {
+        }
         public Type EssenseType
         {
-            get => essense.GetType();
+            get => typeof(T);
         }
-        public void SetCollEssenses(DbSet collEssenses)
+        public void xxx()
         {
-            this.collEssenses = collEssenses;
-            this.collEssenses.Load();
+            var ggg = table.Create();
         }
-        public void CreateNewEssense() => essense = (collEssenses.ElementType).GetConstructor(new Type[] { }).Invoke(new object[] { });
-        public void GetEssense(int id) => essense = collEssenses.Find(id);
-        public void GetEssense(object essense) => this.essense = essense;
-        public void GetEssense(DbSet collEssenses)
+        public void CreateEssense()
         {
-
-            //var x = db.GetType().GetProperties().Select(p => p.GetValue(db));//.Where(pv => (IEnumerable)pv. == essense);
-            //foreach (var item in (IEnumerable)x)
-            //{
-            //    if (item is IEnumerable)
-            //        if (((IEnumerable<object>)item).Contains(essense))
-            //            collEssenses = (DbSet<T>)item;
-            //}
-            //this.essense = essense;
-            this.collEssenses = collEssenses;
+            currEssense = new T();
+            var currEssense2 = (typeof(T)).GetConstructor(new Type[] { }).Invoke(new object[] { });
         }
-        public void SetPropEssense(Dictionary<PropertyInfo, Control> controlsData)
+        public void GetEssense(int id) => currEssense = table.Find(id);
+        public void GetEssense(T essense) => currEssense = essense;
+        public void SetPropEssense(Dictionary<PropertyInfo, Control> dictControlsData)
         {
-            foreach (var item in controlsData)
+            foreach (var item in dictControlsData)
             {
                 switch (GetPropAttribute(item.Key).Control)
                 {
                     case "TextBox":
                         {
-                            item.Key.SetValue(essense, item.Value.Text);
+                            item.Key.SetValue(currEssense, item.Value.Text);
                             break;
                         }
                     case "ComboBox":
                         {
-                            item.Key.SetValue(essense, ((ComboBox)item.Value).SelectedItem);
+                            item.Key.SetValue(currEssense, ((ComboBox)item.Value).SelectedItem);
                             break;
                         }
                     case "CheckBox":
                         {
-                            item.Key.SetValue(essense, ((CheckBox)item.Value).Checked);
+                            item.Key.SetValue(currEssense, ((CheckBox)item.Value).Checked);
                             break;
                         }
                     case "NumericUpDown":
                         {
-                            item.Key.SetValue(essense, (int)((NumericUpDown)item.Value).Value);
+                            item.Key.SetValue(currEssense, (int)((NumericUpDown)item.Value).Value);
                             break;
                         }
                     case "NumericUpDownDecimal":
                         {
-                            item.Key.SetValue(essense, (double)((NumericUpDown)item.Value).Value);
+                            item.Key.SetValue(currEssense, (double)((NumericUpDown)item.Value).Value);
                             break;
                         }
                     case "DateTimePicker":
                         {
-                            item.Key.SetValue(essense, ((DateTimePicker)item.Value).Value);
+                            item.Key.SetValue(currEssense, ((DateTimePicker)item.Value).Value);
                             break;
                         }
                     case null:
@@ -90,20 +78,20 @@ namespace BL
         }
         public void AddNewEssense(Dictionary<PropertyInfo, Control> controlsData)
         {
+            CreateEssense();
             SetPropEssense(controlsData);
-            collEssenses.Add(essense);
+            db.Set<T>().Attach(currEssense);
             db.SaveChanges();
         }
         public void EditEssense(Dictionary<PropertyInfo, Control> controlsData)
         {
             SetPropEssense(controlsData);
-            db.Entry(essense).State = EntityState.Modified;
+            db.Entry(currEssense).State = EntityState.Modified;
             db.SaveChanges();
         }
         public void RemoveEssense(int id)
         {
-            GetEssense(id);
-            collEssenses.Remove(essense);
+            table.Remove(table.Find(id));
             db.SaveChanges();
         }
 
@@ -120,7 +108,6 @@ namespace BL
         public PropAttribute GetPropAttribute(PropertyInfo pi)
         {
             return (PropAttribute)pi.GetCustomAttributes().FirstOrDefault(i => i.GetType() == typeof(PropAttribute));
-            
         }
 
 
