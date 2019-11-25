@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -49,24 +50,59 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logic\AccExtinguisherContext.cs" />
-    <Compile Include="Logic\EssenseController.cs" />
-    <Compile Include="Logic\PropAttribute.cs" />
-    <Compile Include="Model\Extinguisher.cs" />
-    <Compile Include="Model\FireCabinet.cs" />
-    <Compile Include="Model\Hose.cs" />
-    <Compile Include="Model\Hydrant.cs" />
-    <Compile Include="Model\Location.cs" />
-    <Compile Include="Model\StatusExtinguisher.cs" />
-    <Compile Include="Model\TypeExtinguisher.cs" />
-    <Compile Include="Model\TypeFireCabinet.cs" />
-    <Compile Include="Model\TypeHose.cs" />
+    <Compile Include="Logic\BLContext.cs" />
+    <Compile Include="Logic\Helper.cs" />
+    <Compile Include="Logic\EntityController.cs" />
+    <Compile Include="Logic\Interfaces.cs" />
+    <Compile Include="Logic\ControlAttribute.cs" />
+    <Compile Include="Logic\Project.cs" />
+    <Compile Include="Logic\Repository.cs" />
+    <Compile Include="Database\EntityBase.cs" />
+    <Compile Include="Database\Extinguisher.cs" />
+    <Compile Include="Database\FireCabinet.cs" />
+    <Compile Include="Database\Hose.cs" />
+    <Compile Include="Database\Hydrant.cs" />
+    <Compile Include="Database\ImageLocation.cs" />
+    <Compile Include="Logic\Settings.cs" />
+    <Compile Include="Model\ScalePoint.cs" />
+    <Compile Include="Model\EntitySign.cs" />
+    <Compile Include="Properties\Icons.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Icons.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Database\Location.cs" />
+    <Compile Include="Database\StatusExtinguisher.cs" />
+    <Compile Include="Database\TypeExtinguisher.cs" />
+    <Compile Include="Database\TypeFireCabinet.cs" />
+    <Compile Include="Database\TypeHose.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Icons.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Icons.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FireCabinet.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Extinguisher.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hose.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Location.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Hydrant.ico" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

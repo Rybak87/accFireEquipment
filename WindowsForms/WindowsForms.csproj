@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -71,34 +71,58 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WorkEssense.cs">
+    <Compile Include="Forms\FormEditTypes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="WorkEssense.designer.cs">
-      <DependentUpon>WorkEssense.cs</DependentUpon>
+    <Compile Include="Forms\FormEditTypes.Designer.cs">
+      <DependentUpon>FormEditTypes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Tables.cs">
+    <Compile Include="Forms\FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Tables.designer.cs">
-      <DependentUpon>Tables.cs</DependentUpon>
+    <Compile Include="Forms\FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="Main.cs">
+    <Compile Include="Forms\FormTables.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Main.Designer.cs">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="Forms\FormTables.designer.cs">
+      <DependentUpon>FormTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormReport.Designer.cs">
+      <DependentUpon>FormReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MyControls\MyTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyControls\PictureContainer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="MyControls\PictureEntity.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Main.resx">
-      <DependentUpon>Main.cs</DependentUpon>
+    <Compile Include="Forms\FormEditEntity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEditEntity.designer.cs">
+      <DependentUpon>FormEditEntity.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\FormEditTypes.resx">
+      <DependentUpon>FormEditTypes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="WorkEssense.resx">
-      <DependentUpon>WorkEssense.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Tables.resx">
-      <DependentUpon>Tables.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\FormTables.resx">
+      <DependentUpon>FormTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormReport.resx">
+      <DependentUpon>FormReport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -108,7 +132,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Forms\FormEditEntity.resx">
+      <DependentUpon>FormEditEntity.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
