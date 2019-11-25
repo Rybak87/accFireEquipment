@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace BL
+{
+    [Table("FireCabinets")]
+    public class FireCabinet : EntityBase, /*IAddChild<Extinguisher>, IAddChild<Hose>, IAddChild<Hydrant>,*/ INumber, IPoint
+    {
+        public int LocationId { get; set; }
+        public int TypeFireCabinetId { get; set; }
+        public virtual ICollection<Extinguisher> Extinguishers { get; set; }//Установленные огнетушители
+        public virtual ICollection<Hose> Hoses { get; set; }//Установленные рукава
+        public virtual ICollection<Hydrant> Hydrants { get; set; }//Установленный пожарный кран
+        public ScalePoint Point { get; set; }
+
+        [Column("Помещение")]
+        [Control("ComboBox", true, "Locations", true)]
+        public virtual Location Location { get; set; }
+
+        [Column("Тип пожарного шкафа")]
+        [Control("ComboBox", true, "TypeFireCabinets")]
+        public virtual TypeFireCabinet TypeFireCabinet { get; set; }
+
+        [Column("Номер")]
+        [Control("NumericUpDown", true)]
+        public int Number { get; set; }
+
+        [Column("Повреждение")]
+        [Control("CheckBox", false)]
+        public bool IsDented { get; set; }//Повреждение корпуса
+
+        [Column("Наклейка")]
+        [Control("CheckBox", false)]
+        public bool IsSticker { get; set; }//Наличие наклейки
+
+        //[Prop("Image", false)]
+        //public byte[] Image { get; set; }
+
+        //public string NumberSticker { get; set; }//Порядковый номер
+
+        public FireCabinet()
+        {
+            IsSticker = true;
+            Point = new ScalePoint();
+        }
+        public override string ToString()
+        {
+            return $"Шкаф № {Number.ToString()}";
+        }
+
+        public override EntityBase Parent
+        {
+            get => Location;
+            set
+            {
+                if (value is Location)
+                    Location = (Location)value;
+                else
+                    throw new Exception("Нельзя преобразовать object");
+            }
+        }
+    }
+}
+
