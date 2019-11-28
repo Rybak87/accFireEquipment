@@ -34,6 +34,7 @@
             this.ExtinguishersMenu = new System.Windows.Forms.ToolStripButton();
             this.chkWithoutStickers = new System.Windows.Forms.CheckBox();
             this.listView = new System.Windows.Forms.ListView();
+            this.btnOpenExcel = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -44,7 +45,7 @@
             this.ExtinguishersMenu});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(457, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(522, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -80,20 +81,35 @@
             // 
             // listView
             // 
-            this.listView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listView.FullRowSelect = true;
             this.listView.HideSelection = false;
-            this.listView.Location = new System.Drawing.Point(0, 52);
+            this.listView.Location = new System.Drawing.Point(13, 52);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(457, 398);
+            this.listView.Size = new System.Drawing.Size(388, 398);
             this.listView.TabIndex = 2;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
+            // 
+            // btnOpenExcel
+            // 
+            this.btnOpenExcel.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.btnOpenExcel.Location = new System.Drawing.Point(407, 62);
+            this.btnOpenExcel.Name = "btnOpenExcel";
+            this.btnOpenExcel.Size = new System.Drawing.Size(103, 23);
+            this.btnOpenExcel.TabIndex = 3;
+            this.btnOpenExcel.Text = "Открыть в Excel";
+            this.btnOpenExcel.UseVisualStyleBackColor = true;
+            this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
             // 
             // FormStickers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(457, 450);
+            this.ClientSize = new System.Drawing.Size(522, 450);
+            this.Controls.Add(this.btnOpenExcel);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.chkWithoutStickers);
             this.Controls.Add(this.toolStrip1);
@@ -113,5 +129,6 @@
         private System.Windows.Forms.ToolStripButton ExtinguishersMenu;
         private System.Windows.Forms.CheckBox chkWithoutStickers;
         private System.Windows.Forms.ListView listView;
+        private System.Windows.Forms.Button btnOpenExcel;
     }
 }

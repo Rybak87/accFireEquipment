@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace WindowsForms
 {
@@ -104,6 +105,38 @@ namespace WindowsForms
                 count++;
             }
             listView.Columns.AddRange(columnHeaders);
+        }
+
+        private void btnOpenExcel_Click(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var stickers = new List<string>();
+            foreach (var item in listView.SelectedItems)
+            {
+                var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
+                stickers.Add(str);
+            }
+
+            var ex = new Excel.Application();
+            ex.Visible = true;
+            //Добавить рабочую книгу
+            var workBook = ex.Workbooks.Add(Type.Missing);
+            //Отключить отображение окон с сообщениями
+            ex.DisplayAlerts = false;
+            //Получаем первый лист документа (счет начинается с 1)
+            var sheet = (Excel.Worksheet)ex.Worksheets.get_Item(1);
+            //Название листа (вкладки снизу)
+            sheet.Name = "Наклейки";
+            sheet.Columns.ColumnWidth = 87 / 3;
+
+            //Пример заполнения ячеек
+            //for (int i = 1; i <= 9; i++)
+            //{
+            var g = sheet.Columns[1];
+            for (int j = 0; j < stickers.Count; j++)
+                sheet.Cells[j + 1, 1] = string.Format(stickers[j]);
+            //}
         }
     }
 }
