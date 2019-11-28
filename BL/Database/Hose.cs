@@ -31,17 +31,17 @@ namespace BL
         [Control("DateTimePicker", false)]
         public DateTime DateRolling { get; set; }//Дата перекатки
 
-        [Column("Марка")]
-        [Control("TextBox", false)]
-        public string Label { get; set; }//Марка
+        //[Column("Марка")]
+        //[Control("TextBox", false)]
+        //public string Label { get; set; }//Марка
 
-        [Column("Производитель")]
-        [Control("TextBox", false)]
-        public string Manufacturer { get; set; }//Производитель
+        //[Column("Производитель")]
+        //[Control("TextBox", false)]
+        //public string Manufacturer { get; set; }//Производитель
 
-        [Column("Длина")]
-        [Control("NumericUpDownDecimal", false)]
-        public double Length { get; set; }//Длина
+        //[Column("Длина")]
+        //[Control("NumericUpDownDecimal", false)]
+        //public double Length { get; set; }//Длина
 
         [Column("Повреждения")]
         [Control("CheckBox", false)]

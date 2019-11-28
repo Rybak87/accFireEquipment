@@ -44,7 +44,44 @@ namespace WindowsForms
 
         private void HydrantsExtinguishersReport()
         {
-            throw new NotImplementedException();
+            ColumnHeader columnHeader0 = new ColumnHeader();
+            columnHeader0.Text = "Тип";
+            columnHeader0.Width = this.Width / 3 - 10;
+            ColumnHeader columnHeader1 = new ColumnHeader();
+            columnHeader1.Text = "Пожарный шкаф";
+            columnHeader1.Width = this.Width / 3 - 10;
+            ColumnHeader columnHeader2 = new ColumnHeader();
+            columnHeader2.Text = "Недостатки";
+            columnHeader2.Width = this.Width / 3 - 10;
+            listView.Columns.AddRange(new ColumnHeader[]
+            {columnHeader0, columnHeader1, columnHeader2});
+
+            using (var ec = new EntityController())
+            {
+                var full = ec.Hydrants.ToList();
+                var selective = full.Where(h => h.IsDamage).ToList();
+                var locationNames = selective.Select(e => e.Parent.Parent.ToString()).Distinct();
+
+                foreach (var name in locationNames)
+                {
+                    var group = new ListViewGroup(name);
+                    var selectiveThisParent = selective.Where(e => e.Parent.Parent.ToString() == name);
+                    foreach (var hyd in selectiveThisParent)
+                    {
+                        var item = new ListViewItem(hyd.ToString(), group);
+                        item.Tag = hyd.GetSign();
+                        string fault = "";
+                        if (hyd.IsDamage)
+                            fault += "Поврежден; ";
+                        var subItems = new ListViewItem.ListViewSubItem[]
+                            { new ListViewItem.ListViewSubItem(item, hyd.Parent.ToString()),
+                              new ListViewItem.ListViewSubItem(item, fault)};
+                        item.SubItems.AddRange(subItems);
+                        listView.Items.Add(item);
+                    }
+                    listView.Groups.Add(group);
+                }
+            }
         }
 
         private void HosesEquipmentReport()

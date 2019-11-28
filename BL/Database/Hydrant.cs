@@ -22,12 +22,12 @@ namespace BL
         public bool IsDamage { get; set; }
 
 
-        [Control("CheckBox", false)]
-        public bool IsNeed { get; set; }
+        //[Control("CheckBox", false)]
+        //public bool IsNeed { get; set; }
 
         public Hydrant()
         {
-            IsNeed = true;
+            //IsNeed = true;
             Point = new ScalePoint();
         }
 
