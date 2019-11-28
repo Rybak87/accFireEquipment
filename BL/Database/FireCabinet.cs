@@ -6,7 +6,7 @@ using System.Linq;
 namespace BL
 {
     [Table("FireCabinets")]
-    public class FireCabinet : EntityBase, /*IAddChild<Extinguisher>, IAddChild<Hose>, IAddChild<Hydrant>,*/ INumber, IPoint
+    public class FireCabinet : EntityBase, INumber, IPoint
     {
         public int LocationId { get; set; }
         public int TypeFireCabinetId { get; set; }

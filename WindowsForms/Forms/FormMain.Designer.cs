@@ -57,6 +57,7 @@ namespace WindowsForms
             this.contextMenuEquipment = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.EditContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.StickersMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuFireCabinet.SuspendLayout();
             this.contextMenuProject.SuspendLayout();
@@ -70,6 +71,7 @@ namespace WindowsForms
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.ReportMenu,
+            this.StickersMenu,
             this.нормативныеАктыToolStripMenuItem,
             this.настройкиToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -264,6 +266,12 @@ namespace WindowsForms
             this.DeleteContextMenu3.Size = new System.Drawing.Size(154, 22);
             this.DeleteContextMenu3.Text = "Удалить";
             // 
+            // StickersMenu
+            // 
+            this.StickersMenu.Name = "StickersMenu";
+            this.StickersMenu.Size = new System.Drawing.Size(73, 20);
+            this.StickersMenu.Text = "Наклейки";
+            // 
             // FormMain
             // 
             this.AllowDrop = true;
@@ -363,5 +371,6 @@ namespace WindowsForms
         private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AddLocationsContextMenu;
         private System.Windows.Forms.ToolStripMenuItem TypesEquipmentMenu;
+        private System.Windows.Forms.ToolStripMenuItem StickersMenu;
     }
 }

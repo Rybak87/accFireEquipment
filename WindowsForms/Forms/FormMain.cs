@@ -35,6 +35,7 @@ namespace WindowsForms
             EditDatabaseMenu.Click += (s, e) => new DbTables().ShowDialog(this);
             ReportMenu.Click += (s, e) => new FormReport().Show();
             TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
+            StickersMenu.Click += (s, e) => new FormStickers().Show();
         }
 
         private void Main_Resize(object sender, EventArgs e)

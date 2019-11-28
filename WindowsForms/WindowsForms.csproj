@@ -86,6 +86,12 @@
     <Compile Include="Forms\FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormStickers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormStickers.Designer.cs">
+      <DependentUpon>FormStickers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormTables.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormStickers.resx">
+      <DependentUpon>FormStickers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormTables.resx">
       <DependentUpon>FormTables.cs</DependentUpon>
