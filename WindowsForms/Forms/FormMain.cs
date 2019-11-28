@@ -33,13 +33,8 @@ namespace WindowsForms
             myTreeView.ButtonMouseDoubleClick += EditDialog;
             picContainer.EditEntity += EditDialog;
             EditDatabaseMenu.Click += (s, e) => new DbTables().ShowDialog(this);
-            RechargeExtinguishersReportMenu.Click += (s, e) => new FormReport("RechargeExtinguishers").Show();
-            FullReportMenu.Click += (s, e) => new FormReport("Full").Show();
-            FireCabinetsReportMenu.Click += (s, e) => new FormReport("FireCabinets").Show();
-            ExtinguishersReportMenu.Click += (s, e) => new FormReport("Extinguishers").Show();
-            HosesReportMenu.Click += (s, e) => new FormReport("Hoses").Show();
-            HydrantsReportMenu.Click += (s, e) => new FormReport("Hydrants").Show();
-            TypesEquipmentMenu.Click+= (s, e) => new FormEditTypes().ShowDialog(this);
+            ReportMenu.Click += (s, e) => new FormReport().Show();
+            TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
         }
 
         private void Main_Resize(object sender, EventArgs e)
