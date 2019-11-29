@@ -45,7 +45,7 @@ namespace WindowsForms
                     {
                         var item = new ListViewItem(fc.ToString(), group);
                         item.Tag = fc.GetSign();
-                        string sticker = "ПК-" + loc.Number + "." + fc.Number;
+                        string sticker = /*"ПК-" + loc.Number + "." + fc.Number*/fc.ToString();
                         item.SubItems.Add(new ListViewItem.ListViewSubItem(item, sticker));
                         listView.Items.Add(item);
                     }
@@ -75,7 +75,7 @@ namespace WindowsForms
                     {
                         var item = new ListViewItem(ex.ToString(), group);
                         item.Tag = ex.GetSign();
-                        string sticker = loc.Number + "." + ((INumber)ex.Parent).Number + "/" + ex.Number;
+                        string sticker = /*loc.Number + "." + ((INumber)ex.Parent).Number + "/" + ex.Number*/ex.ToString();
                         var subItems = new ListViewItem.ListViewSubItem[]
                             { new ListViewItem.ListViewSubItem(item, ex.Parent.ToString()),
                               new ListViewItem.ListViewSubItem(item, sticker)};
