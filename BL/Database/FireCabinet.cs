@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
+
 namespace BL
 {
     [Table("FireCabinets")]
@@ -47,7 +48,11 @@ namespace BL
         }
         public override string ToString()
         {
-            return $"Шкаф № {Number.ToString()}";
+            //return $"Шкаф № {Number.ToString()}";
+            var sample = Properties.Settings.Default.SampleNameFireCabinets;
+            sample = sample.Replace("#L", Location.Number.ToString());
+            sample = sample.Replace("#F", Number.ToString());
+            return sample;
         }
 
         public override EntityBase Parent

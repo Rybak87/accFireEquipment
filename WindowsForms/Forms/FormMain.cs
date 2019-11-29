@@ -36,6 +36,14 @@ namespace WindowsForms
             ReportMenu.Click += (s, e) => new FormReport().Show();
             TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
             StickersMenu.Click += (s, e) => new FormStickers().Show();
+            SettingsMenu.Click += SettingsMenu_Click;
+        }
+
+        private void SettingsMenu_Click(object sender, EventArgs e)
+        {
+            var frm = new FormSettings();
+            frm.ChangeSample += myTreeView.RenameNodesOfType;
+            frm.Show();
         }
 
         private void Main_Resize(object sender, EventArgs e)
@@ -85,14 +93,7 @@ namespace WindowsForms
                 return;
             var currImage = AddEssForm.currImage;
 
-            if (parentSign == null)
-            {
-                ec.AddNewEntity(entity/*, currImage*/);
-            }
-            else
-            {
-                ec.AddNewEntity(entity);
-            }
+            ec.AddNewEntity(entity);
         }
         public void EditDialog(EntitySign sign)
         {
@@ -107,12 +108,7 @@ namespace WindowsForms
                 return;
 
             var currImage = AddEssForm.currImage;
-            ec.EditEntity(sign/*, currImage*/);
-        }
-
-        private void FireCabinetsReportMenu_Click(object sender, EventArgs e)
-        {
-
+            ec.EditEntity(sign);
         }
     }
 }

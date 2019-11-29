@@ -97,7 +97,12 @@ namespace BL
 
         public override string ToString()
         {
-            return $"Огнетушитель № {Number.ToString()}";
+            //return $"Огнетушитель № {Number.ToString()}";
+            var sample = Properties.Settings.Default.SampleNameExtinguishers;
+            sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
+            sample = sample.Replace("#F", FireCabinet.Number.ToString());
+            sample = sample.Replace("#E", Number.ToString());
+            return sample;
         }
     }
 }

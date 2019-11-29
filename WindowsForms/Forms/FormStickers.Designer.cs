@@ -114,6 +114,7 @@
             this.Controls.Add(this.chkWithoutStickers);
             this.Controls.Add(this.toolStrip1);
             this.Name = "FormStickers";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FormStickers";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();

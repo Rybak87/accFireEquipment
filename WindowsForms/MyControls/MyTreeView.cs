@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
+using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using BL;
@@ -19,7 +19,7 @@ namespace WindowsForms
         public MyTreeView(Dictionary<Type, ContextMenuStrip> dictMenu)
         {
             dictNodes = new Dictionary<EntitySign, TreeNode>();
-            ImageList = Settings.IconsImageList;
+            ImageList = ImageSettings.IconsImageList;
             this.dictMenu = dictMenu;
             ItemDrag += treeView_ItemDrag;
             DragEnter += treeView_DragEnter;
@@ -42,6 +42,17 @@ namespace WindowsForms
         {
             e.Effect = DragDropEffects.Move;
         }
+
+        public void RenameNodesOfType(Type type)
+        {
+            var nodes = dictNodes.Where(i => i.Key.typeEntity == type);
+            using (var ec = new EntityController())
+            {
+                foreach (var node in nodes)
+                    node.Value.Text = ec.GetEntity(node.Key).ToString();
+            }
+        }
+
         private void treeView_DragOver(object sender, DragEventArgs e)
         {
             Point targetPoint = PointToClient(new Point(e.X, e.Y));
@@ -153,7 +164,7 @@ namespace WindowsForms
 
             TreeNode CreateNode(TreeNode parent, EntitySign entitySign, string text, ContextMenuStrip menu = null)
             {
-                var indImage = Settings.IconsImageIndex[entitySign.typeEntity];
+                var indImage = ImageSettings.IconsImageIndex[entitySign.typeEntity];
                 var child = new TreeNode(text, indImage, indImage);
                 child.ContextMenuStrip = menu;
                 parent.Nodes.Add(child);
@@ -166,7 +177,7 @@ namespace WindowsForms
         {
             var nodeParent = SelectedNode;
 
-            var indImage = Settings.IconsImageIndex[entity.GetType()];
+            var indImage = ImageSettings.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
             newNode.ContextMenuStrip = dictMenu[entity.GetType()];
             newNode.Tag = entity.GetSign();

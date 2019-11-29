@@ -17,9 +17,9 @@ namespace WindowsForms
         public FormEditTypes()
         {
             InitializeComponent();
-            FireCabinetsMenu.Image = Settings.IconsImage(typeof(FireCabinet));
-            ExtinguishersMenu.Image = Settings.IconsImage(typeof(Extinguisher));
-            HosesMenu.Image = Settings.IconsImage(typeof(Hose));
+            FireCabinetsMenu.Image = ImageSettings.IconsImage(typeof(FireCabinet));
+            ExtinguishersMenu.Image = ImageSettings.IconsImage(typeof(Extinguisher));
+            HosesMenu.Image = ImageSettings.IconsImage(typeof(Hose));
         }
 
         private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadTypes(typeof(TypeFireCabinet));

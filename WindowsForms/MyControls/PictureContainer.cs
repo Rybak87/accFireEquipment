@@ -46,7 +46,7 @@ namespace BL
                 if (icon == null)
                 {
                     string textIcon;
-                    var img = Settings.IconsImage(sign.typeEntity);
+                    var img = ImageSettings.IconsImage(sign.typeEntity);
                     using (var ec = new EntityController())
                     {
                         var entity = ec.GetEntity(sign) as IPoint;
@@ -130,13 +130,13 @@ namespace BL
         {
             foreach (var fc in parentLocation.FireCabinets)
             {
-                NewPic(fc.GetSign(), fc.Point, Settings.IconsImage(typeof(FireCabinet)), fc.ToString());
+                NewPic(fc.GetSign(), fc.Point, ImageSettings.IconsImage(typeof(FireCabinet)), fc.ToString());
                 foreach (var ex in fc.Extinguishers)
-                    NewPic(ex.GetSign(), ex.Point, Settings.IconsImage(typeof(Extinguisher)), ex.ToString());
+                    NewPic(ex.GetSign(), ex.Point, ImageSettings.IconsImage(typeof(Extinguisher)), ex.ToString());
                 foreach (var hose in fc.Hoses)
-                    NewPic(hose.GetSign(), hose.Point, Settings.IconsImage(typeof(Hose)), hose.ToString());
+                    NewPic(hose.GetSign(), hose.Point, ImageSettings.IconsImage(typeof(Hose)), hose.ToString());
                 foreach (var hyd in fc.Hydrants)
-                    NewPic(hyd.GetSign(), hyd.Point, Settings.IconsImage(typeof(Hydrant)), hyd.ToString());
+                    NewPic(hyd.GetSign(), hyd.Point, ImageSettings.IconsImage(typeof(Hydrant)), hyd.ToString());
             }
         }
         public void NewPic(EntitySign sign, ScalePoint scalePoint, Image img, string textLabel)

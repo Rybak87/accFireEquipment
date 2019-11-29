@@ -36,8 +36,9 @@ namespace WindowsForms
             this.EditDatabaseMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.TypesEquipmentMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.ReportMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.StickersMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.нормативныеАктыToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.настройкиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.SettingsMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuFireCabinet = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.AddContextMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.AddExtinguisherContextMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -57,7 +58,6 @@ namespace WindowsForms
             this.contextMenuEquipment = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.EditContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.StickersMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuFireCabinet.SuspendLayout();
             this.contextMenuProject.SuspendLayout();
@@ -73,7 +73,7 @@ namespace WindowsForms
             this.ReportMenu,
             this.StickersMenu,
             this.нормативныеАктыToolStripMenuItem,
-            this.настройкиToolStripMenuItem});
+            this.SettingsMenu});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
@@ -115,17 +115,23 @@ namespace WindowsForms
             this.ReportMenu.Size = new System.Drawing.Size(60, 20);
             this.ReportMenu.Text = "Отчеты";
             // 
+            // StickersMenu
+            // 
+            this.StickersMenu.Name = "StickersMenu";
+            this.StickersMenu.Size = new System.Drawing.Size(73, 20);
+            this.StickersMenu.Text = "Наклейки";
+            // 
             // нормативныеАктыToolStripMenuItem
             // 
             this.нормативныеАктыToolStripMenuItem.Name = "нормативныеАктыToolStripMenuItem";
             this.нормативныеАктыToolStripMenuItem.Size = new System.Drawing.Size(126, 20);
             this.нормативныеАктыToolStripMenuItem.Text = "Нормативные акты";
             // 
-            // настройкиToolStripMenuItem
+            // SettingsMenu
             // 
-            this.настройкиToolStripMenuItem.Name = "настройкиToolStripMenuItem";
-            this.настройкиToolStripMenuItem.Size = new System.Drawing.Size(79, 20);
-            this.настройкиToolStripMenuItem.Text = "Настройки";
+            this.SettingsMenu.Name = "SettingsMenu";
+            this.SettingsMenu.Size = new System.Drawing.Size(79, 20);
+            this.SettingsMenu.Text = "Настройки";
             // 
             // contextMenuFireCabinet
             // 
@@ -266,12 +272,6 @@ namespace WindowsForms
             this.DeleteContextMenu3.Size = new System.Drawing.Size(154, 22);
             this.DeleteContextMenu3.Text = "Удалить";
             // 
-            // StickersMenu
-            // 
-            this.StickersMenu.Name = "StickersMenu";
-            this.StickersMenu.Size = new System.Drawing.Size(73, 20);
-            this.StickersMenu.Text = "Наклейки";
-            // 
             // FormMain
             // 
             this.AllowDrop = true;
@@ -368,7 +368,7 @@ namespace WindowsForms
         private System.Windows.Forms.ToolStripMenuItem открытьПроектToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ReportMenu;
         private System.Windows.Forms.ToolStripMenuItem нормативныеАктыToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem настройкиToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem SettingsMenu;
         private System.Windows.Forms.ToolStripMenuItem AddLocationsContextMenu;
         private System.Windows.Forms.ToolStripMenuItem TypesEquipmentMenu;
         private System.Windows.Forms.ToolStripMenuItem StickersMenu;
