@@ -35,7 +35,13 @@
             this.chkWithoutStickers = new System.Windows.Forms.CheckBox();
             this.listView = new System.Windows.Forms.ListView();
             this.btnOpenExcel = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numColumns = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numRows = new System.Windows.Forms.NumericUpDown();
             this.toolStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numColumns)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRows)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStrip1
@@ -45,7 +51,7 @@
             this.ExtinguishersMenu});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(522, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(573, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -78,6 +84,7 @@
             this.chkWithoutStickers.TabIndex = 1;
             this.chkWithoutStickers.Text = "Только без наклеек";
             this.chkWithoutStickers.UseVisualStyleBackColor = true;
+            this.chkWithoutStickers.CheckedChanged += new System.EventHandler(this.chkWithoutStickers_CheckedChanged);
             // 
             // listView
             // 
@@ -88,27 +95,95 @@
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(13, 52);
             this.listView.Name = "listView";
-            this.listView.Size = new System.Drawing.Size(388, 398);
+            this.listView.Size = new System.Drawing.Size(367, 398);
             this.listView.TabIndex = 2;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
             // 
             // btnOpenExcel
             // 
-            this.btnOpenExcel.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnOpenExcel.Location = new System.Drawing.Point(407, 62);
+            this.btnOpenExcel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnOpenExcel.Location = new System.Drawing.Point(444, 121);
             this.btnOpenExcel.Name = "btnOpenExcel";
-            this.btnOpenExcel.Size = new System.Drawing.Size(103, 23);
+            this.btnOpenExcel.Size = new System.Drawing.Size(120, 23);
             this.btnOpenExcel.TabIndex = 3;
             this.btnOpenExcel.Text = "Открыть в Excel";
             this.btnOpenExcel.UseVisualStyleBackColor = true;
             this.btnOpenExcel.Click += new System.EventHandler(this.btnOpenExcel_Click);
             // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.Location = new System.Drawing.Point(386, 52);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(52, 20);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Колонок";
+            // 
+            // numColumns
+            // 
+            this.numColumns.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numColumns.Location = new System.Drawing.Point(444, 52);
+            this.numColumns.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numColumns.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numColumns.Name = "numColumns";
+            this.numColumns.Size = new System.Drawing.Size(120, 20);
+            this.numColumns.TabIndex = 5;
+            this.numColumns.Value = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.Location = new System.Drawing.Point(386, 86);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(52, 20);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Строк";
+            // 
+            // numRows
+            // 
+            this.numRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numRows.Location = new System.Drawing.Point(444, 84);
+            this.numRows.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numRows.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numRows.Name = "numRows";
+            this.numRows.Size = new System.Drawing.Size(120, 20);
+            this.numRows.TabIndex = 5;
+            this.numRows.Value = new decimal(new int[] {
+            7,
+            0,
+            0,
+            0});
+            // 
             // FormStickers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(522, 450);
+            this.ClientSize = new System.Drawing.Size(573, 450);
+            this.Controls.Add(this.numRows);
+            this.Controls.Add(this.numColumns);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOpenExcel);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.chkWithoutStickers);
@@ -118,6 +193,8 @@
             this.Text = "FormStickers";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numColumns)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numRows)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -131,5 +208,9 @@
         private System.Windows.Forms.CheckBox chkWithoutStickers;
         private System.Windows.Forms.ListView listView;
         private System.Windows.Forms.Button btnOpenExcel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown numColumns;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numRows;
     }
 }

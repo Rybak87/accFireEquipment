@@ -14,6 +14,7 @@ namespace WindowsForms
 {
     public partial class FormStickers : Form
     {
+        private Type lastType;
         public FormStickers()
         {
             InitializeComponent();
@@ -26,7 +27,7 @@ namespace WindowsForms
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Наклейка");
-
+            lastType = typeof(FireCabinet);
             using (var ec = new EntityController())
             {
                 var full = ec.FireCabinets.ToList();
@@ -45,7 +46,7 @@ namespace WindowsForms
                     {
                         var item = new ListViewItem(fc.ToString(), group);
                         item.Tag = fc.GetSign();
-                        string sticker = /*"ПК-" + loc.Number + "." + fc.Number*/fc.ToString();
+                        string sticker = fc.ToString();
                         item.SubItems.Add(new ListViewItem.ListViewSubItem(item, sticker));
                         listView.Items.Add(item);
                     }
@@ -57,6 +58,7 @@ namespace WindowsForms
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Наклейка");
+            lastType = typeof(Extinguisher);
             using (var ec = new EntityController())
             {
                 var full = ec.Extinguishers.ToList();
@@ -75,7 +77,7 @@ namespace WindowsForms
                     {
                         var item = new ListViewItem(ex.ToString(), group);
                         item.Tag = ex.GetSign();
-                        string sticker = /*loc.Number + "." + ((INumber)ex.Parent).Number + "/" + ex.Number*/ex.ToString();
+                        string sticker = ex.ToString();
                         var subItems = new ListViewItem.ListViewSubItem[]
                             { new ListViewItem.ListViewSubItem(item, ex.Parent.ToString()),
                               new ListViewItem.ListViewSubItem(item, sticker)};
@@ -91,7 +93,7 @@ namespace WindowsForms
         {
             listView.Clear();
             var countColumns = columnsNames.Count();
-            var columnWidth = Width / countColumns - 10;
+            var columnWidth = listView.Width / countColumns - 10;
             var columnHeaders = new ColumnHeader[countColumns];
             int count = 0;
             foreach (var name in columnsNames)
@@ -106,17 +108,23 @@ namespace WindowsForms
             }
             listView.Columns.AddRange(columnHeaders);
         }
-
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
-            if (listView.SelectedItems.Count == 0)
-                return;
             var stickers = new List<string>();
-            foreach (var item in listView.SelectedItems)
-            {
-                var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
-                stickers.Add(str);
-            }
+            if (listView.Items.Count == 0)
+                return;
+            if (listView.SelectedItems.Count == 0)
+                foreach (var item in listView.Items)
+                {
+                    var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
+                    stickers.Add(str);
+                }
+            else
+                foreach (var item in listView.SelectedItems)
+                {
+                    var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
+                    stickers.Add(str);
+                }
 
             var ex = new Excel.Application();
             ex.Visible = true;
@@ -128,15 +136,46 @@ namespace WindowsForms
             var sheet = (Excel.Worksheet)ex.Worksheets.get_Item(1);
             //Название листа (вкладки снизу)
             sheet.Name = "Наклейки";
-            sheet.Columns.ColumnWidth = 87 / 3;
+            sheet.Columns.ColumnWidth = 80 / numColumns.Value;
+            sheet.Rows.RowHeight = 732 / numRows.Value;
+            ex.ActiveWindow.Zoom = 70;
+            ex.ActiveWindow.View = Excel.XlWindowView.xlPageLayoutView;
+            
+            sheet.Columns.HorizontalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            sheet.Columns.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            double currWidth = sheet.Columns.ColumnWidth;
+            var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
+            sheet.Columns.Font.Size = sizeFont;
+            for (int i = 0; i < numRows.Value; i++)
+                for (int j = 0; j < numColumns.Value; j++)
+                {
+                    int index = j + i * (j + 1);
+                    if (index >= stickers.Count)
+                        return;
+                    sheet.Cells[i + 1, j + 1] = string.Format(stickers[index]);
+                }
 
-            //Пример заполнения ячеек
-            //for (int i = 1; i <= 9; i++)
-            //{
-            var g = sheet.Columns[1];
-            for (int j = 0; j < stickers.Count; j++)
-                sheet.Cells[j + 1, 1] = string.Format(stickers[j]);
-            //}
+        }
+
+        private static int CalcFontSize(string template, double currWidth)
+        {
+            int currSizeFont = 8;
+            int len;
+            do
+            {
+                currSizeFont += 2;
+                var f = new Font("Calibri", currSizeFont, FontStyle.Regular);
+                len = TextRenderer.MeasureText(template, f).Width;
+            } while (currWidth * 7 > len);
+            return currSizeFont;
+        }
+
+        private void chkWithoutStickers_CheckedChanged(object sender, EventArgs e)
+        {
+            if (lastType == typeof(FireCabinet))
+                FireCabinetsReport();
+            else if (lastType == typeof(Extinguisher))
+                ExtinguishersReport();
         }
     }
 }
