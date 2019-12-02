@@ -9,12 +9,15 @@ namespace WindowsForms
     public partial class FormSettings : Form
     {
         public event Action<Type> ChangeSample;
+        public event Action ChangeIconSize;
         public FormSettings()
         {
             InitializeComponent();
             txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
             txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
             txbHoses.Text = Sett.Default.SampleNameHoses;
+            scrIconSize.Value = scrIconSize.Maximum + scrIconSize.Minimum-Sett.Default.RatioIconSize;
+            lblIconSize.Text = (scrIconSize.Maximum + scrIconSize.Minimum - Sett.Default.RatioIconSize).ToString();
         }
 
         private void btnSaveSettings_Click(object sender, EventArgs e)
@@ -51,7 +54,10 @@ namespace WindowsForms
                 MessageBox.Show("Неккоректный шаблон: Рукава");
                 return;
             }
+            Sett.Default.RatioIconSize = scrIconSize.Maximum + scrIconSize.Minimum - scrIconSize.Value;
             Sett.Default.Save();
+            ChangeIconSize?.Invoke();
+            Close();
         }
 
         private bool CorrectSample(string sourse, params char[] chars)
@@ -68,6 +74,11 @@ namespace WindowsForms
                 }
             }
             return true;
+        }
+
+        private void scrIconSize_ValueChanged(object sender, EventArgs e)
+        {
+            lblIconSize.Text = scrIconSize.Value.ToString();
         }
     }
 }

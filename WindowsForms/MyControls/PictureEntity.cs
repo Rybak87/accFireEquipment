@@ -23,7 +23,8 @@ namespace BL
             this.scalePoint = scalePoint;
             BorderStyle = BorderStyle.FixedSingle;
             Image = image;
-            Size = new Size(Parent.Width / 50, Parent.Width / 50);
+            var ratioIconSize = Properties.Settings.Default.RatioIconSize;
+            Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);
             SizeMode = PictureBoxSizeMode.Zoom;
 
             Left = (int)(scalePoint.PercentLeft * parentPicBox.Width);
@@ -47,11 +48,12 @@ namespace BL
             label.BringToFront();
         }
 
-        public void Parent_Resize(object sender, EventArgs e)
+        public void Parent_Resize(/*object sender, EventArgs e*/)
         {
             if (Parent == null)
                 return;
-            Size = new Size(Parent.Width / 50, Parent.Width / 50);
+            var ratioIconSize = Properties.Settings.Default.RatioIconSize;
+            Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);
             Left = (int)(scalePoint.PercentLeft * Parent.Width);
             Top = (int)(scalePoint.PercentTop * Parent.Height);
         }

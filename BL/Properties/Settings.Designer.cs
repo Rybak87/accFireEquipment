@@ -23,12 +23,15 @@ namespace BL.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
         public int RatioIconSize {
             get {
                 return ((int)(this["RatioIconSize"]));
+            }
+            set {
+                this["RatioIconSize"] = value;
             }
         }
         

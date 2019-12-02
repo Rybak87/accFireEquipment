@@ -11,12 +11,17 @@ namespace BL
     {
         public event Action<EntitySign> PicDrop;
         public event Action<EntitySign> EditEntity;
+        public event Action CoerciveResize;
 
         public PictureContainer()
         {
             AllowDrop = true;
             DragEnter += new DragEventHandler(picBoxMain_DragEnter);
             DragDrop += new DragEventHandler(picBoxMain_DragDrop);
+        }
+        public virtual void DoCoerciveResize()
+        {
+            CoerciveResize?.Invoke();
         }
         private void picBoxMain_DragEnter(object sender, DragEventArgs e)
         {
@@ -54,7 +59,8 @@ namespace BL
                     }
                     icon = new PictureEntity(this, img, sign, new ScalePoint(new Point(e.X, e.Y), this), textIcon);
                     icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => EditEntity(sign));
-                    Resize += icon.Parent_Resize;
+                    Resize += (s, e2) => icon.Parent_Resize();
+                    CoerciveResize += icon.Parent_Resize;
                 }
                 else
                 {
@@ -122,7 +128,7 @@ namespace BL
         public void LoadImage(Image byteImage)
         {
             this.SuspendDrawing();
-                Image = byteImage;
+            Image = byteImage;
             ResizeRelativePosition();
             this.ResumeDrawing();
         }
@@ -145,7 +151,8 @@ namespace BL
                 return;
             var newPic = new PictureEntity(this, img, sign, scalePoint, textLabel);
             newPic.MouseDoubleClick += new MouseEventHandler((s2, e2) => EditEntity(sign));
-            Resize += newPic.Parent_Resize;
+            Resize += (s, e) => newPic.Parent_Resize();
+            CoerciveResize += newPic.Parent_Resize;
         }
         public void ResizeRelativePosition()
         {
