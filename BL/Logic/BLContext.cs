@@ -69,15 +69,12 @@ namespace BL
     {
         public static void Seed(BLContext db)
         {
-            TypeFireCabinet tf1 = new TypeFireCabinet { Name = "ШКП" };
-            db.TypeFireCabinets.Add(tf1);
-
-            var te = InitDatabaseTypeExtinguishers(db);
+            var tf = InitDefaultTypes<TypeFireCabinet>(Properties.TypesCSV.typesFireCabinet);
+            db.TypeFireCabinets.AddRange(tf);
+            var te = InitDefaultTypes<TypeExtinguisher>(Properties.TypesCSV.typesExtinguisher);
             db.TypeExtinguishers.AddRange(te);
-
-
-            TypeHose th1 = new TypeHose { Name = "РПК" };
-            db.TypeHoses.Add(th1);
+            var th = InitDefaultTypes<TypeHose>(Properties.TypesCSV.typesHose);
+            db.TypeHoses.AddRange(th);
 
             Location l1 = new Location { Name = "Блок 1", Number = 1 };
             Location l2 = new Location { Name = "Блок 2", Number = 2 };
@@ -88,9 +85,9 @@ namespace BL
             db.Locations.Add(l3);
             db.Locations.Add(l4);
 
-            FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, TypeFireCabinet = tf1 };
-            FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, TypeFireCabinet = tf1 };
-            FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, TypeFireCabinet = tf1 };
+            FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, TypeFireCabinet = tf[0] };
+            FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, TypeFireCabinet = tf[0] };
+            FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, TypeFireCabinet = tf[0] };
             db.FireCabinets.Add(f1);
             db.FireCabinets.Add(f2);
             db.FireCabinets.Add(f3);
@@ -100,29 +97,30 @@ namespace BL
             db.Extinguishers.Add(e1);
             db.Extinguishers.Add(e2);
 
-            Hose h1 = new Hose { FireCabinet = f1, Number = 1, TypeHose = th1 };
+            Hose h1 = new Hose { FireCabinet = f1, Number = 1, TypeHose = th[0] };
             db.Hoses.Add(h1);
 
             db.SaveChanges();
         }
-        private static List<TypeExtinguisher> InitDatabaseTypeExtinguishers(BLContext db)
+        private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T: class, new()
         {
-            var result = new List<TypeExtinguisher>();
-            using (StreamReader sr = new StreamReader("..\\typesExtinguishers.csv", System.Text.Encoding.Default))
+            Stream stream = new MemoryStream(fileBinary);
+            var result = new List<T>();
+            using (StreamReader sr = new StreamReader(stream, System.Text.Encoding.Default))
             {
                 string line;
-                TypeExtinguisher curr = null;
+                T curr = null;
                 string headersLine = sr.ReadLine();
                 var headers = headersLine.Split(';');
                 var properties = new List<PropertyInfo>();
                 foreach (var head in headers)
                 {
-                    var property = typeof(TypeExtinguisher).GetProperty(head);
+                    var property = typeof(T).GetProperty(head);
                     properties.Add(property);
                 }
                 while ((line = sr.ReadLine()) != null)
                 {
-                    curr = new TypeExtinguisher();
+                    curr = new T();
                     var values = line.Split(';');
                     for (int i = 0; i < properties.Count; i++)
                     {
@@ -134,8 +132,7 @@ namespace BL
                     result.Add(curr);
                 }
             }
-
-            return result;
+            return result; 
         }
     }
 }

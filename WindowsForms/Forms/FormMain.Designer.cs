@@ -300,7 +300,7 @@ namespace WindowsForms
         }
         private void MyInitializeComponent()
         {
-            this.picContainer = new PictureContainer(/*dictMenu*/);
+            this.picContainer = new PictureContainer();
             this.myTreeView = new MyTreeView(dictMenu);
             this.Controls.Add(this.myTreeView);
             this.rightPanel.Controls.Add(this.picContainer);

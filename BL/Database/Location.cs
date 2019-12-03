@@ -29,6 +29,6 @@ namespace BL
         {
             return Name;
         }
-        public override EntityBase Parent { get => null; set => Parent = value;/* => throw new System.NotImplementedException("Нельзя назначить родителя");*/ }
+        public override EntityBase Parent { get => null; set => Parent = value;}
     }
 }

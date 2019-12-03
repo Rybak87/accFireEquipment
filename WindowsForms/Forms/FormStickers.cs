@@ -15,6 +15,7 @@ namespace WindowsForms
     public partial class FormStickers : Form
     {
         private Type lastType;
+        public event Action<EntitySign> EditEntity;
         public FormStickers()
         {
             InitializeComponent();
@@ -176,6 +177,15 @@ namespace WindowsForms
                 FireCabinetsReport();
             else if (lastType == typeof(Extinguisher))
                 ExtinguishersReport();
+        }
+
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var item = listView.SelectedItems[0];
+            var sign = (EntitySign)item.Tag;
+            EditEntity?.Invoke(sign);
         }
     }
 }

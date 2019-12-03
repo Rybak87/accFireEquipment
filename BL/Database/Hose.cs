@@ -31,18 +31,6 @@ namespace BL
         [Control("DateTimePicker", false)]
         public DateTime DateRolling { get; set; }//Дата перекатки
 
-        //[Column("Марка")]
-        //[Control("TextBox", false)]
-        //public string Label { get; set; }//Марка
-
-        //[Column("Производитель")]
-        //[Control("TextBox", false)]
-        //public string Manufacturer { get; set; }//Производитель
-
-        //[Column("Длина")]
-        //[Control("NumericUpDownDecimal", false)]
-        //public double Length { get; set; }//Длина
-
         [Column("Повреждения")]
         [Control("CheckBox", false)]
         public bool IsRagged { get; set; }//Наличие дыр
@@ -55,15 +43,13 @@ namespace BL
         }
         public override string ToString()
         {
-            return $"Рукав № {Number.ToString()}" ;
+            var sample = Properties.Settings.Default.SampleNameHoses;
+            sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
+            sample = sample.Replace("#F", FireCabinet.Number.ToString());
+            sample = sample.Replace("#H", Number.ToString());
+            return sample;
         }
 
-        //public override object CreateController()
-        //{
-        //    if (controller == null)
-        //        controller = new EntityController<Hose>();
-        //    return controller;
-        //}
         public override EntityBase Parent
         {
             get => FireCabinet;

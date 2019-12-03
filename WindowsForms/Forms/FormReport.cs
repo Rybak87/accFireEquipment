@@ -13,6 +13,7 @@ namespace WindowsForms
 {
     public partial class FormReport : Form
     {
+        public event Action<EntitySign> EditEntity;
         public FormReport()
         {
             InitializeComponent();
@@ -220,32 +221,14 @@ namespace WindowsForms
             }
             listView.Columns.AddRange(columnHeaders);
         }
-        private void DamageEquipmentReport()
-        {
-            using (var ec = new EntityController())
-            {
-                var extinguishersFull = ec.Extinguishers.ToList();
-                var extinguishers = extinguishersFull.Where(e => e.DateRecharge.Subtract(DateTime.Now).Days < 365).ToList();
-                var locationNames = extinguishers.Select(e => e.Parent.Parent.ToString()).Distinct();
 
-                foreach (var name in locationNames)
-                {
-                    var group = new ListViewGroup(name);
-                    var exs = extinguishers.Where(e => e.Parent.Parent.ToString() == name);
-                    foreach (var e in exs)
-                    {
-                        var item = new ListViewItem(e.ToString(), group);
-                        item.Tag = e.GetSign();
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, e.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, e.DateRecharge.SubtractMonths(DateTime.Now).ToString())};
-                        item.SubItems.AddRange(subItems);
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var item = listView.SelectedItems[0];
+            var sign = (EntitySign)item.Tag;
+            EditEntity?.Invoke(sign);
         }
     }
-
 }

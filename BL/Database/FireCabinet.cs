@@ -36,11 +36,6 @@ namespace BL
         [Control("CheckBox", false)]
         public bool IsSticker { get; set; }//Наличие наклейки
 
-        //[Prop("Image", false)]
-        //public byte[] Image { get; set; }
-
-        //public string NumberSticker { get; set; }//Порядковый номер
-
         public FireCabinet()
         {
             IsSticker = true;
@@ -48,7 +43,6 @@ namespace BL
         }
         public override string ToString()
         {
-            //return $"Шкаф № {Number.ToString()}";
             var sample = Properties.Settings.Default.SampleNameFireCabinets;
             sample = sample.Replace("#L", Location.Number.ToString());
             sample = sample.Replace("#F", Number.ToString());

@@ -12,13 +12,13 @@ namespace BL
         [Control("TextBox", true)]
         public string Name { get; set; }//Марка
 
-        [Column("Вид")]
-        [Control("TextBox", false)]
-        public string Species { get; set; } //Вид
-
         [Column("Производитель")]
         [Control("TextBox", false)]
         public string Manufacturer { get; set; }//Производитель
+
+        [Column("Вид")]
+        [Control("TextBox", false)]
+        public string Species { get; set; } //Вид
 
         //[Control("Image", false)]
         //public byte[] Image { get; set; }
@@ -26,13 +26,6 @@ namespace BL
 
         public TypeHose()
         { }
-
-        //public override object CreateController()
-        //{
-        //    if (controller == null)
-        //        controller = new EntityController<TypeHose>();
-        //    return controller;
-        //}
         public override string ToString()
         {
             return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";

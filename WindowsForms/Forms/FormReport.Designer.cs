@@ -43,14 +43,16 @@
             // listView
             // 
             this.listView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listView.FullRowSelect = true;
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 27);
-            this.listView.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listView.Margin = new System.Windows.Forms.Padding(2);
             this.listView.Name = "listView";
             this.listView.Size = new System.Drawing.Size(624, 423);
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
+            this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
             // 
             // toolStrip1
             // 
@@ -128,7 +130,7 @@
             this.ClientSize = new System.Drawing.Size(624, 450);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.listView);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormReport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Report";

@@ -84,8 +84,6 @@ namespace BL
             }
         }
 
-        //public string NumberSticker { get; set; }//Порядковый номер
-
         public Extinguisher()
         {
             DateProduction = DateTime.Now;
@@ -94,10 +92,8 @@ namespace BL
             IsSticker = true;
             Point = new ScalePoint();
         }
-
         public override string ToString()
         {
-            //return $"Огнетушитель № {Number.ToString()}";
             var sample = Properties.Settings.Default.SampleNameExtinguishers;
             sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
             sample = sample.Replace("#F", FireCabinet.Number.ToString());

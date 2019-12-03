@@ -10,14 +10,16 @@ namespace WindowsForms
     {
         public event Action<Type> ChangeSample;
         public event Action ChangeIconSize;
+        int prevAbsoluteIconsSize;
         public FormSettings()
         {
             InitializeComponent();
             txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
             txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
             txbHoses.Text = Sett.Default.SampleNameHoses;
-            scrIconSize.Value = scrIconSize.Maximum + scrIconSize.Minimum-Sett.Default.RatioIconSize;
-            lblIconSize.Text = (scrIconSize.Maximum + scrIconSize.Minimum - Sett.Default.RatioIconSize).ToString();
+            prevAbsoluteIconsSize = InverseIconSize(Sett.Default.RatioIconSize);
+            scrIconSize.Value = prevAbsoluteIconsSize;
+            lblIconSize.Text = prevAbsoluteIconsSize.ToString();
         }
 
         private void btnSaveSettings_Click(object sender, EventArgs e)
@@ -54,9 +56,9 @@ namespace WindowsForms
                 MessageBox.Show("Неккоректный шаблон: Рукава");
                 return;
             }
-            Sett.Default.RatioIconSize = scrIconSize.Maximum + scrIconSize.Minimum - scrIconSize.Value;
+            prevAbsoluteIconsSize = scrIconSize.Value;
+            Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
             Sett.Default.Save();
-            ChangeIconSize?.Invoke();
             Close();
         }
 
@@ -78,7 +80,17 @@ namespace WindowsForms
 
         private void scrIconSize_ValueChanged(object sender, EventArgs e)
         {
+            Sett.Default.RatioIconSize = InverseIconSize(scrIconSize.Value);
+            ChangeIconSize?.Invoke();
             lblIconSize.Text = scrIconSize.Value.ToString();
         }
+
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
+            ChangeIconSize?.Invoke();
+        }
+
+        private int InverseIconSize(int size) => scrIconSize.Maximum + scrIconSize.Minimum - size;
     }
 }

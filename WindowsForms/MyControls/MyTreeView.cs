@@ -42,17 +42,6 @@ namespace WindowsForms
         {
             e.Effect = DragDropEffects.Move;
         }
-
-        public void RenameNodesOfType(Type type)
-        {
-            var nodes = dictNodes.Where(i => i.Key.typeEntity == type);
-            using (var ec = new EntityController())
-            {
-                foreach (var node in nodes)
-                    node.Value.Text = ec.GetEntity(node.Key).ToString();
-            }
-        }
-
         private void treeView_DragOver(object sender, DragEventArgs e)
         {
             Point targetPoint = PointToClient(new Point(e.X, e.Y));
@@ -103,6 +92,15 @@ namespace WindowsForms
             var entitySign = (EntitySign)e.Node.Tag;
 
             ButtonMouseClick?.Invoke(entitySign);
+        }
+        public void RenameNodesOfType(Type type)
+        {
+            var nodes = dictNodes.Where(i => i.Key.typeEntity == type);
+            using (var ec = new EntityController())
+            {
+                foreach (var node in nodes)
+                    node.Value.Text = ec.GetEntity(node.Key).ToString();
+            }
         }
         private bool ContainsNode(TreeNode node1, TreeNode node2)
         {
@@ -188,17 +186,20 @@ namespace WindowsForms
         public void NodeMove(EntityBase entity)
         {
             var saveSelectedNode = SelectedNode;
-            var currNode = SelectedNode;
+            var currNode = dictNodes[entity.GetSign()];
             var entityParent = entity.Parent;
-            TreeNode nodeParent;
+            TreeNode newNodeParent;
             if (entityParent == null)
-                nodeParent = Nodes[0];
+                newNodeParent = Nodes[0];
             else
-                nodeParent = dictNodes[entityParent.GetSign()];
-            currNode.Remove();
-            nodeParent.Nodes.Add(currNode);
+                newNodeParent = dictNodes[entityParent.GetSign()];
+            if (currNode.Parent != newNodeParent)
+            {
+                currNode.Remove();
+                newNodeParent.Nodes.Add(currNode);
+                currNode.Tag = entity.GetSign();
+            }
             currNode.Text = entity.ToString();
-            currNode.Tag = entity.GetSign();
             SelectedNode = saveSelectedNode;
         }
         public void NodeRemove(EntityBase entity)

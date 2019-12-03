@@ -72,11 +72,15 @@
       <DependentUpon>Icons.resx</DependentUpon>
     </Compile>
     <Compile Include="Database\Location.cs" />
-    <Compile Include="Database\StatusExtinguisher.cs" />
     <Compile Include="Database\TypeExtinguisher.cs" />
     <Compile Include="Database\TypeFireCabinet.cs" />
     <Compile Include="Database\TypeHose.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\TypesCSV.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TypesCSV.resx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -88,10 +92,17 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Icons.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\TypesCSV.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TypesCSV.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Resources\typesExtinguisher.csv" />
+    <None Include="Resources\typesFireCabinet.csv" />
+    <None Include="Resources\typesHose.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\Settings.settings">

@@ -33,10 +33,24 @@ namespace WindowsForms
             myTreeView.ButtonMouseDoubleClick += EditDialog;
             picContainer.EditEntity += EditDialog;
             EditDatabaseMenu.Click += (s, e) => new DbTables().ShowDialog(this);
-            ReportMenu.Click += (s, e) => new FormReport().Show();
+            ReportMenu.Click += ReportMenu_Click;
             TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
-            StickersMenu.Click += (s, e) => new FormStickers().Show();
+            StickersMenu.Click += StickersMenu_Click;
             SettingsMenu.Click += SettingsMenu_Click;
+        }
+
+        private void StickersMenu_Click(object sender, EventArgs e)
+        {
+            var frm = new FormStickers();
+            frm.EditEntity += EditDialog;
+            frm.Show(this);
+        }
+
+        private void ReportMenu_Click(object sender, EventArgs e)
+        {
+            var frm = new FormReport();
+            frm.EditEntity += EditDialog;
+            frm.Show(this);
         }
 
         private void SettingsMenu_Click(object sender, EventArgs e)
@@ -44,7 +58,7 @@ namespace WindowsForms
             var frm = new FormSettings();
             frm.ChangeSample += myTreeView.RenameNodesOfType;
             frm.ChangeIconSize += picContainer.DoCoerciveResize;
-            frm.Show();
+            frm.Show(this);
         }
 
         private void Main_Resize(object sender, EventArgs e)

@@ -84,5 +84,14 @@ namespace WindowsForms
             ec.RemoveEntity(sign);
             LoadTypes(saveType);
         }
+
+        private void listView_DoubleClick(object sender, EventArgs e)
+        {
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var item = listView.SelectedItems[0];
+            var sign = (EntitySign)item.Tag;
+            BtnEdit_Click(null, EventArgs.Empty);
+        }
     }
 }

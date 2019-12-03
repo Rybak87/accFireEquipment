@@ -19,6 +19,8 @@ namespace WindowsForms
         //public Image currImage;
         List<Control> needControls = new List<Control>();
         EntityBase currEntity;
+        NumericUpDown weight;
+        NumericUpDown pressure;
 
         public FormEditEntity(EntityBase currEntity, EntityController ec) : this(currEntity, ec, false)
         {
@@ -29,14 +31,8 @@ namespace WindowsForms
             typeEntity = currEntity.GetType();
             this.ec = ec;
             this.currEntity = currEntity;
-            //byte[] locImage=null;
             if (currEntity.GetType() == typeof(Location))
-                //currImage = ((Location)currEntity).Image?.Image;
                 currImage = ((Location)currEntity).Image;
-            //    locImage = ((Location)currEntity).Image;
-            //if (locImage != null)
-            //    currImage = Image.FromStream(new MemoryStream(((Location)currEntity).Image));
-
             bindSource = CreateBindSourse(currEntity, ec);
             CreateControls(currEntity, someComboBoxHide);
         }
@@ -139,6 +135,11 @@ namespace WindowsForms
 
                             Controls.Add(cntrl);
                             ((ComboBox)cntrl).SelectedIndex = -1;
+                            if (prop.Name == "TypeExtinguisher")
+                            {
+                                ComboBox cbxType = (ComboBox)cntrl;
+                                ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => ComboBoxType_SelectedIndexChanged(cbxType);
+                            }
                             break;
                         }
                     case "CheckBox":
@@ -160,7 +161,6 @@ namespace WindowsForms
                                 Size = new Size(150, 25),
                                 Maximum = Int32.MaxValue
                             };
-
                             cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             Controls.Add(cntrl);
                             break;
@@ -175,6 +175,13 @@ namespace WindowsForms
                             };
                             cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             Controls.Add(cntrl);
+                            if (entity is Extinguisher)
+                            {
+                                if (prop.Name == "Weight")
+                                    weight = (NumericUpDown)cntrl;
+                                else if (prop.Name == "Pressure")
+                                    pressure = (NumericUpDown)cntrl;
+                            }
                             break;
                         }
                     case "DateTimePicker":
@@ -183,7 +190,6 @@ namespace WindowsForms
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25),
-                                //Format = DateTimePickerFormat.Short
                             };
                             cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             Controls.Add(cntrl);
@@ -230,6 +236,16 @@ namespace WindowsForms
             }
             this.Height = 25 * yPosControl + 100;
         }
+
+        private void ComboBoxType_SelectedIndexChanged(ComboBox cntrl)
+        {
+            double weight = ((TypeExtinguisher)(cntrl).SelectedItem).NominalWeight;
+            double pressure = ((TypeExtinguisher)(cntrl).SelectedItem).NominalPressure;
+            this.weight.Value = (decimal)weight;
+            this.weight.DataBindings[0].WriteValue();
+            this.pressure.Value = (decimal)pressure;
+            this.pressure.DataBindings[0].WriteValue();
+        }
         private void ImageDialog(Location entity)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -247,7 +263,6 @@ namespace WindowsForms
         {
             currImage = null;
         }
-
         private void BtnOK_Click(object sender, EventArgs e)
         {
             foreach (var cntrl in needControls)
@@ -290,7 +305,6 @@ namespace WindowsForms
                 MessageBox.Show("Необходимо заполнить все поля");
             }
         }
-
         private void FormEditEntity_Load(object sender, EventArgs e)
         {
 
