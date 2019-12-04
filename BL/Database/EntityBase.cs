@@ -15,7 +15,6 @@ namespace BL
         public int Id { get; set; }
         [NotMapped]
         public virtual EntityBase Parent { get; set; }
-        //public object controller;
 
         public override bool Equals(object obj)
         {

@@ -14,5 +14,6 @@ namespace BL
     {
         string Name { get; set; }
         string Manufacturer { get; set; }
+        bool EqualsValues(EntityBase obj);
     }
 }

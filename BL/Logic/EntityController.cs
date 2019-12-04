@@ -11,17 +11,17 @@ namespace BL
         public event Action<EntityBase> entityEdit;
         public event Action<EntityBase> entityRemove;
 
-        public EntityBase CreateEntity(Type typeEntity) => (EntityBase)GetCollection(typeEntity).Create();
+        public EntityBase CreateEntity(Type typeEntity) => (EntityBase)GetTable(typeEntity).Create();
         public EntityBase GetEntity(EntitySign sign)
         {
             if (sign.typeEntity == null)
                 return null;
-            var coll = GetCollection(sign.typeEntity);
+            var coll = GetTable(sign.typeEntity);
             return (EntityBase)coll.Find(sign.idEntity);
         }
         public void AddNewEntity(EntityBase entity)
         {
-            GetCollection(entity.GetType()).Add(entity);
+            GetTable(entity.GetType()).Add(entity);
             SaveChanges();
             entityAdd?.Invoke(entity);
         }
@@ -35,10 +35,10 @@ namespace BL
         {
             var entity = GetEntity(sign);
             entityRemove?.Invoke(entity);
-            GetCollection(sign.typeEntity).Remove(entity);
+            GetTable(sign.typeEntity).Remove(entity);
             SaveChanges();
         }
-        public DbSet GetCollection(Type typeEntity)
+        public DbSet GetTable(Type typeEntity)
         {
             if (typeEntity == typeof(Location))
                 return Locations;
@@ -58,7 +58,8 @@ namespace BL
                 return TypeHoses;
             return null;
         }
-        public List<EntityBase> GetCollectionList(Type typeEntity) => ((IEnumerable<EntityBase>)GetCollection(typeEntity)).ToList();
+        public List<EntityBase> GetTableList(Type typeEntity) => ((IEnumerable<EntityBase>)GetTable(typeEntity)).ToList();
+        public List<EntityBase> ToList(DbSet table) => ((IEnumerable<EntityBase>)table).ToList();
         public int GetNumberChild(EntityBase entity, Type childType)
         {
             var propertiesEntity = entity.GetType().GetProperties();
@@ -72,9 +73,9 @@ namespace BL
         }
         public int GetNumber(EntityBase entity)
         {
-            var EntityBaseCollection = GetCollectionList(entity.GetType());
+            var EntityBaseCollection = GetTableList(entity.GetType());
             var findedCollection = EntityBaseCollection.Cast<INumber>();
-            if (GetCollection(entity.GetType()).Local.Count != 0)
+            if (GetTable(entity.GetType()).Local.Count != 0)
                 return findedCollection.Max(e => e.Number) + 1;
             else
                 return 1;

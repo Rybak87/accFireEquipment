@@ -37,5 +37,15 @@ namespace BL
         {
             return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
         }
+
+        public bool EqualsValues(EntityBase obj)
+        {
+            if (!(obj is TypeFireCabinet))
+                return false;
+            var th = (TypeFireCabinet)obj;
+            if (Name == th.Name && Manufacturer == th.Manufacturer)
+                return true;
+            return false;
+        }
     }
 }

@@ -20,7 +20,6 @@ namespace BL
         public string Name { get; set; }
         [Column("Изображение")]
         [Control("Image", false)]
-        //public virtual ImageLocation Image { get; set; }
         public virtual byte[] Image { get; set; }
 
         public Location()

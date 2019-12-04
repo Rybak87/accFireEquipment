@@ -40,7 +40,7 @@ namespace WindowsForms
         private BindingSource CreateBindSourse(EntityBase entity, EntityController ec)
         {
             var bindSource = new BindingSource();
-            bindSource.DataSource = ec.GetCollection(entity.GetType()).Local;////
+            bindSource.DataSource = ec.GetTable(entity.GetType()).Local;////
             if (bindSource.IndexOf(entity) < 1)
                 bindSource.Add(entity);
             bindSource.Position = bindSource.IndexOf(entity);
@@ -125,7 +125,7 @@ namespace WindowsForms
                                 Size = new Size(150, 25),
                                 Sorted = true
                             };
-                            var parentEntity = ec.GetCollectionList(prop.PropertyType);
+                            var parentEntity = ec.GetTableList(prop.PropertyType);
 
                             foreach (var item2 in parentEntity)
                                 ((ComboBox)cntrl).Items.Add(item2);

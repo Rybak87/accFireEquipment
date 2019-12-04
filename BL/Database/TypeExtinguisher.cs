@@ -59,5 +59,14 @@ namespace BL
         {
             return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
         }
+        public bool EqualsValues(EntityBase obj)
+        {
+            if (!(obj is TypeExtinguisher))
+                return false;
+            var th = (TypeExtinguisher)obj;
+            if (Name == th.Name && Manufacturer == th.Manufacturer)
+                return true;
+            return false;
+        }
     }
 }

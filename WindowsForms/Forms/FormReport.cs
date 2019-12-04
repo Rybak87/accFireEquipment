@@ -38,173 +38,131 @@ namespace WindowsForms
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Недостатки");
-
-            using (var ec = new EntityController())
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
             {
-                var full = ec.FireCabinets.ToList();
-                var selective = full.Where(f => f.IsDented || !f.IsSticker).ToList();
-                var locationNames = selective.Select(e => e.Parent.ToString()).Distinct();
-
-                foreach (var name in locationNames)
-                {
-                    var group = new ListViewGroup(name);
-                    var selectiveThisParent = selective.Where(e => e.Parent.ToString() == name);
-                    foreach (var fc in selectiveThisParent)
-                    {
-                        var item = new ListViewItem(fc.ToString(), group);
-                        item.Tag = fc.GetSign();
-                        string fault = "";
-                        if (fc.IsDented)
-                            fault += "Поврежден; ";
-                        if (!fc.IsSticker)
-                            fault += "Без наклейки; ";
-                        item.SubItems.Add(new ListViewItem.ListViewSubItem(item, fault));
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
+                [ent => ((FireCabinet)ent).IsDented] = ent => "Поврежден; ",
+                [ent => !((FireCabinet)ent).IsSticker] = ent => "Без наклейки; "
+            };
+            EntityReport(typeof(FireCabinet), dict);
         }
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            using (var ec = new EntityController())
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
             {
-                var full = ec.Extinguishers.ToList();
-                var selective = full.Where(e => e.IsDented || !e.IsSticker || !e.IsHose || e.IsLabelDamage || e.IsPaintDamage || e.IsPressureGaugeFault || e.Pressure < 4 || e.Weight < 5).ToList();
-                var locationNames = selective.Select(e => e.Parent.Parent.ToString()).Distinct();
-
-                foreach (var name in locationNames)
-                {
-                    var group = new ListViewGroup(name);
-                    var selectiveThisParent = selective.Where(e => e.Parent.Parent.ToString() == name);
-                    foreach (var ex in selectiveThisParent)
-                    {
-                        var item = new ListViewItem(ex.ToString(), group);
-                        item.Tag = ex.GetSign();
-                        string fault = "";
-                        if (ex.IsDented)
-                            fault += "Поврежден; ";
-                        if (!ex.IsSticker)
-                            fault += "Без наклейки; ";
-                        if (!ex.IsHose)
-                            fault += "Нет шланга; ";
-                        if (ex.IsLabelDamage)
-                            fault += "Повреждена этикетка; ";
-                        if (ex.IsPaintDamage)
-                            fault += "Повреждена краска; ";
-                        if (ex.IsPressureGaugeFault)
-                            fault += "Поврежден манометр; ";
-                        if (ex.Pressure < 4)
-                            fault += "Давление менее 4; ";
-                        if (ex.Weight < 5)
-                            fault += "Вес менее 5; ";
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, ex.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, fault)};
-                        item.SubItems.AddRange(subItems);
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
+                [ent => ((Extinguisher)ent).IsDented] = ent => "Поврежден; ",
+                [ent => !((Extinguisher)ent).IsSticker] = ent => "Без наклейки; ",
+                [ent => !((Extinguisher)ent).IsHose] = ent => "Нет шланга; ",
+                [ent => ((Extinguisher)ent).IsLabelDamage] = ent => "Повреждена этикетка; ",
+                [ent => ((Extinguisher)ent).IsPaintDamage] = ent => "Повреждена краска; ",
+                [ent => ((Extinguisher)ent).IsPressureGaugeFault] = ent => "Поврежден манометр; ",
+                [ent => ((Extinguisher)ent).Pressure < 4] = ent => "Давление менее 4; ",
+                [ent => ((Extinguisher)ent).Weight < 5] = ent => "Вес менее 5; "
+            };
+            EntityReport(typeof(Extinguisher), dict);
         }
         private void HosesReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-
-            using (var ec = new EntityController())
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
             {
-                var full = ec.Hoses.ToList();
-                var selective = full.Where(h => h.IsRagged || h.DateRolling.Subtract(DateTime.Now).Days < 30).ToList();
-                var locationNames = selective.Select(e => e.Parent.Parent.ToString()).Distinct();
-
-                foreach (var name in locationNames)
-                {
-                    var group = new ListViewGroup(name);
-                    var selectiveThisParent = selective.Where(e => e.Parent.Parent.ToString() == name);
-                    foreach (var hose in selectiveThisParent)
-                    {
-                        var item = new ListViewItem(hose.ToString(), group);
-                        item.Tag = hose.GetSign();
-                        string fault = "";
-                        if (hose.IsRagged)
-                            fault += "Порван; ";
-                        if (hose.DateRolling.Subtract(DateTime.Now).Days < 30)
-                            fault += "Необходима перекатка; ";
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, hose.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, fault)};
-                        item.SubItems.AddRange(subItems);
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
+                [ent => ((Hose)ent).IsRagged] = ent => "Поврежден; ",
+                [ent => ((Hose)ent).DateRolling.Subtract(DateTime.Now).Days < 30] = ent => "Необходима перекатка; "
+            };
+            EntityReport(typeof(Hose), dict);
         }
         private void HydrantsReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => ((Hydrant)ent).IsDamage] = ent => "Поврежден; "
+            };
+            EntityReport(typeof(Hydrant), dict);
 
+        }
+        private void EntityReport(Type type, Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>> dict)
+        {
             using (var ec = new EntityController())
             {
-                var full = ec.Hydrants.ToList();
-                var selective = full.Where(h => h.IsDamage).ToList();
-                var locationNames = selective.Select(e => e.Parent.Parent.ToString()).Distinct();
-
-                foreach (var name in locationNames)
+                var full = ec.GetTableList(type);
+                if (type == typeof(FireCabinet))
+                    full = full.OrderBy(f => f.Parent.ToString()).ToList();
+                else
+                    full = full.OrderBy(f => f.Parent.Parent.ToString()).ToList();
+                ListViewGroup group;
+                foreach (var entity in full)
                 {
-                    var group = new ListViewGroup(name);
-                    var selectiveThisParent = selective.Where(e => e.Parent.Parent.ToString() == name);
-                    foreach (var hyd in selectiveThisParent)
+                    string fault = "";
+                    bool IsAdd = false;
+                    foreach (var item in dict)
                     {
-                        var item = new ListViewItem(hyd.ToString(), group);
-                        item.Tag = hyd.GetSign();
-                        string fault = "";
-                        if (hyd.IsDamage)
-                            fault += "Поврежден; ";
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, hyd.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, fault)};
-                        item.SubItems.AddRange(subItems);
+                        if (item.Key(entity))
+                        {
+                            fault += item.Value(entity);
+                            IsAdd = true;
+                        }
+                    }
+                    if (IsAdd)
+                    {
+                        group = GetGroup(entity);
+                        var item = GetItem(entity, group, fault);
                         listView.Items.Add(item);
                     }
+                }
+            }
+            ListViewGroup GetGroup(EntityBase entity)
+            {
+                string name;
+                if (entity is FireCabinet)
+                    name = entity.Parent.ToString();
+                else
+                    name = entity.Parent.Parent.ToString();
+
+                ListViewGroup group;
+                if (listView.Groups[name] == null)
+                {
+                    group = new ListViewGroup(name);
+                    group.Name = name;
                     listView.Groups.Add(group);
                 }
+                else
+                    group = listView.Groups[name];
+                return group;
+            }
+            ListViewItem GetItem(EntityBase entity, ListViewGroup group, string fault)
+            {
+                var item = new ListViewItem(entity.ToString(), group);
+                item.Tag = entity.GetSign();
+                ListViewItem.ListViewSubItem[] subItems;
+                if (entity is FireCabinet)
+                    subItems = new ListViewItem.ListViewSubItem[]
+                        {
+                            new ListViewItem.ListViewSubItem(item, fault)
+                        };
+                else
+                    subItems = new ListViewItem.ListViewSubItem[]
+                        {
+                            new ListViewItem.ListViewSubItem(item, entity.Parent.ToString()),
+                            new ListViewItem.ListViewSubItem(item, fault)
+                        };
+                item.SubItems.AddRange(subItems);
+                return item;
             }
         }
         private void RechargeExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
-
-            List<Extinguisher> extinguishersFull;
-            using (var ec = new EntityController())
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
             {
-                extinguishersFull = ec.Extinguishers.ToList();
-                var extinguishers = extinguishersFull.Where(e => e.DateRecharge.Subtract(DateTime.Now).Days < 365).ToList();
-                var locationNames = extinguishers.Select(e => e.Parent.Parent.ToString()).Distinct();
-
-                foreach (var name in locationNames)
-                {
-                    var group = new ListViewGroup(name);
-                    var exs = extinguishers.Where(e => e.Parent.Parent.ToString() == name);
-                    foreach (var e in exs)
-                    {
-                        var item = new ListViewItem(e.ToString(), group);
-                        item.Tag = e.GetSign();
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, e.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, e.DateRecharge.SubtractMonths(DateTime.Now).ToString())};
-                        item.SubItems.AddRange(subItems);
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
+                [ent => ((Extinguisher)ent).DateRecharge.Subtract(DateTime.Now).Days < 365] = ent => ((Extinguisher)ent).DateRecharge.SubtractMonths(DateTime.Now).ToString()
+            };
+            EntityReport(typeof(Extinguisher), dict);
         }
         private void InitColumns(params string[] columnsNames)
         {
             listView.Clear();
+            listView.Groups.Clear();
             var countColumns = columnsNames.Count();
             var columnWidth = Width / countColumns - 10;
             var columnHeaders = new ColumnHeader[countColumns];
@@ -221,7 +179,6 @@ namespace WindowsForms
             }
             listView.Columns.AddRange(columnHeaders);
         }
-
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0)
