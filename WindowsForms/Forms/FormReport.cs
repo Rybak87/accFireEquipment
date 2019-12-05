@@ -33,7 +33,71 @@ namespace WindowsForms
         }
         private void FullReport()
         {
-            listView.Clear();
+            InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.ToString()
+            };
+            var dict1 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.ToString()
+            };
+            var dict2 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => ((FireCabinet)ent).IsDented] = ent => "Поврежден; ",
+                [ent => !((FireCabinet)ent).IsSticker] = ent => "Без наклейки; "
+            };
+            EntityReport2(typeof(FireCabinet), ent => ent.Parent.ToString(), 3, dict, dict1, dict2);
+
+            dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.ToString()
+            };
+            dict1 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.Parent.ToString()
+            };
+            dict2 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => ((Extinguisher)ent).IsDented] = ent => "Поврежден; ",
+                [ent => !((Extinguisher)ent).IsSticker] = ent => "Без наклейки; ",
+                [ent => !((Extinguisher)ent).IsHose] = ent => "Нет шланга; ",
+                [ent => ((Extinguisher)ent).IsLabelDamage] = ent => "Повреждена этикетка; ",
+                [ent => ((Extinguisher)ent).IsPaintDamage] = ent => "Повреждена краска; ",
+                [ent => ((Extinguisher)ent).IsPressureGaugeFault] = ent => "Поврежден манометр; ",
+                [ent => ((Extinguisher)ent).Pressure < 4] = ent => "Давление менее 4; ",
+                [ent => ((Extinguisher)ent).Weight < 5] = ent => "Вес менее 5; "
+            };
+            EntityReport2(typeof(Extinguisher), ent => ent.Parent.Parent.ToString(), 3, dict, dict1, dict2);
+
+            dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.ToString()
+            };
+            dict1 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.Parent.ToString()
+            };
+            dict2 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => ((Hose)ent).IsRagged] = ent => "Поврежден; ",
+                [ent => ((Hose)ent).DateRolling.Subtract(DateTime.Now).Days < 30] = ent => "Необходима перекатка; "
+            };
+            EntityReport2(typeof(Hose), ent => ent.Parent.Parent.ToString(), 3, dict, dict1, dict2);
+
+            dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.ToString()
+            };
+            dict1 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.Parent.ToString()
+            };
+            dict2 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => ((Hydrant)ent).IsDamage] = ent => "Поврежден; "
+            };
+            EntityReport2(typeof(Hydrant), ent => ent.Parent.Parent.ToString(), 3, dict, dict1, dict2);
         }
         private void FireCabinetsReport()
         {
@@ -71,14 +135,32 @@ namespace WindowsForms
             };
             EntityReport(typeof(Hose), dict);
         }
+        //private void HydrantsReport()
+        //{
+        //    InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+        //    var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+        //    {
+        //        [ent => ((Hydrant)ent).IsDamage] = ent => "Поврежден; "
+        //    };
+        //    EntityReport(typeof(Hydrant), dict);
+
+        //}
         private void HydrantsReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             var dict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
             {
+                [ent => true] = ent => ent.ToString()
+            };
+            var dict1 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = ent => ent.Parent.ToString()
+            };
+            var dict2 = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
                 [ent => ((Hydrant)ent).IsDamage] = ent => "Поврежден; "
             };
-            EntityReport(typeof(Hydrant), dict);
+            EntityReport2(typeof(Hydrant), ent => ent.Parent.Parent.ToString(), 3, dict, dict1, dict2);
 
         }
         private void EntityReport(Type type, Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>> dict)
@@ -149,6 +231,81 @@ namespace WindowsForms
                 item.SubItems.AddRange(subItems);
                 return item;
             }
+        }
+        private void EntityReport2(Type type, Func<EntityBase, string> nameGroups, int requiredDict, params Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>[] dicts)
+        {
+            if (dicts == null)
+                return;//////////
+            var list = dicts.ToList();
+            var newDict = new Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>
+            {
+                [ent => true] = nameGroups
+            };
+            list.Insert(0, newDict);
+            var res = CreateResultStringsTable(type, requiredDict, list);
+            var uniqueGroupNames = res.Select(arr => arr[0]).Distinct().OrderBy(n => n);
+            foreach (var name in uniqueGroupNames)
+                if (listView.Groups[name] == null)
+                    listView.Groups.Add(new ListViewGroup(name, name));
+            foreach (var str in res)
+            {
+                var nameGroup = listView.Groups[str[0]];
+                var item = new ListViewItem(str[1], nameGroup);
+                //item.Tag =
+                var countSbItems = dicts.Length - 1;
+                var subItems = new ListViewItem.ListViewSubItem[countSbItems];
+                for (int i = 0; i < countSbItems; i++)
+                {
+                    var newSubitem = new ListViewItem.ListViewSubItem(item, str[i + 2]);
+                    subItems[i] = newSubitem;
+                }
+                item.SubItems.AddRange(subItems);
+                listView.Items.Add(item);
+            }
+        }
+        private string CreateResultString(EntityBase entity, Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>> dict)
+        {
+            string result = string.Empty;
+            foreach (var item in dict)
+            {
+                if (item.Key(entity))
+                {
+                    result += item.Value(entity);
+                }
+            }
+            return result;
+        }
+        private string[] CreateResultStrings(EntityBase entity, int requiredDict, List<Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>> dicts)
+        {
+            var countDicts = dicts.Count();
+            string[] result = new string[countDicts];
+            bool isEmpty = true;
+            for (int i = 0; i < countDicts; i++)
+            {
+                var str = CreateResultString(entity, dicts[i]);
+                result[i] = CreateResultString(entity, dicts[i]);
+                if (requiredDict == i  && str != string.Empty)
+                    isEmpty = false;
+            }
+            if (isEmpty)
+                return null;
+            else
+                return result;
+        }
+        private List<string[]> CreateResultStringsTable(Type type, int requiredDict, List<Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>>> dicts)
+        {
+            List<string[]> result = new List<string[]>();
+            using (var ec = new EntityController())
+            {
+                var full = ec.GetTableList(type);
+                foreach (var ent in full)
+                {
+                    var str = CreateResultStrings(ent, requiredDict, dicts);
+                    if (str != null)
+                        result.Add(str);
+                }
+            }
+            return result;
         }
         private void RechargeExtinguishersReport()
         {

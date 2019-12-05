@@ -95,7 +95,7 @@ namespace WindowsForms
         {
             using (var od = new OpenFileDialog())
             {
-                od.Filter = "Файл csv (*.csv*)|*.csv*|Текстовый файл (*.txt)|*.txt|Все файлы (*.*)|*.*";
+                od.Filter = "Текстовые файлы (*.txt,*.csv)|*.txt;*.csv|Все файлы (*.*)|*.*";
                 od.RestoreDirectory = true;
                 var pathDownLoads = Microsoft.Win32.Registry.GetValue(
                                     @"HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders",
@@ -204,7 +204,6 @@ namespace WindowsForms
             }
             //TODO: изза перестановок заголовков не будет правильно читаться
         }
-
         private void WriteTypesToFile(Stream fileStream)
         {
             using (StreamWriter sw = new StreamWriter(fileStream, Encoding.Default))

@@ -17,6 +17,7 @@ namespace WindowsForms
             txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
             txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
             txbHoses.Text = Sett.Default.SampleNameHoses;
+            txbHydrants.Text = Sett.Default.SampleNameHydrants;
             prevAbsoluteIconsSize = InverseIconSize(Sett.Default.RatioIconSize);
             scrIconSize.Value = prevAbsoluteIconsSize;
             lblIconSize.Text = prevAbsoluteIconsSize.ToString();
@@ -54,6 +55,17 @@ namespace WindowsForms
             else
             {
                 MessageBox.Show("Неккоректный шаблон: Рукава");
+                return;
+            }
+
+            if (CorrectSample(txbHydrants.Text, 'L', 'F', 'D'))
+            {
+                Sett.Default.SampleNameHydrants = txbHydrants.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHydrants : txbHydrants.Text;
+                ChangeSample?.Invoke(typeof(Hose));
+            }
+            else
+            {
+                MessageBox.Show("Неккоректный шаблон: Пожарный кран");
                 return;
             }
             prevAbsoluteIconsSize = scrIconSize.Value;

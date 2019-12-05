@@ -97,5 +97,29 @@ namespace BL.Properties {
                 return ((string)(this["DefaultSampleNameHoses"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SampleNameHydrants {
+            get {
+                return ((string)(this["SampleNameHydrants"]));
+            }
+            set {
+                this["SampleNameHydrants"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultSampleNameHydrants {
+            get {
+                return ((string)(this["DefaultSampleNameHydrants"]));
+            }
+            set {
+                this["DefaultSampleNameHydrants"] = value;
+            }
+        }
     }
 }

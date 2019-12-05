@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txbHydrants = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
             this.txbHoses = new System.Windows.Forms.TextBox();
             this.txbExtinguishers = new System.Windows.Forms.TextBox();
             this.txbFireCabinets = new System.Windows.Forms.TextBox();
@@ -45,6 +47,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.txbHydrants);
+            this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.txbHoses);
             this.groupBox1.Controls.Add(this.txbExtinguishers);
             this.groupBox1.Controls.Add(this.txbFireCabinets);
@@ -54,10 +58,26 @@
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 167);
+            this.groupBox1.Size = new System.Drawing.Size(304, 205);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Правила именования";
+            // 
+            // txbHydrants
+            // 
+            this.txbHydrants.Location = new System.Drawing.Point(113, 98);
+            this.txbHydrants.Name = "txbHydrants";
+            this.txbHydrants.Size = new System.Drawing.Size(174, 20);
+            this.txbHydrants.TabIndex = 3;
+            // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(6, 95);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(100, 25);
+            this.label6.TabIndex = 2;
+            this.label6.Text = "Пожарные краны";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txbHoses
             // 
@@ -82,12 +102,12 @@
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(7, 110);
+            this.label4.Location = new System.Drawing.Point(6, 130);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(281, 55);
+            this.label4.Size = new System.Drawing.Size(281, 68);
             this.label4.TabIndex = 0;
             this.label4.Text = "#L - номер локации\n#F - номер пожарного шкафа\n#E - номер огнетушителя\n#H - номер " +
-    "рукава";
+    "рукава\n#D - номер пожарного крана";
             // 
             // label3
             // 
@@ -118,7 +138,7 @@
             // 
             // btnSaveSettings
             // 
-            this.btnSaveSettings.Location = new System.Drawing.Point(242, 218);
+            this.btnSaveSettings.Location = new System.Drawing.Point(242, 253);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(75, 23);
             this.btnSaveSettings.TabIndex = 2;
@@ -129,7 +149,7 @@
             // scrIconSize
             // 
             this.scrIconSize.LargeChange = 1;
-            this.scrIconSize.Location = new System.Drawing.Point(23, 222);
+            this.scrIconSize.Location = new System.Drawing.Point(23, 257);
             this.scrIconSize.Maximum = 70;
             this.scrIconSize.Minimum = 20;
             this.scrIconSize.Name = "scrIconSize";
@@ -141,7 +161,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 199);
+            this.label5.Location = new System.Drawing.Point(20, 234);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(88, 13);
             this.label5.TabIndex = 4;
@@ -150,7 +170,7 @@
             // lblIconSize
             // 
             this.lblIconSize.AutoSize = true;
-            this.lblIconSize.Location = new System.Drawing.Point(112, 199);
+            this.lblIconSize.Location = new System.Drawing.Point(112, 234);
             this.lblIconSize.Name = "lblIconSize";
             this.lblIconSize.Size = new System.Drawing.Size(35, 13);
             this.lblIconSize.TabIndex = 5;
@@ -161,7 +181,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(341, 265);
+            this.ClientSize = new System.Drawing.Size(341, 287);
             this.Controls.Add(this.lblIconSize);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.scrIconSize);
@@ -192,5 +212,7 @@
         private System.Windows.Forms.HScrollBar scrIconSize;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblIconSize;
+        private System.Windows.Forms.TextBox txbHydrants;
+        private System.Windows.Forms.Label label6;
     }
 }
