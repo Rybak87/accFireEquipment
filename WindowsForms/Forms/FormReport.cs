@@ -161,7 +161,11 @@ namespace WindowsForms
                 [ent => ((Hydrant)ent).IsDamage] = ent => "Поврежден; "
             };
             EntityReport2(typeof(Hydrant), ent => ent.Parent.Parent.ToString(), 3, dict, dict1, dict2);
-
+            //var filter0 = new Filter(ent => true, ent => ent.Parent.Parent.ToString());
+            //var filter1 = new FilterSet(ent => true, ent => ent.ToString());
+            //var filter2 = new FilterSet(ent => true, ent => ent.Parent.ToString());
+            //var filter3 = new FilterSet(ent => ((Hydrant)ent).IsDamage, ent => "Поврежден; ", true);
+            //EntityReport3(typeof(Hydrant), filter0, filter1, filter2, filter3);
         }
         private void EntityReport(Type type, Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>> dict)
         {
@@ -263,6 +267,35 @@ namespace WindowsForms
                 listView.Items.Add(item);
             }
         }
+        //private void EntityReport3(Type type, Filter nameGroups, params FilterSet[] filterSet)
+        //{
+        //    if (filterSet == null)
+        //        return;//////////
+        //    IEnumerable<string> uniqueGroupNames;
+        //    using (var ec = new EntityController())
+        //    {
+        //        uniqueGroupNames = FilterWork.CreateResultStringsTable(type, new FilterSet(nameGroups)).Select(arr=>arr[0]);
+        //    }
+        //    var res = FilterWork.CreateResultStringsTable(type, filterSet);
+        //    foreach (var name in uniqueGroupNames)
+        //        if (listView.Groups[name] == null)
+        //            listView.Groups.Add(new ListViewGroup(name, name));
+        //    foreach (var str in res)
+        //    {
+        //        var nameGroup = listView.Groups[str[0]];
+        //        var item = new ListViewItem(str[1], nameGroup);
+        //        //item.Tag =
+        //        var countSbItems = filterSet.Length - 1;
+        //        var subItems = new ListViewItem.ListViewSubItem[countSbItems];
+        //        for (int i = 0; i < countSbItems; i++)
+        //        {
+        //            var newSubitem = new ListViewItem.ListViewSubItem(item, str[i + 2]);
+        //            subItems[i] = newSubitem;
+        //        }
+        //        item.SubItems.AddRange(subItems);
+        //        listView.Items.Add(item);
+        //    }
+        //}
         private string CreateResultString(EntityBase entity, Dictionary<Func<EntityBase, bool>, Func<EntityBase, string>> dict)
         {
             string result = string.Empty;
@@ -284,7 +317,7 @@ namespace WindowsForms
             {
                 var str = CreateResultString(entity, dicts[i]);
                 result[i] = CreateResultString(entity, dicts[i]);
-                if (requiredDict == i  && str != string.Empty)
+                if (requiredDict == i && str != string.Empty)
                     isEmpty = false;
             }
             if (isEmpty)

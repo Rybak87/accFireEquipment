@@ -72,7 +72,14 @@ namespace WindowsForms
             var menuItem = (ToolStripMenuItem)sender;
             var typeNewEntity = (Type)menuItem.Tag;
             var parentSign = (EntitySign)myTreeView.SelectedNode.Tag;
-            AddDialog(typeNewEntity, parentSign);
+            AddDialog2(typeNewEntity, parentSign);
+        }
+        private void MenuAdd_MouseClick2(object sender, EventArgs e)
+        {
+            var menuItem = (ToolStripMenuItem)sender;
+            var typeNewEntity = (Type)menuItem.Tag;
+            var parentSign = (EntitySign)myTreeView.SelectedNode.Tag;
+            AddRangeDialog(typeNewEntity, parentSign);
         }
         private void MenuEdit_MouseClick(object sender, EventArgs e)
         {
@@ -109,6 +116,67 @@ namespace WindowsForms
             var currImage = AddEssForm.currImage;
 
             ec.AddNewEntity(entity);
+        }
+        private void AddDialog2(Type typeEntity, EntitySign parentSign)
+        {
+            //var ec = new EntityController();
+            //ec.entityAdd += myTreeView.NodeAdd;
+            //var entity = ec.CreateEntity(typeNewEntity);
+
+            //if (parentSign == null)
+            //{
+            //    ((INumber)entity).Number = ec.GetNumber(entity);
+            //}
+            //else
+            //{
+            //    entity.Parent = ec.GetEntity(parentSign);
+            //    ((INumber)entity).Number = ec.GetNumberChild(entity.Parent, entity.GetType());
+            //}
+
+            var AddEssForm = new FormEditEntity2(typeEntity, parentSign);
+            DialogResult result = AddEssForm.ShowDialog(this);
+            if (result == DialogResult.Cancel)
+                return;
+            using(var ec = new EntityController())
+            {
+                EntityBase entity = (EntityBase)ec.GetTable(typeEntity).Attach(AddEssForm.currEntity);
+                ec.AddNewEntity(entity);
+                ec.SaveChanges();
+            }
+            //var currImage = AddEssForm.currImage;
+
+            //ec.AddNewEntity(entity);
+        }
+        private void AddRangeDialog(Type typeNewEntity, EntitySign parentSign)
+        {
+            var ec = new EntityController();
+            ec.entityAdd += myTreeView.NodeAdd;
+
+            var AddEssForm = new FormEditEntities(typeNewEntity, ec);
+            DialogResult result = AddEssForm.ShowDialog(this);
+            if (result == DialogResult.Cancel)
+                return;
+            int c = (int)AddEssForm.num.Value;
+            var typeEq = AddEssForm.cbx.SelectedItem;
+            var pi = AddEssForm.pi;
+            for (int i = 1; i <= c; i++)
+            {
+                var entity = ec.CreateEntity(typeNewEntity);
+                
+                if (parentSign == null)
+                {
+                    ((INumber)entity).Number = ec.GetNumber(entity);
+                    ((Location)entity).Name = "Помещение №" + ((INumber)entity).Number;
+                }
+                else
+                {
+                    entity.Parent = ec.GetEntity(parentSign);
+                    ((INumber)entity).Number = ec.GetNumberChild(entity.Parent, entity.GetType());
+                    pi.SetValue(entity, typeEq);
+                }
+                ec.AddNewEntity(entity);
+            }
+
         }
         public void EditDialog(EntitySign sign)
         {

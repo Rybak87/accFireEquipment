@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\BLContext.cs" />
+    <Compile Include="Logic\Filter.cs" />
     <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\EntityController.cs" />
     <Compile Include="Logic\Interfaces.cs" />

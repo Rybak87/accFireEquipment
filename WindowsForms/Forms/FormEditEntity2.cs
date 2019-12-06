@@ -10,66 +10,46 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
-    public partial class FormEditEntity : Form
+    public partial class FormEditEntity2 : Form
     {
-        EntityController ec;
-        BindingSource bindSource;
-        Type typeEntity;
+        //EntityController ec;
+        Type entityType;
+        EntitySign parentSign;
         public byte[] currImage;
-        //public Image currImage;
         List<Control> needControls = new List<Control>();
-        EntityBase currEntity;
+        public EntityBase currEntity;
         NumericUpDown weight;
         NumericUpDown pressure;
+        List<(PropertyInfo, Func<object>)> saveProperties = new List<(PropertyInfo, Func<object>)>();
 
-        public FormEditEntity(EntityBase currEntity, EntityController ec) : this(currEntity, ec, false)
-        {
-        }
-        //public FormEditEntity(Type entityType, EntitySign parentSign, EntityController ec) : this(currEntity, ec, false)
-        //{
-        //    var entity = ec.CreateEntity(entityType);
-
-        //    if (parentSign == null)
-        //    {
-        //        ((INumber)entity).Number = ec.GetNumber(entity);
-        //    }
-        //    else
-        //    {
-        //        entity.Parent = ec.GetEntity(parentSign);
-        //        ((INumber)entity).Number = ec.GetNumberChild(entity.Parent, entity.GetType());
-        //    }
-        //}
-        public FormEditEntity(EntityBase currEntity, EntityController ec, bool someComboBoxHide)
+        public FormEditEntity2(Type entityType, EntitySign parentSign)
         {
             InitializeComponent();
-            typeEntity = currEntity.GetType();
-            this.ec = ec;
-            this.currEntity = currEntity;
-            if (currEntity.GetType() == typeof(Location))
-                currImage = ((Location)currEntity).Image;
-            bindSource = CreateBindSourse(currEntity, ec);
-            CreateControls(currEntity, someComboBoxHide);
+            CreateControls(entityType);
+            this.entityType = entityType;
+            this.parentSign = parentSign;
         }
+        //public FormEditEntity2(EntityBase currEntity, EntityController ec, bool someComboBoxHide)
+        //{
+        //    InitializeComponent();
+        //    typeEntity = currEntity.GetType();
+        //    this.ec = ec;
+        //    this.currEntity = currEntity;
+        //    if (currEntity.GetType() == typeof(Location))
+        //        currImage = ((Location)currEntity).Image;
+        //    CreateControls(currEntity, someComboBoxHide);
+        //}
 
-        private BindingSource CreateBindSourse(EntityBase entity, EntityController ec)
-        {
-            var bindSource = new BindingSource();
-            bindSource.DataSource = ec.GetTable(entity.GetType()).Local;////
-            if (bindSource.IndexOf(entity) < 1)
-                bindSource.Add(entity);
-            bindSource.Position = bindSource.IndexOf(entity);
-            return bindSource;
-        }
-        private List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity, bool someComboBoxHide)
+        private List<(PropertyInfo, ControlAttribute, string)> GetProperties(Type entityType)
         {
             var result = new List<(PropertyInfo, ControlAttribute, string)>();
-            foreach (PropertyInfo prop in entity.GetType().GetProperties())
+            foreach (PropertyInfo prop in entityType.GetProperties())
             {
                 var controlAttr = GetControlAttribute(prop);
                 if (controlAttr == null)
                     continue;
 
-                bool controlHide = controlAttr.IsCanHide && someComboBoxHide;
+                bool controlHide = controlAttr.IsCanHide;
                 if (controlHide)
                     continue;
 
@@ -93,11 +73,11 @@ namespace WindowsForms
                 return null;
             }
         }
-        private void CreateControls(EntityBase entity, bool someComboBoxHide)
+        private void CreateControls(Type entityType)
         {
             int yPosControl = 1;
-            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = GetProperties(entity, someComboBoxHide);
-            Control cntrl = null;
+            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = GetProperties(entityType);
+            //Control cntrl = null;
 
             foreach (var item in properties)
             {
@@ -106,149 +86,162 @@ namespace WindowsForms
                 var name = item.name;
                 if (name == null)
                     name = prop.Name;
-
-
-                var lbl = new Label
-                {
-                    Text = name,
-                    Location = new Point(25, 25 * yPosControl),
-                    Size = new Size(175, 25)
-                };
-                Controls.Add(lbl);
-
+                CreateLabelNameProperty(yPosControl, name);
 
                 switch (attr.Control)
                 {
                     case "TextBox":
                         {
-                            cntrl = new TextBox
+                            var cntrl = new TextBox
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25)
                             };
                             Controls.Add(cntrl);
 
-                            cntrl.DataBindings.Add("Text", bindSource, prop.Name);
+                            //cntrl.DataBindings.Add("Text", bindSource, prop.Name);
+                            saveProperties.Add((prop, () => cntrl.Text));
                             break;
                         }
                     case "ComboBox":
                         {
-                            cntrl = new ComboBox
+                            var cntrl = new ComboBox
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25),
                                 Sorted = true
                             };
-                            var parentEntity = ec.GetTableList(prop.PropertyType);
+                            List<EntityBase> parentEntity;
+                            using (var ec = new EntityController())
+                            {
+                                parentEntity = ec.GetTableList(prop.PropertyType);
+                            }
+                                
 
                             foreach (var item2 in parentEntity)
                                 ((ComboBox)cntrl).Items.Add(item2);
 
-                            var bind = new Binding("SelectedItem", bindSource, prop.Name, true, DataSourceUpdateMode.OnValidation);
-                            cntrl.DataBindings.Add(bind);
+                            //var bind = new Binding("SelectedItem", bindSource, prop.Name, true, DataSourceUpdateMode.OnValidation);
+                            //cntrl.DataBindings.Add(bind);
+                            saveProperties.Add((prop, () => (((ComboBox)cntrl).SelectedItem)));
 
                             Controls.Add(cntrl);
-                            ((ComboBox)cntrl).SelectedIndex = -1;
-                            if (prop.Name == "TypeExtinguisher")
-                            {
-                                ComboBox cbxType = (ComboBox)cntrl;
-                                ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => ComboBoxType_SelectedIndexChanged(cbxType);
-                            }
+                            //((ComboBox)cntrl).SelectedIndex = -1;
+                            //if (prop.Name == "TypeExtinguisher")
+                            //{
+                            //    ComboBox cbxType = (ComboBox)cntrl;
+                            //    ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => ComboBoxType_SelectedIndexChanged(cbxType);
+                            //}
                             break;
                         }
                     case "CheckBox":
                         {
-                            cntrl = new CheckBox
+                            var cntrl = new CheckBox
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25)
                             };
-                            cntrl.DataBindings.Add("Checked", bindSource, prop.Name);
+                            saveProperties.Add((prop, () => ((CheckBox)cntrl).Checked));
+                            //cntrl.DataBindings.Add("Checked", bindSource, prop.Name);
                             Controls.Add(cntrl);
                             break;
                         }
                     case "NumericUpDown":
                         {
-                            cntrl = new NumericUpDown
+                            var cntrl = new NumericUpDown
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25),
                                 Maximum = Int32.MaxValue
                             };
-                            cntrl.DataBindings.Add("Value", bindSource, prop.Name);
+                            saveProperties.Add((prop, () => (int)((NumericUpDown)cntrl).Value));
+                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             Controls.Add(cntrl);
                             break;
                         }
                     case "NumericUpDownDecimal":
                         {
-                            cntrl = new NumericUpDown
+                            var cntrl = new NumericUpDown
                             {
                                 DecimalPlaces = 2,
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25)
                             };
-                            cntrl.DataBindings.Add("Value", bindSource, prop.Name);
+                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
+                            saveProperties.Add((prop, () => (double)((NumericUpDown)cntrl).Value));
                             Controls.Add(cntrl);
-                            if (entity is Extinguisher)
-                            {
-                                if (prop.Name == "Weight")
-                                    weight = (NumericUpDown)cntrl;
-                                else if (prop.Name == "Pressure")
-                                    pressure = (NumericUpDown)cntrl;
-                            }
+                            //if (entity is Extinguisher)
+                            //{
+                            //    if (prop.Name == "Weight")
+                            //        weight = (NumericUpDown)cntrl;
+                            //    else if (prop.Name == "Pressure")
+                            //        pressure = (NumericUpDown)cntrl;
+                            //}
                             break;
                         }
                     case "DateTimePicker":
                         {
-                            cntrl = new DateTimePicker
+                            var cntrl = new DateTimePicker
                             {
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25),
                             };
-                            cntrl.DataBindings.Add("Value", bindSource, prop.Name);
+                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
+                            saveProperties.Add((prop, ()=>((DateTimePicker)cntrl).Value));
                             Controls.Add(cntrl);
                             break;
                         }
-                    case "Image":
-                        {
-                            cntrl = new Button
-                            {
-                                Location = new Point(200, 25 * yPosControl),
-                                Size = new Size(75, 25),
-                                Text = "..."
-                            };
-                            var cntrl2 = new Button
-                            {
-                                Location = new Point(275, 25 * yPosControl),
-                                Size = new Size(75, 25),
-                                Text = "Удалить"
-                            };
-                            cntrl.Click += new EventHandler((s, e) => ImageDialog((Location)entity));
-                            cntrl2.Click += new EventHandler((s, e) => ImageClear((Location)entity));
-                            Controls.Add(cntrl);
-                            Controls.Add(cntrl2);
-                            break;
-                        }
+                    //case "Image":
+                    //    {
+                    //        cntrl = new Button
+                    //        {
+                    //            Location = new Point(200, 25 * yPosControl),
+                    //            Size = new Size(75, 25),
+                    //            Text = "..."
+                    //        };
+                    //        var cntrl2 = new Button
+                    //        {
+                    //            Location = new Point(275, 25 * yPosControl),
+                    //            Size = new Size(75, 25),
+                    //            Text = "Удалить"
+                    //        };
+                    //        cntrl.Click += new EventHandler((s, e) => ImageDialog((Location)entity));
+                    //        cntrl2.Click += new EventHandler((s, e) => ImageClear((Location)entity));
+                    //        Controls.Add(cntrl);
+                    //        Controls.Add(cntrl2);
+                    //        break;
+                    //    }
                     case null:
                         break;
-                    default:
-                        throw new ArgumentException();
+                    //default:
+                    //    throw new ArgumentException();
                 }
 
-                if (attr.IsRequired)
-                {
-                    lbl = new Label
-                    {
-                        Text = "Обязательно заполнить",
-                        AutoSize = true,
-                        Location = new Point(400, 25 * yPosControl)
-                    };
-                    Controls.Add(lbl);
-                    needControls.Add(cntrl);
-                }
+                //if (attr.IsRequired)
+                //{
+                //    var lbl = new Label
+                //    {
+                //        Text = "Обязательно заполнить",
+                //        AutoSize = true,
+                //        Location = new Point(400, 25 * yPosControl)
+                //    };
+                //    Controls.Add(lbl);
+                //    needControls.Add(cntrl);
+                //}
                 yPosControl++;
             }
             this.Height = 25 * yPosControl + 100;
+        }
+
+        private void CreateLabelNameProperty(int yPosControl, string name)
+        {
+            var lbl = new Label
+            {
+                Text = name,
+                Location = new Point(25, 25 * yPosControl),
+                Size = new Size(175, 25)
+            };
+            Controls.Add(lbl);
         }
 
         private void ComboBoxType_SelectedIndexChanged(ComboBox cntrl)
@@ -307,11 +300,18 @@ namespace WindowsForms
                         break;
                 }
             }
-            if (typeEntity == typeof(Location))
+            using (var ec = new EntityController())
             {
-                ((Location)currEntity).Image = currImage;
-                ((FormMain)Owner).picContainer.LoadImage(currImage);
+                currEntity = ec.CreateEntity(entityType);
+                foreach (var item in saveProperties)
+                    item.Item1.SetValue(currEntity, item.Item2());
             }
+
+            //if (typeEntity == typeof(Location))
+            //{
+            //    ((Location)currEntity).Image = currImage;
+            //    ((FormMain)Owner).picContainer.LoadImage(currImage);
+            //}
 
             void AbortDialogResult()
             {
@@ -319,9 +319,12 @@ namespace WindowsForms
                 MessageBox.Show("Необходимо заполнить все поля");
             }
         }
-        private void FormEditEntity_Load(object sender, EventArgs e)
-        {
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            object x;
+            foreach (var item in saveProperties)
+                x = item.Item2();
         }
     }
 }

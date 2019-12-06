@@ -173,7 +173,14 @@ namespace WindowsForms
         }
         public void NodeAdd(EntityBase entity)
         {
-            var nodeParent = SelectedNode;
+            //var nodeParent = SelectedNode;
+
+            var entityParent = entity.Parent;
+            TreeNode nodeParent;
+            if (entityParent == null)
+                nodeParent = Nodes[0];
+            else
+                nodeParent = dictNodes[entityParent.GetSign()];
 
             var indImage = ImageSettings.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);

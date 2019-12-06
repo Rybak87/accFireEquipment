@@ -61,7 +61,7 @@ namespace WindowsForms
             if (CorrectSample(txbHydrants.Text, 'L', 'F', 'D'))
             {
                 Sett.Default.SampleNameHydrants = txbHydrants.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHydrants : txbHydrants.Text;
-                ChangeSample?.Invoke(typeof(Hose));
+                ChangeSample?.Invoke(typeof(Hydrant));
             }
             else
             {
