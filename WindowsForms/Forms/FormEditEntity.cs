@@ -38,7 +38,7 @@ namespace WindowsForms
 
             numCountCopy.Visible = false;
             lblCountCopy.Visible = false;
-            
+            Text = "Редактирование: " + currEntity.ToString();
             if (currEntity.GetType() == typeof(Location))
                 currPlan = ((Location)currEntity).Plan;
             bindSource = CreateBindSourse(currEntity, ec);
@@ -54,7 +54,6 @@ namespace WindowsForms
             currEntity = ec.CreateEntity(entityType);
             this.entityType = entityType;
 
-            //if (parentSign == null)
             if (entityType == typeof(Location))
             {
                 ((INumber)currEntity).Number = ec.GetNumber(currEntity);
@@ -65,20 +64,22 @@ namespace WindowsForms
                 currEntity.Parent = ec.GetEntity(parentSign);
                 ((INumber)currEntity).Number = ec.GetNumberChild(currEntity.Parent, entityType);
             }
-
+            Text = "Добавить"; 
             bindSource = CreateBindSourse(currEntity, ec);
             CreateControls(currEntity);
         }
         public FormEditEntity(Type entityType)
         {
             InitializeComponent();
+
             ec = new EntityController();
             mode = "AddType";
 
             yPosControl = 2;
             currEntity = ec.CreateEntity(entityType);
             this.entityType = entityType;
-            
+            Text = "Добавить новый тип";
+
             bindSource = CreateBindSourse(currEntity, ec);
             CreateControls(currEntity);
         }
@@ -287,8 +288,8 @@ namespace WindowsForms
 
         private void ComboBoxType_SelectedIndexChanged(ComboBox cntrl)
         {
-            double weight = ((TypeExtinguisher)(cntrl).SelectedItem).NominalWeight;
-            double pressure = ((TypeExtinguisher)(cntrl).SelectedItem).NominalPressure;
+            double weight = ((SpeciesExtinguisher)(cntrl).SelectedItem).NominalWeight;
+            double pressure = ((SpeciesExtinguisher)(cntrl).SelectedItem).NominalPressure;
             cntrl.DataBindings[0].WriteValue();
             this.weight.Value = (decimal)weight;
             this.weight.DataBindings[0].WriteValue();

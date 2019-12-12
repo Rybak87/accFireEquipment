@@ -1,27 +1,28 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BL
 {
     [Table("Extinguishers")]
-    public class Extinguisher : EntityEquipment, ISticker//, INumber, IPoint, ISticker
+    public class Extinguisher : EntityBase, INumber, IPoint, ISticker
     {
         public int FireCabinetId { get; set; }
         public int TypeExtinguisherId { get; set; }
-        //public virtual StatusExtinguisher Status { get; set; }//Статус
-        //public ScalePoint Point { get; set; }
+        public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
+        //[Required]
         [Control("ComboBox", true, "FireCabinets", true)]
         public virtual FireCabinet FireCabinet { get; set; }
 
         [Column("Тип огнетушителя")]
         [Control("ComboBox", true, "TypeExtinguishers")]
-        public virtual TypeExtinguisher TypeExtinguisher { get; set; }
+        public virtual SpeciesExtinguisher TypeExtinguisher { get; set; }
 
-        //[Column("Номер")]
-        //[Control("NumericUpDown", true)]
-        //public int Number { get; set; }
+        [Column("Номер")]
+        [Control("NumericUpDown", true)]
+        public int Number { get; set; }
 
         [Column("Дата производства")]
         [Control("DateTimePicker", false)]
@@ -77,8 +78,8 @@ namespace BL
             {
                 if (value is FireCabinet)
                     FireCabinet = (FireCabinet)value;
-                else if (value is TypeExtinguisher)
-                    TypeExtinguisher = (TypeExtinguisher)value;
+                else if (value is SpeciesExtinguisher)
+                    TypeExtinguisher = (SpeciesExtinguisher)value;
                 else
                     throw new Exception("Нельзя преобразовать object");
             }

@@ -63,7 +63,7 @@ namespace BL
             string textIcon;
             using (var ec = new EntityController())
             {
-                var entity = ec.GetEntity(sign)/* as IPoint*/;
+                var entity = ec.GetEntity(sign) as IPoint;
                 textIcon = entity.ToString();
             }
             this.SuspendDrawing();
@@ -76,7 +76,7 @@ namespace BL
         {
             using (var ec = new EntityController())
             {
-                var parentLocation = ec.ParentLocation(sign);
+                var parentLocation = ec.ParentLocation(sign,true);
                 if (parentLocation.GetSign() == ((EntitySign)Tag))
                     return;
                 Tag = parentLocation.GetSign();

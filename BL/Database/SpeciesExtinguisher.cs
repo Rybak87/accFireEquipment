@@ -1,21 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BL
 {
-    [Table("TypeExtinguishers")]
-    public class TypeExtinguisher: EntityBase, ITypes
+    [Table("SpeciesExtinguishers")]
+    public class SpeciesExtinguisher: SpeciesBase//EntityBase, ITypes
     {
         public virtual ICollection<Extinguisher> Extinguishers { get; set; }//Огнетушитель
-
-        [Column("Марка")]
-        [Control("TextBox", true)]
-        public string Name { get; set; }//Марка
-
-        [Column("Производитель")]
-        [Control("TextBox", false)]
-        public string Manufacturer { get; set; }//Производитель
 
         [Column("Вид")]
         [Control("TextBox", false)]
@@ -57,24 +50,13 @@ namespace BL
         [Control("TextBox", false)]
         public string FireClass { get; set; }//Класс пожара
 
-        //[Control("Image", false)]
-        //public byte[] Image { get; set; }
-        public override EntityBase Parent { get => null; set => throw new System.NotImplementedException("Нельзя назначить родителя"); }
+        public override ICollection<EntityBase> Childs { get => Extinguishers.Cast<EntityBase>().ToList(); }
 
-        public TypeExtinguisher()
+        public SpeciesExtinguisher()
         { }
         public override string ToString()
         {
             return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
-        }
-        public bool EqualsValues(EntityBase obj)
-        {
-            if (!(obj is TypeExtinguisher))
-                return false;
-            var th = (TypeExtinguisher)obj;
-            if (Name == th.Name && Manufacturer == th.Manufacturer)
-                return true;
-            return false;
         }
     }
 }

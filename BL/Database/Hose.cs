@@ -5,11 +5,11 @@ using System.Linq;
 namespace BL
 {
     [Table("Hoses")]
-    public class Hose : EntityEquipment//, INumber, IPoint
+    public class Hose : EntityBase, INumber, IPoint
     {
         public int TypeHoseId { get; set; }
         public int FireCabinetId { get; set; }
-        //public ScalePoint Point { get; set; }
+        public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]
@@ -17,11 +17,11 @@ namespace BL
 
         [Column("Тип рукава")]
         [Control("ComboBox", true, "TypeHoses")]
-        public virtual TypeHose TypeHose { get; set; }
+        public virtual SpeciesHose TypeHose { get; set; }
 
-        //[Column("Номер")]
-        //[Control("NumericUpDown", true)]
-        //public int Number { get; set; }
+        [Column("Номер")]
+        [Control("NumericUpDown", true)]
+        public int Number { get; set; }
 
         [Column("Дата производства")]
         [Control("DateTimePicker", false)]
@@ -57,8 +57,8 @@ namespace BL
             {
                 if (value is FireCabinet)
                     FireCabinet = (FireCabinet)value;
-                else if (value is TypeHose)
-                    TypeHose = (TypeHose)value;
+                else if (value is SpeciesHose)
+                    TypeHose = (SpeciesHose)value;
                 else
                     throw new Exception("Нельзя преобразовать object");
             }

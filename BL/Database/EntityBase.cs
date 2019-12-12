@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity.Core.Objects;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL
 {
-    //[Table("EntityBase")]
-    public class EntityBase
+    abstract public class EntityBase
     {
-        public int Id { get; set; }
-        //[NotMapped]
+        public virtual int Id { get; set; }
+        [NotMapped]
         public virtual EntityBase Parent { get; set; }
 
         public override bool Equals(object obj)
@@ -44,15 +39,29 @@ namespace BL
 
         public new Type GetType() => ObjectContext.GetObjectType(base.GetType());
     }
-
-    public class EntityEquipment: EntityBase, INumber
+    abstract public class EquipmentBase
     {
-        public virtual new EntityBase Parent { get; set; }
 
-        [Column("Номер")]
-        [Control("NumericUpDown", true)]
-        public int Number { get; set; }
+    }
+    abstract public class SpeciesBase : EntityBase
+    {
+        [Column("Марка")]
+        [Control("TextBox", true)]
+        public string Name { get; set; }//Марка
 
-        public ScalePoint Point { get; set; }
+        [Column("Производитель")]
+        [Control("TextBox", false)]
+        public string Manufacturer { get; set; }//Производитель
+        public bool EqualsValues(SpeciesBase obj)
+        {
+            if (GetType() != obj.GetType())
+                return false;
+            var th = obj;
+            if (Name == th.Name && Manufacturer == th.Manufacturer)
+                return true;
+            return false;
+        }
+        [NotMapped]
+        abstract public ICollection<EntityBase> Childs { get; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace BL
 {
@@ -21,7 +22,7 @@ namespace BL
             var table = GetIQueryable(sign.Type);
             if (noTracking)
                 table = table.AsNoTracking();
-            return table.First(ent => ent.Id == sign.Id);
+            return table.FirstOrDefault(ent => ent.Id == sign.Id);
         }
 
         /// <summary>
@@ -82,6 +83,15 @@ namespace BL
         {
             var entity = GetEntity(sign);
             entityRemove?.Invoke(entity);
+            if (sign.Type.IsSubclassOf(typeof(SpeciesBase)))
+            {
+                if (((SpeciesBase)entity).Childs.Count != 0)
+                {
+                    MessageBox.Show("Существует инвентарь с этим типом");
+                    return;
+                }
+            }
+
             GetTable(sign.Type).Remove(entity);
             SaveChanges();
         }
@@ -101,11 +111,11 @@ namespace BL
                 return Hoses;
             else if (typeEntity == typeof(Hydrant))
                 return Hydrants;
-            else if (typeEntity == typeof(TypeExtinguisher))
+            else if (typeEntity == typeof(SpeciesExtinguisher))
                 return TypeExtinguishers;
-            else if (typeEntity == typeof(TypeFireCabinet))
+            else if (typeEntity == typeof(SpeciesFireCabinet))
                 return TypeFireCabinets;
-            else if (typeEntity == typeof(TypeHose))
+            else if (typeEntity == typeof(SpeciesHose))
                 return TypeHoses;
             return null;
         }
@@ -125,11 +135,11 @@ namespace BL
                 return Hoses;
             else if (typeEntity == typeof(Hydrant))
                 return Hydrants;
-            else if (typeEntity == typeof(TypeExtinguisher))
+            else if (typeEntity == typeof(SpeciesExtinguisher))
                 return TypeExtinguishers;
-            else if (typeEntity == typeof(TypeFireCabinet))
+            else if (typeEntity == typeof(SpeciesFireCabinet))
                 return TypeFireCabinets;
-            else if (typeEntity == typeof(TypeHose))
+            else if (typeEntity == typeof(SpeciesHose))
                 return TypeHoses;
             return null;
         }

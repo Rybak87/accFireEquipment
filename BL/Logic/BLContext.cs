@@ -16,9 +16,9 @@ namespace BL
         public DbSet<Hose> Hoses { get; set; }
         public DbSet<Hydrant> Hydrants { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<TypeExtinguisher> TypeExtinguishers { get; set; }
-        public DbSet<TypeHose> TypeHoses { get; set; }
-        public DbSet<TypeFireCabinet> TypeFireCabinets { get; set; }
+        public DbSet<SpeciesExtinguisher> TypeExtinguishers { get; set; }
+        public DbSet<SpeciesHose> TypeHoses { get; set; }
+        public DbSet<SpeciesFireCabinet> TypeFireCabinets { get; set; }
         //public DbSet<FireCabinetHistory> HistoriesFireCabinet { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -28,13 +28,11 @@ namespace BL
             //    .WithRequired(l => l.Location)
             //    .HasForeignKey(s => s.LocationId)
             //    .WillCascadeOnDelete(true);
-
-            //base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<ImageLocation>()
-            //            .HasOptional(x=>)
-            //            .WithOptional(x => x.Parent)
-            //            .WillCascadeOnDelete(true);
-
+        //    modelBuilder.Entity<FireCabinet>()
+        //.HasMany(c => c.Extinguishers)
+        //.WithRequired(o => o.FireCabinet)
+        //.HasForeignKey(s => s.FireCabinetId)
+        //.WillCascadeOnDelete(true);
         }
         static BLContext()
         {
@@ -70,11 +68,11 @@ namespace BL
     {
         public static void Seed(BLContext db)
         {
-            var tf = InitDefaultTypes<TypeFireCabinet>(Properties.TypesCSV.typesFireCabinet);
+            var tf = InitDefaultTypes<SpeciesFireCabinet>(Properties.TypesCSV.typesFireCabinet);
             db.TypeFireCabinets.AddRange(tf);
-            var te = InitDefaultTypes<TypeExtinguisher>(Properties.TypesCSV.typesExtinguisher);
+            var te = InitDefaultTypes<SpeciesExtinguisher>(Properties.TypesCSV.typesExtinguisher);
             db.TypeExtinguishers.AddRange(te);
-            var th = InitDefaultTypes<TypeHose>(Properties.TypesCSV.typesHose);
+            var th = InitDefaultTypes<SpeciesHose>(Properties.TypesCSV.typesHose);
             db.TypeHoses.AddRange(th);
 
             Location l1 = new Location { Name = "Блок 1", Number = 1 };
@@ -103,7 +101,7 @@ namespace BL
 
             db.SaveChanges();
         }
-        private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T: class, new()
+        private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T : class, new()
         {
             Stream stream = new MemoryStream(fileBinary);
             var result = new List<T>();
@@ -133,7 +131,7 @@ namespace BL
                     result.Add(curr);
                 }
             }
-            return result; 
+            return result;
         }
     }
 }

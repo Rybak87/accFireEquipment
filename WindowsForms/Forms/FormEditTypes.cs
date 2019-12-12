@@ -1,14 +1,10 @@
 ﻿using BL;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -24,20 +20,22 @@ namespace WindowsForms
             HosesMenu.Image = ImageSettings.IconsImage(typeof(Hose));
         }
 
-        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadTypes(typeof(TypeFireCabinet));
-        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadTypes(typeof(TypeExtinguisher));
-        private void HosesMenu_Click(object sender, EventArgs e) => LoadTypes(typeof(TypeHose));
-        private void LoadTypes(Type type)
+        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesFireCabinet));
+        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesExtinguisher));
+        private void HosesMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesHose));
+        private void LoadSpecies(Type type)
         {
+            if (!type.IsSubclassOf(typeof(SpeciesBase)))
+                return;
             listView.Items.Clear();
             using (var ec = new EntityController())
             {
-                foreach (ITypes t in ec.GetTable(type))
+                foreach (SpeciesBase species in ec.GetTable(type))
                 {
-                    var item = new ListViewItem(t.Name);
-                    var subItem = new ListViewItem.ListViewSubItem(item, t.Manufacturer);
+                    var item = new ListViewItem(species.Name);
+                    var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
                     item.SubItems.Add(subItem);
-                    item.Tag = ((EntityBase)t).GetSign();
+                    item.Tag = species.GetSign();
                     listView.Items.Add(item);
                 }
             }
@@ -45,61 +43,28 @@ namespace WindowsForms
         }
         private void BtnAdd_Click(object sender, EventArgs e)
         {
-            //if (saveType == null)
-            //    return;
-            //var ec = new EntityController();
-            //var entity = ec.CreateEntity(saveType);
-
-            //var AddEssForm = new FormEditEntity(entity, ec);
-            //DialogResult result = AddEssForm.ShowDialog(this);
-            //if (result == DialogResult.Cancel)
-            //    return;
-
-            //ec.AddNewEntity(entity);
-            //LoadTypes(saveType);
             if (saveType == null)
                 return;
-            //var ec = new EntityController();
-            //var entity = ec.CreateEntity(saveType);
-
             using (var AddEssForm = new FormEditEntity(saveType))
             {
                 DialogResult result = AddEssForm.ShowDialog(this);
                 if (result == DialogResult.Cancel)
                     return;
             }
-
-            //ec.AddEntity(entity);
-            LoadTypes(saveType);
+            LoadSpecies(saveType);
         }
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            //if (listView.SelectedItems.Count == 0)
-            //    return;
-            //var sign = (EntitySign)listView.SelectedItems[0].Tag;
-
-            //var ec = new EntityController();
-            //var AddEssForm = new FormEditEntity(ec.GetEntity(sign), ec);
-            //DialogResult result = AddEssForm.ShowDialog(this);
-            //if (result == DialogResult.Cancel)
-            //    return;
-
-            //ec.EditEntity(sign);
-            //LoadTypes(saveType);
             if (listView.SelectedItems.Count == 0)
                 return;
             var sign = (EntitySign)listView.SelectedItems[0].Tag;
-
-            //var ec = new EntityController();
             using (var AddEssForm = new FormEditEntity(sign))
             {
                 DialogResult result = AddEssForm.ShowDialog(this);
                 if (result == DialogResult.Cancel)
                     return;
             }
-
-            //ec.EditEntity(sign);
-            LoadTypes(saveType);
+            LoadSpecies(saveType);
         }
         private void BtnRemove_Click(object sender, EventArgs e)
         {
@@ -111,12 +76,8 @@ namespace WindowsForms
             {
                 ec.RemoveEntity(sign);
             }
-            LoadTypes(saveType);
+            LoadSpecies(saveType);
         }
-        //private void listView_DoubleClick(object sender, EventArgs e)
-        //{
-        //    BtnEdit_Click(null, EventArgs.Empty);
-        //}
         private void btnImport_Click(object sender, EventArgs e)
         {
             using (var od = new OpenFileDialog())
@@ -183,7 +144,7 @@ namespace WindowsForms
                     var table = ec.GetTable(type);
                     while ((line = sr.ReadLine()) != null)
                     {
-                        var curr = ec.CreateEntity(type);
+                        var curr = (SpeciesBase)ec.CreateEntity(type);
                         var values = line.Split(';');
                         for (int i = 0; i < properties.Count; i++)
                         {
@@ -192,24 +153,24 @@ namespace WindowsForms
                             else if (properties[i].PropertyType == typeof(double))
                                 properties[i].SetValue(curr, Double.Parse(values[i]));
                         }
-                        if (!ec.GetTableList(table).Any(ent => ((ITypes)ent).EqualsValues(curr)))
+                        if (!ec.GetTableList(table).Any(ent => ((SpeciesBase)ent).EqualsValues(curr)))
                             table.Add(curr);
                     }
                     ec.SaveChanges();
                 }
-                LoadTypes(type);
+                LoadSpecies(type);
             }
 
             int CheckingFile(StreamReader sr)
             {
                 char[] semicolon = new char[] { ';' };
-                Type[] typesEquipment = new Type[] { typeof(TypeFireCabinet), typeof(TypeExtinguisher), typeof(TypeHose) };
                 string typeString = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries)[0];
-                var typeExist = typesEquipment.Select(t => t.Name).Any(s => s == typeString);
-                if (!typeExist)
-                    return 1;
-
                 var type = Type.GetType("BL." + typeString + ", BL");
+                if (type==null)
+                    return 1;
+                if (!type.IsSubclassOf(typeof(SpeciesBase)))
+                    return 1;
+                
                 var headers = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries);
                 var properties = type.GetProperties().Where(p => headers.Contains(p.Name)).ToArray();
                 var propertiesName = properties.Select(p => p.Name);
@@ -225,14 +186,13 @@ namespace WindowsForms
                     for (int i = 0; i < values.Length; i++)
                     {
                         if (properties[i].PropertyType == typeof(double))
-                            if (!Double.TryParse(values[i], out double x))
+                            if (!double.TryParse(values[i], out double x))
                                 return 4;
                     }
                 }
                 return 0;
             }
 
-            //string[] ReadLine( this string asd) => asd.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             //TODO: изза перестановок заголовков не будет правильно читаться
         }
         private void WriteTypesToFile(Stream fileStream)
