@@ -4,7 +4,7 @@ using System;
 namespace BL
 {
     [Table("Hydrants")]
-    public class Hydrant : EntityBase, INumber, IPoint
+    public class Hydrant : EquipmentBase, INumber, IPoint
     {
         public int FireCabinetId { get; set; }
         public ScalePoint Point { get; set; }
@@ -56,5 +56,7 @@ namespace BL
                     throw new Exception("Нельзя преобразовать object");
             }
         }
+
+        public override Location GetLocation => FireCabinet.Location;
     }
 }

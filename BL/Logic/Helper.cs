@@ -72,7 +72,7 @@ namespace BL
             List<ListViewGroup> groups = new List<ListViewGroup>();
             using (var ec = new EntityController())
             {
-                var full = ec.GetTableList(type).OrderBy(ent => ent.Parent.ToString()).ThenBy(ent => ent.ToString());
+                var full = ec.GetTableList(type).Cast<EquipmentBase>().OrderBy(ent => ent.Parent.ToString()).ThenBy(ent => ent.ToString());
                 foreach (var ent in full)
                 {
                     var row = FilterWork.CreateResultStrings(ent, filterSet);

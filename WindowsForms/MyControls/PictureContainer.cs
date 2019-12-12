@@ -71,12 +71,18 @@ namespace BL
             this.ResumeDrawing();
             return icon;
         }
-        
+
         public void LoadImage(EntitySign sign)
         {
             using (var ec = new EntityController())
             {
-                var parentLocation = ec.ParentLocation(sign,true);
+                //var parentLocation = ec.ParentLocation(sign,true);
+                Location parentLocation;
+                var entity = ec.GetEntity(sign);
+                if (entity is Location)
+                    parentLocation = (Location)entity;
+                else
+                    parentLocation = ((EquipmentBase)entity).GetLocation;
                 if (parentLocation.GetSign() == ((EntitySign)Tag))
                     return;
                 Tag = parentLocation.GetSign();
@@ -134,7 +140,7 @@ namespace BL
             return icon;
         }
 
-        public  void RemoveOfPlan(EntitySign removeSign)
+        public void RemoveOfPlan(EntitySign removeSign)
         {
             var x = GetIcons();
             GetIcons().First(i => i.Sign == removeSign).Dispose();
@@ -142,11 +148,11 @@ namespace BL
 
         private void Icon_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button==MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 //var x = PointToClient(e.Location);
                 var y = ((IconEntity)sender).PointToScreen(e.Location);
-                RightClick?.Invoke(((IconEntity)sender).Sign,y);
+                RightClick?.Invoke(((IconEntity)sender).Sign, y);
             }
         }
 

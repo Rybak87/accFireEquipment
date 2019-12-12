@@ -28,6 +28,6 @@ namespace BL
         {
             return Name;
         }
-        public override EntityBase Parent { get => null; set => Parent = value;}
+        //public override EntityBase Parent { get => null; set => Parent = value;}
     }
 }

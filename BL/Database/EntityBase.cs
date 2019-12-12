@@ -8,8 +8,6 @@ namespace BL
     abstract public class EntityBase
     {
         public virtual int Id { get; set; }
-        [NotMapped]
-        public virtual EntityBase Parent { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -39,9 +37,12 @@ namespace BL
 
         public new Type GetType() => ObjectContext.GetObjectType(base.GetType());
     }
-    abstract public class EquipmentBase
+    abstract public class EquipmentBase:EntityBase
     {
-
+        [NotMapped]
+        abstract public EntityBase Parent { get; set; }
+        [NotMapped]
+        abstract public Location GetLocation { get;}
     }
     abstract public class SpeciesBase : EntityBase
     {

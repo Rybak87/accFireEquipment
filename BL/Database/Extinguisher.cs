@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BL
 {
     [Table("Extinguishers")]
-    public class Extinguisher : EntityBase, INumber, IPoint, ISticker
+    public class Extinguisher : EquipmentBase, INumber, IPoint, ISticker
     {
         public int FireCabinetId { get; set; }
         public int TypeExtinguisherId { get; set; }
@@ -84,6 +84,8 @@ namespace BL
                     throw new Exception("Нельзя преобразовать object");
             }
         }
+
+        public override Location GetLocation => FireCabinet.Location;
 
         public Extinguisher()
         {

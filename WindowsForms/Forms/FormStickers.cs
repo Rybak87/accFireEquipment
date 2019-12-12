@@ -17,8 +17,8 @@ namespace WindowsForms
     public partial class FormStickers : Form
     {
         private FilterSet filterName = new FilterSet(ent => ent.ToString());
-        private FilterSet filterParent = new FilterSet(ent => ent.Parent.ToString());
-        private FilterSet filterParentParent = new FilterSet(ent => ent.Parent.Parent.ToString());
+        private FilterSet filterParent = new FilterSet(ent => ent.GetLocation.ToString());
+        private FilterSet filterParentParent = new FilterSet(ent => ent.GetLocation.ToString());
         private FilterSet filterFireCabinetSticker;
         private FilterSet filterExtinguisherSticker;
         private Type lastType;
@@ -161,7 +161,7 @@ namespace WindowsForms
         {
             Extinguisher entityBase = (Extinguisher)entityBase2;
             var sample = txbExtinguishers.Text;
-            sample = sample.Replace("#L", ((Location)entityBase.Parent.Parent).Number.ToString());
+            sample = sample.Replace("#L", (entityBase.GetLocation).Number.ToString());
             sample = sample.Replace("#F", ((FireCabinet)(entityBase.Parent)).Number.ToString());
             sample = sample.Replace("#E", entityBase.Number.ToString());
             return sample;

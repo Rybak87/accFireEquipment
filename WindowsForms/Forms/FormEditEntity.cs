@@ -61,8 +61,8 @@ namespace WindowsForms
             }
             else
             {
-                currEntity.Parent = ec.GetEntity(parentSign);
-                ((INumber)currEntity).Number = ec.GetNumberChild(currEntity.Parent, entityType);
+                ((EquipmentBase)currEntity).Parent = ec.GetEntity(parentSign);
+                ((INumber)currEntity).Number = ec.GetNumberChild(((EquipmentBase)currEntity).Parent, entityType);
             }
             Text = "Добавить"; 
             bindSource = CreateBindSourse(currEntity, ec);

@@ -183,12 +183,12 @@ namespace BL
         /// <summary>
         /// Возвращает родительский Location.
         /// </summary>
-        public Location ParentLocation(EntitySign sign, bool noTracking = false)
-        {
-            var entity = GetEntity(sign, noTracking);
-            if (sign.Type == typeof(Location))
-                return (Location)entity;
-            return ParentLocation(entity.Parent.GetSign());
-        }
+        //public Location ParentLocation(EntitySign sign, bool noTracking = false)
+        //{
+        //    var entity = GetEntity(sign, noTracking);
+        //    if (sign.Type == typeof(Location))
+        //        return (Location)entity;
+        //    return ParentLocation(entity.Parent.GetSign());
+        //}
     }
 }

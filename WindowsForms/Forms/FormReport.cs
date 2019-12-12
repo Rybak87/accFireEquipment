@@ -11,8 +11,8 @@ namespace WindowsForms
     {
         public event Action<EntitySign> EditEntity;
         private FilterSet filterName = new FilterSet(ent => ent.ToString());
-        private FilterSet filterParent = new FilterSet(ent => ent.Parent.ToString());
-        private FilterSet filterParentParent = new FilterSet(ent => ent.Parent.Parent.ToString());
+        private FilterSet filterParent = new FilterSet(ent => ent.GetLocation.ToString());
+        private FilterSet filterParentParent = new FilterSet(ent => ent.GetLocation.ToString());
         private FilterSet filterFireCabinetFault = new FilterSet(true,
                                     new Filter(ent => ((FireCabinet)ent).IsDented, ent => "Поврежден; "),
                                     new Filter(ent => !((FireCabinet)ent).IsSticker, ent => "Без наклейки; ")

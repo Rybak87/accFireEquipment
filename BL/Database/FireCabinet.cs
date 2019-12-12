@@ -7,7 +7,7 @@ using System.Linq;
 namespace BL
 {
     [Table("FireCabinets")]
-    public class FireCabinet : EntityBase,  INumber, IPoint, ISticker
+    public class FireCabinet : EquipmentBase,  INumber, IPoint, ISticker
     {
         public int LocationId { get; set; }
         public int TypeFireCabinetId { get; set; }
@@ -61,6 +61,8 @@ namespace BL
                     throw new Exception("Нельзя преобразовать object");
             }
         }
+
+        public override Location GetLocation => Location;
     }
 }
 

@@ -7,8 +7,6 @@ using BL;
 
 namespace WindowsForms
 {
-    
-
     public class MyTreeView : TreeView
     {
         public event TreeNodeEventHandler DoubleLeftButtonMouseClick;
@@ -35,12 +33,10 @@ namespace WindowsForms
 
             if (entitySign?.Type == null || entitySign.Type == typeof(Location))
                 return;
-                
+
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
-
-        
 
         private void treeView_DragEnter(object sender, DragEventArgs e)
         {
@@ -75,7 +71,7 @@ namespace WindowsForms
                     var signNewParent = (EntitySign)targetNode.Tag;
                     using (var ec = new EntityController())
                     {
-                        var entity = ec.GetEntity(sign);
+                        var entity = ec.GetEntity(sign) as EquipmentBase;
                         entity.Parent = ec.GetEntity(signNewParent);
                         ec.SaveChanges();
                     }
@@ -90,7 +86,8 @@ namespace WindowsForms
         {
             if (e.Button == MouseButtons.Right)
             {
-                dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
+                if (e.Node.Tag != null)
+                    dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
                 ((TreeView)sender).SelectedNode = e.Node;
                 return;
             }
@@ -181,14 +178,11 @@ namespace WindowsForms
         }
         public void NodeAdd(EntityBase entity)
         {
-            //var nodeParent = SelectedNode;
-
-            var entityParent = entity.Parent;
             TreeNode nodeParent;
-            if (entityParent == null)
+            if (entity is Location)
                 nodeParent = Nodes[0];
             else
-                nodeParent = dictNodes[entityParent.GetSign()];
+                nodeParent = dictNodes[((EquipmentBase)entity).Parent.GetSign()];
 
             var indImage = ImageSettings.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
@@ -202,7 +196,7 @@ namespace WindowsForms
         {
             var saveSelectedNode = SelectedNode;
             var currNode = dictNodes[entity.GetSign()];
-            var entityParent = entity.Parent;
+            var entityParent = ((EquipmentBase)entity).Parent;
             TreeNode newNodeParent;
             if (entityParent == null)
                 newNodeParent = Nodes[0];
