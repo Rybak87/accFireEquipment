@@ -78,18 +78,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\FormEditEntities.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormEditEntities.designer.cs">
-      <DependentUpon>FormEditEntities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\FormEditEntity2.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormEditEntity2.designer.cs">
-      <DependentUpon>FormEditEntity2.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormEditTypes.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,12 +102,6 @@
     <Compile Include="Forms\FormStickers.Designer.cs">
       <DependentUpon>FormStickers.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormTables.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\FormTables.designer.cs">
-      <DependentUpon>FormTables.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\FormReport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,7 +114,7 @@
     <Compile Include="MyControls\PictureContainer.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MyControls\PictureEntity.cs">
+    <Compile Include="MyControls\IconEntity.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -148,12 +130,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
-    <EmbeddedResource Include="Forms\FormEditEntities.resx">
-      <DependentUpon>FormEditEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormEditEntity2.resx">
-      <DependentUpon>FormEditEntity2.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormEditTypes.resx">
       <DependentUpon>FormEditTypes.cs</DependentUpon>
     </EmbeddedResource>
@@ -165,9 +141,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormStickers.resx">
       <DependentUpon>FormStickers.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\FormTables.resx">
-      <DependentUpon>FormTables.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormReport.resx">
       <DependentUpon>FormReport.cs</DependentUpon>

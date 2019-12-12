@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -99,8 +100,8 @@ namespace WindowsForms
                             };
                             Controls.Add(cntrl);
 
-                            //cntrl.DataBindings.Add("Text", bindSource, prop.Name);
                             saveProperties.Add((prop, () => cntrl.Text));
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
                     case "ComboBox":
@@ -111,27 +112,25 @@ namespace WindowsForms
                                 Size = new Size(150, 25),
                                 Sorted = true
                             };
-                            List<EntityBase> parentEntity;
+                            List<EntityBase> entityTypes;
                             using (var ec = new EntityController())
                             {
-                                parentEntity = ec.GetTableList(prop.PropertyType);
+                                entityTypes = ec.GetTableList(prop.PropertyType);
                             }
-                                
 
-                            foreach (var item2 in parentEntity)
+
+                            foreach (var item2 in entityTypes)
                                 ((ComboBox)cntrl).Items.Add(item2);
 
-                            //var bind = new Binding("SelectedItem", bindSource, prop.Name, true, DataSourceUpdateMode.OnValidation);
-                            //cntrl.DataBindings.Add(bind);
-                            saveProperties.Add((prop, () => (((ComboBox)cntrl).SelectedItem)));
-
+                            var newProp = entityType.GetProperty(prop.Name + "Id");
+                            saveProperties.Add((newProp, () => ((EntityBase)cntrl.SelectedItem).Id));
                             Controls.Add(cntrl);
-                            //((ComboBox)cntrl).SelectedIndex = -1;
-                            //if (prop.Name == "TypeExtinguisher")
-                            //{
-                            //    ComboBox cbxType = (ComboBox)cntrl;
-                            //    ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => ComboBoxType_SelectedIndexChanged(cbxType);
-                            //}
+                            if (prop.Name == "TypeExtinguisher")
+                            {
+                                ComboBox cbxType = (ComboBox)cntrl;
+                                ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => ComboBoxType_SelectedIndexChanged(cbxType);
+                            }
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
                     case "CheckBox":
@@ -142,8 +141,8 @@ namespace WindowsForms
                                 Size = new Size(150, 25)
                             };
                             saveProperties.Add((prop, () => ((CheckBox)cntrl).Checked));
-                            //cntrl.DataBindings.Add("Checked", bindSource, prop.Name);
                             Controls.Add(cntrl);
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
                     case "NumericUpDown":
@@ -155,8 +154,8 @@ namespace WindowsForms
                                 Maximum = Int32.MaxValue
                             };
                             saveProperties.Add((prop, () => (int)((NumericUpDown)cntrl).Value));
-                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             Controls.Add(cntrl);
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
                     case "NumericUpDownDecimal":
@@ -167,16 +166,16 @@ namespace WindowsForms
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25)
                             };
-                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
                             saveProperties.Add((prop, () => (double)((NumericUpDown)cntrl).Value));
                             Controls.Add(cntrl);
-                            //if (entity is Extinguisher)
-                            //{
-                            //    if (prop.Name == "Weight")
-                            //        weight = (NumericUpDown)cntrl;
-                            //    else if (prop.Name == "Pressure")
-                            //        pressure = (NumericUpDown)cntrl;
-                            //}
+                            if (entityType == typeof(Extinguisher))
+                            {
+                                if (prop.Name == "Weight")
+                                    weight = (NumericUpDown)cntrl;
+                                else if (prop.Name == "Pressure")
+                                    pressure = (NumericUpDown)cntrl;
+                            }
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
                     case "DateTimePicker":
@@ -186,51 +185,53 @@ namespace WindowsForms
                                 Location = new Point(200, 25 * yPosControl),
                                 Size = new Size(150, 25),
                             };
-                            //cntrl.DataBindings.Add("Value", bindSource, prop.Name);
-                            saveProperties.Add((prop, ()=>((DateTimePicker)cntrl).Value));
+                            saveProperties.Add((prop, () => ((DateTimePicker)cntrl).Value));
                             Controls.Add(cntrl);
+                            LabelRequired(yPosControl, attr, cntrl);
                             break;
                         }
-                    //case "Image":
-                    //    {
-                    //        cntrl = new Button
-                    //        {
-                    //            Location = new Point(200, 25 * yPosControl),
-                    //            Size = new Size(75, 25),
-                    //            Text = "..."
-                    //        };
-                    //        var cntrl2 = new Button
-                    //        {
-                    //            Location = new Point(275, 25 * yPosControl),
-                    //            Size = new Size(75, 25),
-                    //            Text = "Удалить"
-                    //        };
-                    //        cntrl.Click += new EventHandler((s, e) => ImageDialog((Location)entity));
-                    //        cntrl2.Click += new EventHandler((s, e) => ImageClear((Location)entity));
-                    //        Controls.Add(cntrl);
-                    //        Controls.Add(cntrl2);
-                    //        break;
-                    //    }
-                    case null:
-                        break;
-                    //default:
-                    //    throw new ArgumentException();
+                    case "Image":
+                        {
+                            var cntrl = new Button
+                            {
+                                Location = new Point(200, 25 * yPosControl),
+                                Size = new Size(75, 25),
+                                Text = "..."
+                            };
+                            var cntrl2 = new Button
+                            {
+                                Location = new Point(275, 25 * yPosControl),
+                                Size = new Size(75, 25),
+                                Text = "Удалить"
+                            };
+                            saveProperties.Add((prop, () => currImage));
+                            cntrl.Click += new EventHandler((s, e) => ImageDialog());
+                            cntrl2.Click += new EventHandler((s, e) => ImageClear());
+                            Controls.Add(cntrl);
+                            Controls.Add(cntrl2);
+                            break;
+                        }
                 }
 
-                //if (attr.IsRequired)
-                //{
-                //    var lbl = new Label
-                //    {
-                //        Text = "Обязательно заполнить",
-                //        AutoSize = true,
-                //        Location = new Point(400, 25 * yPosControl)
-                //    };
-                //    Controls.Add(lbl);
-                //    needControls.Add(cntrl);
-                //}
+                //LabelRequired(yPosControl, attr);
                 yPosControl++;
             }
             this.Height = 25 * yPosControl + 100;
+        }
+
+        private void LabelRequired(int yPosControl, ControlAttribute attr, Control cntrl)
+        {
+            if (attr.IsRequired)
+            {
+                var lbl = new Label
+                {
+                    Text = "Обязательно заполнить",
+                    AutoSize = true,
+                    Location = new Point(400, 25 * yPosControl)
+                };
+                Controls.Add(lbl);
+                needControls.Add(cntrl);
+            }
         }
 
         private void CreateLabelNameProperty(int yPosControl, string name)
@@ -249,11 +250,9 @@ namespace WindowsForms
             double weight = ((TypeExtinguisher)(cntrl).SelectedItem).NominalWeight;
             double pressure = ((TypeExtinguisher)(cntrl).SelectedItem).NominalPressure;
             this.weight.Value = (decimal)weight;
-            this.weight.DataBindings[0].WriteValue();
             this.pressure.Value = (decimal)pressure;
-            this.pressure.DataBindings[0].WriteValue();
         }
-        private void ImageDialog(Location entity)
+        private void ImageDialog()
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -261,12 +260,8 @@ namespace WindowsForms
                 var data = File.ReadAllBytes(dialog.FileName);
                 currImage = data;
             }
-            else
-            {
-                currImage = entity.Image;
-            }
         }
-        private void ImageClear(Location entity)
+        private void ImageClear()
         {
             currImage = null;
         }
@@ -303,8 +298,18 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 currEntity = ec.CreateEntity(entityType);
+                currEntity.Parent = ec.GetEntity(parentSign);
                 foreach (var item in saveProperties)
                     item.Item1.SetValue(currEntity, item.Item2());
+                //EntityBase entity = (EntityBase)ec.GetTable(entityType).Attach(currEntity);
+                ec.AddNewEntity(currEntity);
+                ec.SaveChanges();
+                var g = ec.CopyEntity(currEntity.GetSign());
+                //ec.Entry(g).State = EntityState.Detached;
+                //ec.SaveChanges();
+                //EntityBase g2 = (EntityBase)ec.GetTable(entityType).Attach(g);
+                ec.AddNewEntity(g);
+                ec.SaveChanges();
             }
 
             //if (typeEntity == typeof(Location))

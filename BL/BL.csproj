@@ -50,7 +50,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\History.cs" />
+    <Compile Include="Database\Inspection.cs" />
     <Compile Include="Logic\BLContext.cs" />
+    <Compile Include="Logic\Delegates.cs" />
     <Compile Include="Logic\Filter.cs" />
     <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\EntityController.cs" />

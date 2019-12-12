@@ -7,14 +7,15 @@ using System.Linq;
 namespace BL
 {
     [Table("FireCabinets")]
-    public class FireCabinet : EntityBase, INumber, IPoint
+    public class FireCabinet : EntityEquipment, ISticker//, INumber, IPoint, ISticker
     {
         public int LocationId { get; set; }
         public int TypeFireCabinetId { get; set; }
         public virtual ICollection<Extinguisher> Extinguishers { get; set; }//Установленные огнетушители
         public virtual ICollection<Hose> Hoses { get; set; }//Установленные рукава
         public virtual ICollection<Hydrant> Hydrants { get; set; }//Установленный пожарный кран
-        public ScalePoint Point { get; set; }
+        //public virtual ICollection<FireCabinetHistory> Histories { get; set; }
+        //public ScalePoint Point { get; set; }
 
         [Column("Помещение")]
         [Control("ComboBox", true, "Locations", true)]
@@ -24,9 +25,9 @@ namespace BL
         [Control("ComboBox", true, "TypeFireCabinets")]
         public virtual TypeFireCabinet TypeFireCabinet { get; set; }
 
-        [Column("Номер")]
-        [Control("NumericUpDown", true)]
-        public int Number { get; set; }
+        //[Column("Номер")]
+        //[Control("NumericUpDown", true)]
+        //public int Number { get; set; }
 
         [Column("Повреждение")]
         [Control("CheckBox", false)]

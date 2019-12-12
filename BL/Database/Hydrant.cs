@@ -4,18 +4,18 @@ using System;
 namespace BL
 {
     [Table("Hydrants")]
-    public class Hydrant : EntityBase, INumber, IPoint
+    public class Hydrant : EntityEquipment//, INumber, IPoint
     {
         public int FireCabinetId { get; set; }
-        public ScalePoint Point { get; set; }
+        //public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]
         public virtual FireCabinet FireCabinet { get; set; }
 
-        [Column("Номер")]
-        [Control("NumericUpDown", true)]
-        public int Number { get; set; }
+        //[Column("Номер")]
+        //[Control("NumericUpDown", true)]
+        //public int Number { get; set; }
 
         [Column("Повреждение")]
         [Control("CheckBox", false)]

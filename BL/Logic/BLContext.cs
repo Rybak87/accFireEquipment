@@ -19,6 +19,7 @@ namespace BL
         public DbSet<TypeExtinguisher> TypeExtinguishers { get; set; }
         public DbSet<TypeHose> TypeHoses { get; set; }
         public DbSet<TypeFireCabinet> TypeFireCabinets { get; set; }
+        //public DbSet<FireCabinetHistory> HistoriesFireCabinet { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

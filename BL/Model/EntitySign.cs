@@ -4,25 +4,25 @@ namespace BL
 {
     public class EntitySign
     {
-        public Type typeEntity;
-        public int idEntity;
+        public Type Type { get;  }
+        public int Id { get; }
 
         public EntitySign(Type typeEntity, int idEntity)
         {
-            this.typeEntity = typeEntity;
-            this.idEntity = idEntity;
+            this.Type = typeEntity;
+            this.Id = idEntity;
         }
         public override bool Equals(object obj)
         {
             if (obj.GetType() != GetType())
                 return false;
-            else if (typeEntity == ((EntitySign)obj).typeEntity && idEntity == ((EntitySign)obj).idEntity)
+            else if (Type == ((EntitySign)obj).Type && Id == ((EntitySign)obj).Id)
                 return true;
             return false;
         }
         public override int GetHashCode()
         {
-            return typeEntity.GetHashCode() + idEntity.GetHashCode();
+            return Type.GetHashCode() + Id.GetHashCode();
         }
         public static bool operator ==(EntitySign e1, object e2)
         {

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    [Table("EntityBase")]
+    //[Table("EntityBase")]
     public class EntityBase
     {
         public int Id { get; set; }
-        [NotMapped]
+        //[NotMapped]
         public virtual EntityBase Parent { get; set; }
 
         public override bool Equals(object obj)
@@ -43,5 +43,16 @@ namespace BL
         }
 
         public new Type GetType() => ObjectContext.GetObjectType(base.GetType());
+    }
+
+    public class EntityEquipment: EntityBase, INumber
+    {
+        public virtual new EntityBase Parent { get; set; }
+
+        [Column("Номер")]
+        [Control("NumericUpDown", true)]
+        public int Number { get; set; }
+
+        public ScalePoint Point { get; set; }
     }
 }

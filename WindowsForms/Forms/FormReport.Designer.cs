@@ -42,7 +42,8 @@
             // 
             // listView
             // 
-            this.listView.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.listView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listView.FullRowSelect = true;
             this.listView.HideSelection = false;
             this.listView.Location = new System.Drawing.Point(0, 27);
@@ -130,6 +131,7 @@
             this.ClientSize = new System.Drawing.Size(624, 450);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.listView);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormReport";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

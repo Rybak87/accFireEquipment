@@ -27,14 +27,14 @@ namespace BL
         {
             PercentLeft = 0;
             PercentTop = 0;
-            Empty = false;
+            Empty = true;
         }
         public ScalePoint(Point mousePoint, Control control)
         {
             var point = control.PointToClient(mousePoint);
             PercentLeft = (double)point.X / control.Width;
             PercentTop = (double)point.Y / control.Height;
-            Empty = true;
+            Empty = false;
         }
     }
 }

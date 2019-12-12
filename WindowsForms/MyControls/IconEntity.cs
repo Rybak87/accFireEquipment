@@ -5,50 +5,49 @@ using System.Windows.Forms;
 
 namespace BL
 {
-    public class PictureEntity : PictureBox
+    public class IconEntity : PictureBox, IDisposable
     {
         //public IPoint entity;
         private Point MouseDownPosition;
         private Label label;
-        public EntitySign sign;
-        ScalePoint scalePoint;
+        public EntitySign Sign { get; }
+        private ScalePoint scalePoint;
 
-        double ScaleLeft { get => (double)Left / (double)Parent.Width; }
-        double ScaleTop { get => (double)Top / (double)Parent.Height; }
+        double ScaleLeft { get => (double)Left / Parent.Width; }
+        double ScaleTop { get => (double)Top / Parent.Height; }
 
-        public PictureEntity(PictureBox parentPicBox, Image image, EntitySign sign, ScalePoint scalePoint, string textLabel)
+        public IconEntity(PictureBox parent, Image image, EntitySign sign, ScalePoint scalePoint, string textLabel)
         {
-            this.sign = sign;
-            Parent = parentPicBox;
+            Sign = sign;
+            Parent = parent;
             this.scalePoint = scalePoint;
             BorderStyle = BorderStyle.FixedSingle;
             Image = image;
             var ratioIconSize = Properties.Settings.Default.RatioIconSize;
-            Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);
+            int minSize = Math.Min(Parent.Width, Parent.Height);
+            Size = new Size(minSize / ratioIconSize, minSize / ratioIconSize);
             SizeMode = PictureBoxSizeMode.Zoom;
 
-            Left = (int)(scalePoint.PercentLeft * parentPicBox.Width);
-            Top = (int)(scalePoint.PercentTop * parentPicBox.Height);
-
+            Left = (int)(scalePoint.PercentLeft * parent.Width);
+            Top = (int)(scalePoint.PercentTop * parent.Height);
 
             BringToFront();
             MouseDown += PictureEntity_DragDropMove;
             MouseMove += PictureEntity_MouseMove;
-            Resize += PictureEntity_ResizeMove;
-            Move += PictureEntity_ResizeMove;
+            Resize += (s, e) => LabelRedraw();
+            Move += (s, e) => LabelRedraw();
 
             label = new Label
             {
                 BackColor = Color.Transparent,
                 Text = textLabel,
-                
             };
             label.Parent = Parent;
             LabelRedraw();
             label.BringToFront();
         }
 
-        public void Parent_Resize(/*object sender, EventArgs e*/)
+        public void Parent_Resize()
         {
             if (Parent == null)
                 return;
@@ -56,11 +55,6 @@ namespace BL
             Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);
             Left = (int)(scalePoint.PercentLeft * Parent.Width);
             Top = (int)(scalePoint.PercentTop * Parent.Height);
-        }
-
-        private void PictureEntity_ResizeMove(object sender, EventArgs e)
-        {
-            LabelRedraw();
         }
 
         private void LabelRedraw()
@@ -98,18 +92,30 @@ namespace BL
         {
             using (var ec = new EntityController())
             {
-                var copyEntity = ec.GetEntity(sign);
-                ((IPoint)copyEntity).Point = new ScalePoint(ScaleLeft, ScaleTop, true);
+                var copyEntity = ec.GetEntity(Sign);
+                ((EntityEquipment)copyEntity).Point = new ScalePoint(ScaleLeft, ScaleTop, false);
                 ec.Entry(copyEntity).State = EntityState.Modified;
                 ec.SaveChanges();
             }
         }
 
-        public void Remove(Point point)
+        public void NewLocation(Point point)
         {
             Location = point;
             scalePoint.PercentLeft = (double)Left / Parent.Width;
             scalePoint.PercentTop = (double)Top / Parent.Height;
+        }
+        public new void Dispose()
+        {
+            using (var ec = new EntityController())
+            {
+                var entity = ec.GetEntity(Sign);
+                ((IPoint)entity).Point.Empty = true;
+                ec.Entry(entity).State = EntityState.Modified;
+                ec.SaveChanges();
+            }
+            label.Dispose();
+            base.Dispose();
         }
     }
 }

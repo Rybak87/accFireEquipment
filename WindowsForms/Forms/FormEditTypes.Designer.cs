@@ -102,7 +102,7 @@
             this.listView.TabIndex = 1;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
-            this.listView.DoubleClick += new System.EventHandler(this.listView_DoubleClick);
+            this.listView.DoubleClick += new System.EventHandler(this.BtnEdit_Click);
             // 
             // Label
             // 
@@ -181,6 +181,7 @@
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.listView);
             this.Controls.Add(this.toolStrip);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FormEditTypes";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

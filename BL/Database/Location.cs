@@ -10,17 +10,18 @@ namespace BL
     public class Location : EntityBase, INumber
     {
         public virtual ICollection<FireCabinet> FireCabinets { get; set; }
+
         [Column ("Номер")]
         [Control("NumericUpDown", true)]
-
         public int Number { get; set; }
+
         [Column("Имя")]
         [Control("TextBox", true)]
-
         public string Name { get; set; }
+
         [Column("Изображение")]
         [Control("Image", false)]
-        public virtual byte[] Image { get; set; }
+        public virtual byte[] Plan { get; set; }
 
         public Location()
         { }

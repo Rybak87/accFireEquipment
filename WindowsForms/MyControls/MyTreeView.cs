@@ -7,7 +7,7 @@ using BL;
 
 namespace WindowsForms
 {
-    public delegate void TreeNodeEventHandler(object sender, TreeNodeEventArgs e);
+    
 
     public class MyTreeView : TreeView
     {
@@ -33,14 +33,21 @@ namespace WindowsForms
         {
             var entitySign = (EntitySign)((TreeNode)e.Item).Tag;
 
-            if (entitySign?.typeEntity == null || entitySign.typeEntity == typeof(Location))
+            if (entitySign?.Type == null || entitySign.Type == typeof(Location))
                 return;
+                
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
+
+        
+
         private void treeView_DragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Move;
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
+            {
+                e.Effect = DragDropEffects.Move;
+            }
         }
         private void treeView_DragOver(object sender, DragEventArgs e)
         {
@@ -53,8 +60,8 @@ namespace WindowsForms
             TreeNode targetNode = GetNodeAt(targetPoint);
             TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
 
-            var targetType = ((EntitySign)targetNode.Tag).typeEntity;
-            var draggedType = ((EntitySign)draggedNode.Tag).typeEntity;
+            var targetType = ((EntitySign)targetNode.Tag).Type;
+            var draggedType = ((EntitySign)draggedNode.Tag).Type;
             Type draggedTypeParent;
             if (draggedType == typeof(FireCabinet))
                 draggedTypeParent = typeof(Location);
@@ -83,6 +90,7 @@ namespace WindowsForms
         {
             if (e.Button == MouseButtons.Right)
             {
+                dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
                 ((TreeView)sender).SelectedNode = e.Node;
                 return;
             }
@@ -95,7 +103,7 @@ namespace WindowsForms
         }
         public void RenameNodesOfType(Type type)
         {
-            var nodes = dictNodes.Where(i => i.Key.typeEntity == type);
+            var nodes = dictNodes.Where(i => i.Key.Type == type);
             using (var ec = new EntityController())
             {
                 foreach (var node in nodes)
@@ -124,9 +132,8 @@ namespace WindowsForms
             this.SuspendDrawing();
             using (var ec = new EntityController())
             {
-                var projectNode = new TreeNode("Текущий проект");
+                var projectNode = new TreeNode("Проект");
                 projectNode.ContextMenuStrip = dictMenu[0.GetType()];
-                //projectNode.Tag = new EntitySign(null, 0);
                 Nodes.Add(projectNode);
 
                 foreach (var location in ec.Locations)
@@ -158,11 +165,12 @@ namespace WindowsForms
                 }
             }
             Sort();
+            Nodes[0].Expand();
             this.ResumeDrawing();
 
             TreeNode CreateNode(TreeNode parent, EntitySign entitySign, string text, ContextMenuStrip menu = null)
             {
-                var indImage = ImageSettings.IconsImageIndex[entitySign.typeEntity];
+                var indImage = ImageSettings.IconsImageIndex[entitySign.Type];
                 var child = new TreeNode(text, indImage, indImage);
                 child.ContextMenuStrip = menu;
                 parent.Nodes.Add(child);
@@ -215,7 +223,7 @@ namespace WindowsForms
             dictNodes.Remove(entity.GetSign());
         }
     }
-
+    public delegate void TreeNodeEventHandler(object sender, TreeNodeEventArgs e);
     public class TreeNodeEventArgs : EventArgs
     {
         public TreeNode Node { get; }

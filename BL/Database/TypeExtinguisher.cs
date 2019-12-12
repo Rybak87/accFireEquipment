@@ -27,7 +27,15 @@ namespace BL
 
         [Column("Номинальное давление")]
         [Control("NumericUpDownDecimal", false)]
-        public double NominalPressure { get; set; }//Номинальная масса
+        public double NominalPressure { get; set; }//Номинальное давление
+
+        [Column("Минимальная масса")]
+        [Control("NumericUpDownDecimal", false)]
+        public double MinWeight { get; set; }//Минимальная масса
+
+        [Column("Минимальное давление")]
+        [Control("NumericUpDownDecimal", false)]
+        public double MinPressure { get; set; }//Минимальное давление
 
         [Column("Масса ОТВ")]
         [Control("NumericUpDownDecimal", false)]

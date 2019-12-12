@@ -13,11 +13,15 @@ namespace BL
         public Func<EntityBase, string> Execution { get; }
 
 
-        public Filter(Func<EntityBase, bool> condition, Func<EntityBase, string> execution/*, bool required = false*/)
+        public Filter(Func<EntityBase, bool> condition, Func<EntityBase, string> execution)
         {
             Condition = condition;
             Execution = execution;
-            //Required = required;
+        }
+        public Filter(Func<EntityBase, string> execution)
+        {
+            Condition = ent => true;
+            Execution = execution;
         }
     }
     public class FilterSet
@@ -27,11 +31,21 @@ namespace BL
         public FilterSet(Func<EntityBase, bool> condition, Func<EntityBase, string> execution, bool required = false)
         {
             Required = required;
-            Filters = new Filter[] { new Filter(condition, execution/*, required*/) };
+            Filters = new Filter[] { new Filter(condition, execution) };
         }
-        public FilterSet(Filter[] funcArray)
+        public FilterSet(Func<EntityBase, string> execution, bool required = false)
         {
-            Required = true;
+            Required = required;
+            Filters = new Filter[] { new Filter(execution) };
+        }
+        public FilterSet(Filter[] funcArray, bool required = false)
+        {
+            Required = required;
+            Filters = funcArray;
+        }
+        public FilterSet(bool required = false, params Filter[] funcArray)
+        {
+            Required = required;
             Filters = funcArray;
         }
         public FilterSet(Filter filter)
@@ -55,60 +69,17 @@ namespace BL
             return Filters.GetEnumerator();
         }
 
-        private string CreateResultString(EntityBase entity, FilterSet filters)
+        public string CreateResultString(EntityBase entity)
         {
             string result = string.Empty;
-            foreach (Filter filter in filters)
+            foreach (Filter filter in Filters)
                 if (filter.Condition(entity))
                     result += filter.Execution(entity);
-            return result;
-        }
-        private string[] CreateResultStrings(EntityBase entity, FilterSet[] filterSet)
-        {
-            var countFilters = filterSet.Length;
-            string[] result = new string[countFilters];
-            for (int i = 0; i < countFilters; i++)
-            {
-                if (filterSet[i].Required)
-                    result[i] = CreateResultString(entity, filterSet[i]);
-                if (result[i] != string.Empty)
-                    return null;
-            }
-            for (int i = 0; i < countFilters; i++)
-            {
-                if (!filterSet[i].Required)
-                    result[i] = CreateResultString(entity, filterSet[i]);
-            }
-            return result;
-        }
-        private List<string[]> CreateResultStringsTable(Type type, params FilterSet[] filterSet)
-        {
-            if (filterSet.Length == 0)
-                return null;
-            List<string[]> result = new List<string[]>();
-            using (var ec = new EntityController())
-            {
-                var full = ec.GetTableList(type);
-                foreach (var ent in full)
-                {
-                    var str = CreateResultStrings(ent, filterSet);
-                    if (str != null)
-                        result.Add(str);
-                }
-            }
             return result;
         }
     }
     public static class FilterWork
     {
-        private static string CreateResultString(EntityBase entity, FilterSet filters)
-        {
-            string result = string.Empty;
-            foreach (Filter filter in filters)
-                if (filter.Condition(entity))
-                    result += filter.Execution(entity);
-            return result;
-        }
         public static string[] CreateResultStrings(EntityBase entity, FilterSet[] filterSet)
         {
             var countFilters = filterSet.Length;
@@ -116,31 +87,16 @@ namespace BL
             for (int i = 0; i < countFilters; i++)
             {
                 if (filterSet[i].Required)
-                    result[i] = CreateResultString(entity, filterSet[i]);
-                if (result[i] != string.Empty)
-                    return null;
+                {
+                    result[i] = filterSet[i].CreateResultString(entity);
+                    if (result[i] == string.Empty)
+                        return null;
+                }
             }
             for (int i = 0; i < countFilters; i++)
             {
                 if (!filterSet[i].Required)
-                    result[i] = CreateResultString(entity, filterSet[i]);
-            }
-            return result;
-        }
-        public static List<string[]> CreateResultStringsTable(Type type, params FilterSet[] filterSet)
-        {
-            if (filterSet.Length == 0)
-                return null;
-            List<string[]> result = new List<string[]>();
-            using (var ec = new EntityController())
-            {
-                var full = ec.GetTableList(type);
-                foreach (var ent in full)
-                {
-                    var str = CreateResultStrings(ent, filterSet);
-                    if (str != null)
-                        result.Add(str);
-                }
+                    result[i] = filterSet[i].CreateResultString(entity);
             }
             return result;
         }

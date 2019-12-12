@@ -16,4 +16,8 @@ namespace BL
         string Manufacturer { get; set; }
         bool EqualsValues(EntityBase obj);
     }
+    public interface ISticker
+    {
+        bool IsSticker { get; set; }
+    }
 }

@@ -5,11 +5,11 @@ using System.Linq;
 namespace BL
 {
     [Table("Hoses")]
-    public class Hose : EntityBase, INumber, IPoint
+    public class Hose : EntityEquipment//, INumber, IPoint
     {
         public int TypeHoseId { get; set; }
         public int FireCabinetId { get; set; }
-        public ScalePoint Point { get; set; }
+        //public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]
@@ -19,9 +19,9 @@ namespace BL
         [Control("ComboBox", true, "TypeHoses")]
         public virtual TypeHose TypeHose { get; set; }
 
-        [Column("Номер")]
-        [Control("NumericUpDown", true)]
-        public int Number { get; set; }
+        //[Column("Номер")]
+        //[Control("NumericUpDown", true)]
+        //public int Number { get; set; }
 
         [Column("Дата производства")]
         [Control("DateTimePicker", false)]

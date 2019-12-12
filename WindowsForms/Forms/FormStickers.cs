@@ -9,13 +9,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
+using Sett = BL.Properties.Settings;
 
 namespace WindowsForms
 {
+
     public partial class FormStickers : Form
     {
+        private FilterSet filterName = new FilterSet(ent => ent.ToString());
+        private FilterSet filterParent = new FilterSet(ent => ent.Parent.ToString());
+        private FilterSet filterParentParent = new FilterSet(ent => ent.Parent.Parent.ToString());
+        private FilterSet filterFireCabinetSticker;
+        private FilterSet filterExtinguisherSticker;
         private Type lastType;
         public event Action<EntitySign> EditEntity;
+        private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
         public FormStickers()
         {
             InitializeComponent();
@@ -23,72 +31,23 @@ namespace WindowsForms
             ExtinguishersMenu.Image = ImageSettings.IconsImage(typeof(Extinguisher));
             FireCabinetsMenu.Click += (s, e) => FireCabinetsReport();
             ExtinguishersMenu.Click += (s, e) => ExtinguishersReport();
+            txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
+            txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
+            filterFireCabinetSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerFireCabinet));
+            filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
         }
 
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Наклейка");
             lastType = typeof(FireCabinet);
-            using (var ec = new EntityController())
-            {
-                var full = ec.FireCabinets.ToList();
-                List<FireCabinet> selective;
-                if (chkWithoutStickers.Checked)
-                    selective = full.Where(f => !f.IsSticker).ToList();
-                else
-                    selective = full;
-                var locationTuples = selective.Select(e => (e.Parent.ToString(), ((INumber)e.Parent).Number)).Distinct();
-
-                foreach (var loc in locationTuples)
-                {
-                    var group = new ListViewGroup(loc.Item1);
-                    var selectiveThisParent = selective.Where(f => f.Parent.ToString() == loc.Item1);
-                    foreach (var fc in selectiveThisParent)
-                    {
-                        var item = new ListViewItem(fc.ToString(), group);
-                        item.Tag = fc.GetSign();
-                        string sticker = fc.ToString();
-                        item.SubItems.Add(new ListViewItem.ListViewSubItem(item, sticker));
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
-
+            listView.EntityReport(typeof(FireCabinet), filterParent, filterName, filterFireCabinetSticker);
         }
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Наклейка");
             lastType = typeof(Extinguisher);
-            using (var ec = new EntityController())
-            {
-                var full = ec.Extinguishers.ToList();
-                List<Extinguisher> selective;
-                if (chkWithoutStickers.Checked)
-                    selective = full.Where(e => !e.IsSticker).ToList();
-                else
-                    selective = full;
-                var locationTuples = selective.Select(e => (e.Parent.Parent.ToString(), ((INumber)e.Parent.Parent).Number)).Distinct();
-
-                foreach (var loc in locationTuples)
-                {
-                    var group = new ListViewGroup(loc.Item1);
-                    var selectiveThisParent = selective.Where(e => e.Parent.Parent.ToString() == loc.Item1);
-                    foreach (var ex in selectiveThisParent)
-                    {
-                        var item = new ListViewItem(ex.ToString(), group);
-                        item.Tag = ex.GetSign();
-                        string sticker = ex.ToString();
-                        var subItems = new ListViewItem.ListViewSubItem[]
-                            { new ListViewItem.ListViewSubItem(item, ex.Parent.ToString()),
-                              new ListViewItem.ListViewSubItem(item, sticker)};
-                        item.SubItems.AddRange(subItems);
-                        listView.Items.Add(item);
-                    }
-                    listView.Groups.Add(group);
-                }
-            }
-
+            listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherSticker);
         }
         private void InitColumns(params string[] columnsNames)
         {
@@ -141,23 +100,25 @@ namespace WindowsForms
             sheet.Rows.RowHeight = 732 / numRows.Value;
             ex.ActiveWindow.Zoom = 70;
             ex.ActiveWindow.View = Excel.XlWindowView.xlPageLayoutView;
-            
+
             sheet.Columns.HorizontalAlignment = Excel.XlVAlign.xlVAlignCenter;
             sheet.Columns.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
             double currWidth = sheet.Columns.ColumnWidth;
             var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
             sheet.Columns.Font.Size = sizeFont;
-            for (int i = 0; i < numRows.Value; i++)
-                for (int j = 0; j < numColumns.Value; j++)
+            int i = 1;
+            int j = 1;
+            foreach (var item in stickers)
+            {
+                sheet.Cells[i, j] = string.Format(item);
+                j++;
+                if (j > numColumns.Value)
                 {
-                    int index = j + i * (j + 1);
-                    if (index >= stickers.Count)
-                        return;
-                    sheet.Cells[i + 1, j + 1] = string.Format(stickers[index]);
+                    j = 1; i++;
                 }
+            }
 
         }
-
         private static int CalcFontSize(string template, double currWidth)
         {
             int currSizeFont = 8;
@@ -170,15 +131,24 @@ namespace WindowsForms
             } while (currWidth * 7 > len);
             return currSizeFont;
         }
-
         private void chkWithoutStickers_CheckedChanged(object sender, EventArgs e)
         {
+            if(chkWithoutStickers.Checked)
+            {
+                filterFireCabinetSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerFireCabinet));
+                filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
+            }
+            else
+            {
+                filterFireCabinetSticker = new FilterSet(true, new Filter(CreateStickerFireCabinet));
+                filterExtinguisherSticker = new FilterSet(true, new Filter(CreateStickerExtinguisher));
+            }
+            
             if (lastType == typeof(FireCabinet))
                 FireCabinetsReport();
             else if (lastType == typeof(Extinguisher))
                 ExtinguishersReport();
         }
-
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0)
@@ -186,6 +156,42 @@ namespace WindowsForms
             var item = listView.SelectedItems[0];
             var sign = (EntitySign)item.Tag;
             EditEntity?.Invoke(sign);
+        }
+        string CreateStickerExtinguisher(EntityBase entityBase2)
+        {
+            Extinguisher entityBase = (Extinguisher)entityBase2;
+            var sample = txbExtinguishers.Text;
+            sample = sample.Replace("#L", ((Location)entityBase.Parent.Parent).Number.ToString());
+            sample = sample.Replace("#F", ((FireCabinet)(entityBase.Parent)).Number.ToString());
+            sample = sample.Replace("#E", entityBase.Number.ToString());
+            return sample;
+        }
+        string CreateStickerFireCabinet(EntityBase entityBase2)
+        {
+            FireCabinet entityBase = (FireCabinet)entityBase2;
+            var sample = txbFireCabinets.Text;
+            sample = sample.Replace("#L", ((Location)entityBase.Parent).Number.ToString());
+            sample = sample.Replace("#F", entityBase.Number.ToString());
+            return sample;
+        }
+
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            if (!txbFireCabinets.Text.CorrectSample('L', 'F'))
+            {
+                MessageBox.Show("Неккоректный шаблон: Пожарные шкафы");
+                return;
+            }
+            if (!txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
+            {
+                MessageBox.Show("Неккоректный шаблон: Огнетушители");
+                return;
+            }
+
+            if (lastType == typeof(FireCabinet))
+                FireCabinetsReport();
+            else if (lastType == typeof(Extinguisher))
+                ExtinguishersReport();
         }
     }
 }

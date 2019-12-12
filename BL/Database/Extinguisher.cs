@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace BL
 {
     [Table("Extinguishers")]
-    public class Extinguisher : EntityBase, INumber, IPoint
+    public class Extinguisher : EntityEquipment, ISticker//, INumber, IPoint, ISticker
     {
         public int FireCabinetId { get; set; }
         public int TypeExtinguisherId { get; set; }
         //public virtual StatusExtinguisher Status { get; set; }//Статус
-        public ScalePoint Point { get; set; }
+        //public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]
@@ -19,9 +19,9 @@ namespace BL
         [Control("ComboBox", true, "TypeExtinguishers")]
         public virtual TypeExtinguisher TypeExtinguisher { get; set; }
 
-        [Column("Номер")]
-        [Control("NumericUpDown", true)]
-        public int Number { get; set; }
+        //[Column("Номер")]
+        //[Control("NumericUpDown", true)]
+        //public int Number { get; set; }
 
         [Column("Дата производства")]
         [Control("DateTimePicker", false)]

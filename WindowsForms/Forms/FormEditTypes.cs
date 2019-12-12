@@ -45,32 +45,60 @@ namespace WindowsForms
         }
         private void BtnAdd_Click(object sender, EventArgs e)
         {
+            //if (saveType == null)
+            //    return;
+            //var ec = new EntityController();
+            //var entity = ec.CreateEntity(saveType);
+
+            //var AddEssForm = new FormEditEntity(entity, ec);
+            //DialogResult result = AddEssForm.ShowDialog(this);
+            //if (result == DialogResult.Cancel)
+            //    return;
+
+            //ec.AddNewEntity(entity);
+            //LoadTypes(saveType);
             if (saveType == null)
                 return;
-            var ec = new EntityController();
-            var entity = ec.CreateEntity(saveType);
+            //var ec = new EntityController();
+            //var entity = ec.CreateEntity(saveType);
 
-            var AddEssForm = new FormEditEntity(entity, ec);
-            DialogResult result = AddEssForm.ShowDialog(this);
-            if (result == DialogResult.Cancel)
-                return;
+            using (var AddEssForm = new FormEditEntity(saveType))
+            {
+                DialogResult result = AddEssForm.ShowDialog(this);
+                if (result == DialogResult.Cancel)
+                    return;
+            }
 
-            ec.AddNewEntity(entity);
+            //ec.AddEntity(entity);
             LoadTypes(saveType);
         }
         private void BtnEdit_Click(object sender, EventArgs e)
         {
+            //if (listView.SelectedItems.Count == 0)
+            //    return;
+            //var sign = (EntitySign)listView.SelectedItems[0].Tag;
+
+            //var ec = new EntityController();
+            //var AddEssForm = new FormEditEntity(ec.GetEntity(sign), ec);
+            //DialogResult result = AddEssForm.ShowDialog(this);
+            //if (result == DialogResult.Cancel)
+            //    return;
+
+            //ec.EditEntity(sign);
+            //LoadTypes(saveType);
             if (listView.SelectedItems.Count == 0)
                 return;
             var sign = (EntitySign)listView.SelectedItems[0].Tag;
 
-            var ec = new EntityController();
-            var AddEssForm = new FormEditEntity(ec.GetEntity(sign), ec);
-            DialogResult result = AddEssForm.ShowDialog(this);
-            if (result == DialogResult.Cancel)
-                return;
+            //var ec = new EntityController();
+            using (var AddEssForm = new FormEditEntity(sign))
+            {
+                DialogResult result = AddEssForm.ShowDialog(this);
+                if (result == DialogResult.Cancel)
+                    return;
+            }
 
-            ec.EditEntity(sign);
+            //ec.EditEntity(sign);
             LoadTypes(saveType);
         }
         private void BtnRemove_Click(object sender, EventArgs e)
@@ -79,18 +107,16 @@ namespace WindowsForms
                 return;
             var sign = (EntitySign)listView.SelectedItems[0].Tag;
 
-            var ec = new EntityController();
-            ec.RemoveEntity(sign);
+            using (var ec = new EntityController())
+            {
+                ec.RemoveEntity(sign);
+            }
             LoadTypes(saveType);
         }
-        private void listView_DoubleClick(object sender, EventArgs e)
-        {
-            if (listView.SelectedItems.Count == 0)
-                return;
-            var item = listView.SelectedItems[0];
-            var sign = (EntitySign)item.Tag;
-            BtnEdit_Click(null, EventArgs.Empty);
-        }
+        //private void listView_DoubleClick(object sender, EventArgs e)
+        //{
+        //    BtnEdit_Click(null, EventArgs.Empty);
+        //}
         private void btnImport_Click(object sender, EventArgs e)
         {
             using (var od = new OpenFileDialog())
@@ -105,7 +131,7 @@ namespace WindowsForms
                 if (od.ShowDialog() == DialogResult.OK)
                 {
                     var fileStream = od.OpenFile();
-                    AddTypesFromFile(fileStream);
+                    ReadTypesFromFile(fileStream);
                 }
             }
         }
@@ -134,7 +160,7 @@ namespace WindowsForms
                 }
             }
         }
-        private void AddTypesFromFile(Stream fileStream)
+        private void ReadTypesFromFile(Stream fileStream)
         {
             using (StreamReader sr = new StreamReader(fileStream, Encoding.Default))
             {
@@ -166,22 +192,25 @@ namespace WindowsForms
                             else if (properties[i].PropertyType == typeof(double))
                                 properties[i].SetValue(curr, Double.Parse(values[i]));
                         }
-                        if (!ec.ToList(table).Any(ent => ((ITypes)ent).EqualsValues(curr)))
+                        if (!ec.GetTableList(table).Any(ent => ((ITypes)ent).EqualsValues(curr)))
                             table.Add(curr);
                     }
                     ec.SaveChanges();
                 }
+                LoadTypes(type);
             }
+
             int CheckingFile(StreamReader sr)
             {
+                char[] semicolon = new char[] { ';' };
                 Type[] typesEquipment = new Type[] { typeof(TypeFireCabinet), typeof(TypeExtinguisher), typeof(TypeHose) };
-                string typeString = sr.ReadLine().Split(';')[0];
+                string typeString = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries)[0];
                 var typeExist = typesEquipment.Select(t => t.Name).Any(s => s == typeString);
                 if (!typeExist)
                     return 1;
 
                 var type = Type.GetType("BL." + typeString + ", BL");
-                var headers = sr.ReadLine().Split(';');
+                var headers = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries);
                 var properties = type.GetProperties().Where(p => headers.Contains(p.Name)).ToArray();
                 var propertiesName = properties.Select(p => p.Name);
                 if (!(propertiesName.Union(headers).Count() == propertiesName.Count()))
@@ -190,7 +219,7 @@ namespace WindowsForms
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    var values = line.Split(';');
+                    var values = line.Split(semicolon, StringSplitOptions.RemoveEmptyEntries);
                     if (values.Length != properties.Count())
                         return 3;
                     for (int i = 0; i < values.Length; i++)
@@ -202,6 +231,8 @@ namespace WindowsForms
                 }
                 return 0;
             }
+
+            //string[] ReadLine( this string asd) => asd.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             //TODO: изза перестановок заголовков не будет правильно читаться
         }
         private void WriteTypesToFile(Stream fileStream)

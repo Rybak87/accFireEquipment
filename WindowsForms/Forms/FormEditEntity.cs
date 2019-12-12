@@ -12,55 +12,89 @@ namespace WindowsForms
 {
     public partial class FormEditEntity : Form
     {
-        EntityController ec;
-        BindingSource bindSource;
-        Type typeEntity;
-        public byte[] currImage;
-        //public Image currImage;
-        List<Control> needControls = new List<Control>();
-        EntityBase currEntity;
-        NumericUpDown weight;
-        NumericUpDown pressure;
+        private readonly EntityController ec;
+        private readonly BindingSource bindSource;
+        private readonly Type entityType;
+        public byte[] currPlan;
+        private readonly List<Control> needControls = new List<Control>();
+        private readonly EntityBase currEntity;
+        private NumericUpDown weight;
+        private NumericUpDown pressure;
+        private readonly string mode;
+        public event Action<EntityBase> EntityAdd;
+        public event Action<EntityBase> EntityEdit;
+        int yPosControl;
+        public int CountCopy { get => (int)numCountCopy.Value; }
 
-        public FormEditEntity(EntityBase currEntity, EntityController ec) : this(currEntity, ec, false)
-        {
-        }
-        //public FormEditEntity(Type entityType, EntitySign parentSign, EntityController ec) : this(currEntity, ec, false)
-        //{
-        //    var entity = ec.CreateEntity(entityType);
-
-        //    if (parentSign == null)
-        //    {
-        //        ((INumber)entity).Number = ec.GetNumber(entity);
-        //    }
-        //    else
-        //    {
-        //        entity.Parent = ec.GetEntity(parentSign);
-        //        ((INumber)entity).Number = ec.GetNumberChild(entity.Parent, entity.GetType());
-        //    }
-        //}
-        public FormEditEntity(EntityBase currEntity, EntityController ec, bool someComboBoxHide)
+        public FormEditEntity(EntitySign sign)
         {
             InitializeComponent();
-            typeEntity = currEntity.GetType();
-            this.ec = ec;
-            this.currEntity = currEntity;
+            ec = new EntityController();
+            mode = "Edit";
+
+            yPosControl = 1;
+            currEntity = ec.GetEntity(sign);
+            entityType = currEntity.GetType();
+
+            numCountCopy.Visible = false;
+            lblCountCopy.Visible = false;
+            
             if (currEntity.GetType() == typeof(Location))
-                currImage = ((Location)currEntity).Image;
+                currPlan = ((Location)currEntity).Plan;
             bindSource = CreateBindSourse(currEntity, ec);
-            CreateControls(currEntity, someComboBoxHide);
+            CreateControls(currEntity);
+        }
+        public FormEditEntity(Type entityType, EntitySign parentSign)
+        {
+            InitializeComponent();
+            ec = new EntityController();
+            mode = "Add";
+
+            yPosControl = 2;
+            currEntity = ec.CreateEntity(entityType);
+            this.entityType = entityType;
+
+            //if (parentSign == null)
+            if (entityType == typeof(Location))
+            {
+                ((INumber)currEntity).Number = ec.GetNumber(currEntity);
+                currPlan = ((Location)currEntity).Plan;
+            }
+            else
+            {
+                currEntity.Parent = ec.GetEntity(parentSign);
+                ((INumber)currEntity).Number = ec.GetNumberChild(currEntity.Parent, entityType);
+            }
+
+            bindSource = CreateBindSourse(currEntity, ec);
+            CreateControls(currEntity);
+        }
+        public FormEditEntity(Type entityType)
+        {
+            InitializeComponent();
+            ec = new EntityController();
+            mode = "AddType";
+
+            yPosControl = 2;
+            currEntity = ec.CreateEntity(entityType);
+            this.entityType = entityType;
+            
+            bindSource = CreateBindSourse(currEntity, ec);
+            CreateControls(currEntity);
         }
 
         private BindingSource CreateBindSourse(EntityBase entity, EntityController ec)
         {
-            var bindSource = new BindingSource();
-            bindSource.DataSource = ec.GetTable(entity.GetType()).Local;////
+            var bindSource = new BindingSource
+            {
+                DataSource = ec.GetTable(entity.GetType()).Local////
+            };
             if (bindSource.IndexOf(entity) < 1)
                 bindSource.Add(entity);
             bindSource.Position = bindSource.IndexOf(entity);
             return bindSource;
         }
-        private List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity, bool someComboBoxHide)
+        private List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity)
         {
             var result = new List<(PropertyInfo, ControlAttribute, string)>();
             foreach (PropertyInfo prop in entity.GetType().GetProperties())
@@ -69,7 +103,7 @@ namespace WindowsForms
                 if (controlAttr == null)
                     continue;
 
-                bool controlHide = controlAttr.IsCanHide && someComboBoxHide;
+                bool controlHide = controlAttr.IsCanHide;
                 if (controlHide)
                     continue;
 
@@ -93,10 +127,10 @@ namespace WindowsForms
                 return null;
             }
         }
-        private void CreateControls(EntityBase entity, bool someComboBoxHide)
+        private void CreateControls(EntityBase entity)
         {
-            int yPosControl = 1;
-            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = GetProperties(entity, someComboBoxHide);
+
+            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = GetProperties(entity);
             Control cntrl = null;
 
             foreach (var item in properties)
@@ -223,8 +257,8 @@ namespace WindowsForms
                                 Size = new Size(75, 25),
                                 Text = "Удалить"
                             };
-                            cntrl.Click += new EventHandler((s, e) => ImageDialog((Location)entity));
-                            cntrl2.Click += new EventHandler((s, e) => ImageClear((Location)entity));
+                            cntrl.Click += new EventHandler((s, e) => ImageDialog());
+                            cntrl2.Click += new EventHandler((s, e) => ImageClear());
                             Controls.Add(cntrl);
                             Controls.Add(cntrl2);
                             break;
@@ -255,30 +289,32 @@ namespace WindowsForms
         {
             double weight = ((TypeExtinguisher)(cntrl).SelectedItem).NominalWeight;
             double pressure = ((TypeExtinguisher)(cntrl).SelectedItem).NominalPressure;
+            cntrl.DataBindings[0].WriteValue();
             this.weight.Value = (decimal)weight;
             this.weight.DataBindings[0].WriteValue();
             this.pressure.Value = (decimal)pressure;
             this.pressure.DataBindings[0].WriteValue();
         }
-        private void ImageDialog(Location entity)
+        private void ImageDialog()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            if (dialog.ShowDialog() == DialogResult.OK)
+            using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                var data = File.ReadAllBytes(dialog.FileName);
-                currImage = data;
-            }
-            else
-            {
-                currImage = entity.Image;
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var data = File.ReadAllBytes(dialog.FileName);
+                    currPlan = data;
+                }
             }
         }
-        private void ImageClear(Location entity)
+        private void ImageClear()
         {
-            currImage = null;
+            currPlan = null;
         }
+
         private void BtnOK_Click(object sender, EventArgs e)
         {
+            ec.entityAdd += EntityAdd;
+            ec.entityEdit += EntityEdit;
             foreach (var cntrl in needControls)
             {
                 switch (cntrl.GetType().Name)
@@ -307,21 +343,23 @@ namespace WindowsForms
                         break;
                 }
             }
-            if (typeEntity == typeof(Location))
+            if (entityType == typeof(Location))
             {
-                ((Location)currEntity).Image = currImage;
-                ((FormMain)Owner).picContainer.LoadImage(currImage);
+                ((Location)currEntity).Plan = currPlan;
+                ((FormMain)Owner).picContainer.LoadImage(currPlan);
             }
+            if (mode == "Add")
+                ec.AddRangeEntity(currEntity, CountCopy);
+            else if (mode == "Edit")
+                ec.EditEntity(currEntity.GetSign());
+            else if (mode == "AddType")
+                ec.AddEntity(currEntity);
 
             void AbortDialogResult()
             {
                 DialogResult = DialogResult.None;
                 MessageBox.Show("Необходимо заполнить все поля");
             }
-        }
-        private void FormEditEntity_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

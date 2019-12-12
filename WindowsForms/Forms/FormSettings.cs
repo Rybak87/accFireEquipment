@@ -25,7 +25,7 @@ namespace WindowsForms
 
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
-            if (CorrectSample(txbFireCabinets.Text, 'L', 'F'))
+            if (txbFireCabinets.Text.CorrectSample('L', 'F'))
             {
                 Sett.Default.SampleNameFireCabinets = txbFireCabinets.Text.Trim() == "" ? Sett.Default.DefaultSampleNameFireCabinets : txbFireCabinets.Text;
                 ChangeSample?.Invoke(typeof(FireCabinet));
@@ -36,7 +36,7 @@ namespace WindowsForms
                 return;
             }
 
-            if (CorrectSample(txbExtinguishers.Text, 'L', 'F', 'E'))
+            if (txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
             {
                 Sett.Default.SampleNameExtinguishers = txbExtinguishers.Text.Trim() == "" ? Sett.Default.DefaultSampleNameExtinguishers : txbExtinguishers.Text;
                 ChangeSample?.Invoke(typeof(Extinguisher));
@@ -47,7 +47,7 @@ namespace WindowsForms
                 return;
             }
 
-            if (CorrectSample(txbHoses.Text, 'L', 'F', 'H'))
+            if (txbHoses.Text.CorrectSample('L', 'F', 'H'))
             {
                 Sett.Default.SampleNameHoses = txbHoses.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHoses : txbHoses.Text;
                 ChangeSample?.Invoke(typeof(Hose));
@@ -58,7 +58,7 @@ namespace WindowsForms
                 return;
             }
 
-            if (CorrectSample(txbHydrants.Text, 'L', 'F', 'D'))
+            if (txbHydrants.Text.CorrectSample('L', 'F', 'D'))
             {
                 Sett.Default.SampleNameHydrants = txbHydrants.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHydrants : txbHydrants.Text;
                 ChangeSample?.Invoke(typeof(Hydrant));
@@ -72,22 +72,6 @@ namespace WindowsForms
             Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
             Sett.Default.Save();
             Close();
-        }
-
-        private bool CorrectSample(string sourse, params char[] chars)
-        {
-            for (int i = 0; i < sourse.Length; i++)
-            {
-                var ch = sourse[i];
-                if (ch == '#')
-                {
-                    if (i + 1 == sourse.Length)
-                        return false;
-                    if (!chars.Contains(sourse[i + 1]))
-                        return false;
-                }
-            }
-            return true;
         }
 
         private void scrIconSize_ValueChanged(object sender, EventArgs e)
