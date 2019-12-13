@@ -15,6 +15,7 @@ namespace BL
         public virtual ICollection<Hose> Hoses { get; set; }//Установленные рукава
         public virtual ICollection<Hydrant> Hydrants { get; set; }//Установленный пожарный кран
         //public virtual ICollection<FireCabinetHistory> Histories { get; set; }
+        
         public ScalePoint Point { get; set; }
 
         [Column("Помещение")]

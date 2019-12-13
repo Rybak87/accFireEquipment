@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace BL
@@ -33,6 +35,15 @@ namespace BL
         {
             GetTable(entity.GetType()).Add(entity);
             SaveChanges();
+            if (entity is EquipmentBase)
+            {
+                var s2 = GetValues(entity as EquipmentBase);
+                var s1 = new List<string>(s2.Count);
+                for (int i = 0; i < s2.Count; i++)
+                    s1.Add("");
+                AddHistory(entity as EquipmentBase, s1, s2);
+            }
+
             entityAdd?.Invoke(entity);
         }
 
@@ -117,6 +128,8 @@ namespace BL
                 return TypeFireCabinets;
             else if (typeEntity == typeof(SpeciesHose))
                 return TypeHoses;
+            else if (typeEntity == typeof(History))
+                return Histories;
             return null;
         }
 
@@ -141,6 +154,8 @@ namespace BL
                 return TypeFireCabinets;
             else if (typeEntity == typeof(SpeciesHose))
                 return TypeHoses;
+            else if (typeEntity == typeof(History))
+                return Histories;
             return null;
         }
 
@@ -190,5 +205,64 @@ namespace BL
         //        return (Location)entity;
         //    return ParentLocation(entity.Parent.GetSign());
         //}
+
+        public List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity)
+        {
+            var result = new List<(PropertyInfo, ControlAttribute, string)>();
+            foreach (PropertyInfo prop in entity?.GetType().GetProperties())
+            {
+                var controlAttr = GetControlAttribute(prop);
+                if (controlAttr == null)
+                    continue;
+
+                bool controlHide = controlAttr.IsCanHide;
+                if (controlHide)
+                    continue;
+
+                var nameAttr = GetColumnAttribute(prop)?.Name;
+                result.Add((prop, controlAttr, nameAttr));
+            }
+            return result;
+
+            ControlAttribute GetControlAttribute(PropertyInfo pi)
+            {
+                foreach (var item in pi.GetCustomAttributes())
+                    if (item.GetType() == typeof(ControlAttribute))
+                        return (ControlAttribute)item;
+                return null;
+            }
+            ColumnAttribute GetColumnAttribute(PropertyInfo pi)
+            {
+                foreach (var item in pi.GetCustomAttributes())
+                    if (item.GetType() == typeof(ColumnAttribute))
+                        return (ColumnAttribute)item;
+                return null;
+            }
+        }
+
+        public void AddHistory(EquipmentBase currEntity, List<string> saveValues, List<string> currValues)
+        {
+            int i = 0;
+            foreach (var pr in GetProperties(currEntity).Select(j => j.Item1))
+            {
+                if (saveValues[i] != currValues[i])
+                {
+                    var hy = (History)CreateEntity(typeof(History));
+                    hy.EquipmentBase = currEntity;
+                    hy.Property = pr.Name;
+                    hy.OldValue = saveValues[i];
+                    hy.NewValue = currValues[i];
+                    AddEntity(hy);
+                }
+                i++;
+            }
+        }
+        public List<string> GetValues(EquipmentBase currEntity)
+        {
+            var result = new List<string>();
+            foreach (var pr in GetProperties(currEntity))
+                result.Add(pr.Item1.GetValue(currEntity).ToString());
+            return result;
+        }
     }
 }

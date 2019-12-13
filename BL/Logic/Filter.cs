@@ -53,21 +53,21 @@ namespace BL
             Required = true;
             Filters = new Filter[] { filter };
         }
-        public Filter this[int index]
-        {
-            get
-            {
-                return Filters[index];
-            }
-            set
-            {
-                Filters[index] = value;
-            }
-        }
-        public IEnumerator GetEnumerator()
-        {
-            return Filters.GetEnumerator();
-        }
+        //public Filter this[int index]
+        //{
+        //    get
+        //    {
+        //        return Filters[index];
+        //    }
+        //    set
+        //    {
+        //        Filters[index] = value;
+        //    }
+        //}
+        //public IEnumerator GetEnumerator()
+        //{
+        //    return Filters.GetEnumerator();
+        //}
 
         public string CreateResultString(EquipmentBase entity)
         {

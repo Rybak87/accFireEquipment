@@ -24,6 +24,8 @@ namespace WindowsForms
         public event Action<EntityBase> EntityAdd;
         public event Action<EntityBase> EntityEdit;
         int yPosControl;
+        List<string> saveValues;
+
         public int CountCopy { get => (int)numCountCopy.Value; }
 
         public FormEditEntity(EntitySign sign)
@@ -42,8 +44,16 @@ namespace WindowsForms
             if (currEntity.GetType() == typeof(Location))
                 currPlan = ((Location)currEntity).Plan;
             bindSource = CreateBindSourse(currEntity, ec);
+            if (currEntity is EquipmentBase)
+            {
+                saveValues = ec.GetValues(currEntity as EquipmentBase);
+            }
+                
             CreateControls(currEntity);
         }
+
+        
+
         public FormEditEntity(Type entityType, EntitySign parentSign)
         {
             InitializeComponent();
@@ -64,7 +74,7 @@ namespace WindowsForms
                 ((EquipmentBase)currEntity).Parent = ec.GetEntity(parentSign);
                 ((INumber)currEntity).Number = ec.GetNumberChild(((EquipmentBase)currEntity).Parent, entityType);
             }
-            Text = "Добавить"; 
+            Text = "Добавить";
             bindSource = CreateBindSourse(currEntity, ec);
             CreateControls(currEntity);
         }
@@ -95,43 +105,10 @@ namespace WindowsForms
             bindSource.Position = bindSource.IndexOf(entity);
             return bindSource;
         }
-        private List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity)
-        {
-            var result = new List<(PropertyInfo, ControlAttribute, string)>();
-            foreach (PropertyInfo prop in entity.GetType().GetProperties())
-            {
-                var controlAttr = GetControlAttribute(prop);
-                if (controlAttr == null)
-                    continue;
-
-                bool controlHide = controlAttr.IsCanHide;
-                if (controlHide)
-                    continue;
-
-                var nameAttr = GetColumnAttribute(prop)?.Name;
-                result.Add((prop, controlAttr, nameAttr));
-            }
-            return result;
-
-            ControlAttribute GetControlAttribute(PropertyInfo pi)
-            {
-                foreach (var item in pi.GetCustomAttributes())
-                    if (item.GetType() == typeof(ControlAttribute))
-                        return (ControlAttribute)item;
-                return null;
-            }
-            ColumnAttribute GetColumnAttribute(PropertyInfo pi)
-            {
-                foreach (var item in pi.GetCustomAttributes())
-                    if (item.GetType() == typeof(ColumnAttribute))
-                        return (ColumnAttribute)item;
-                return null;
-            }
-        }
         private void CreateControls(EntityBase entity)
         {
 
-            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = GetProperties(entity);
+            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = ec.GetProperties(entity);
             Control cntrl = null;
 
             foreach (var item in properties)
@@ -352,7 +329,15 @@ namespace WindowsForms
             if (mode == "Add")
                 ec.AddRangeEntity(currEntity, CountCopy);
             else if (mode == "Edit")
+            {
                 ec.EditEntity(currEntity.GetSign());
+                if (currEntity is EquipmentBase)
+                {
+                    var currValues = ec.GetValues(currEntity as EquipmentBase);
+                    ec.AddHistory(currEntity as EquipmentBase, currValues, saveValues);
+                }
+            }
+
             else if (mode == "AddType")
                 ec.AddEntity(currEntity);
 

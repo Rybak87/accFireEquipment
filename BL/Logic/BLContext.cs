@@ -19,6 +19,7 @@ namespace BL
         public DbSet<SpeciesExtinguisher> TypeExtinguishers { get; set; }
         public DbSet<SpeciesHose> TypeHoses { get; set; }
         public DbSet<SpeciesFireCabinet> TypeFireCabinets { get; set; }
+        public DbSet<History> Histories { get; set; }
         //public DbSet<FireCabinetHistory> HistoriesFireCabinet { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -28,11 +29,12 @@ namespace BL
             //    .WithRequired(l => l.Location)
             //    .HasForeignKey(s => s.LocationId)
             //    .WillCascadeOnDelete(true);
-        //    modelBuilder.Entity<FireCabinet>()
-        //.HasMany(c => c.Extinguishers)
-        //.WithRequired(o => o.FireCabinet)
-        //.HasForeignKey(s => s.FireCabinetId)
-        //.WillCascadeOnDelete(true);
+            //    modelBuilder.Entity<FireCabinet>()
+            //.HasMany(c => c.Extinguishers)
+            //.WithRequired(o => o.FireCabinet)
+            //.HasForeignKey(s => s.FireCabinetId)
+            //.WillCascadeOnDelete(true);
+            //modelBuilder.Entity<History>().HasAlternateKey(u => new { u.Type, u.Id });
         }
         static BLContext()
         {

@@ -37,7 +37,6 @@ namespace WindowsForms
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
-
         private void treeView_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeNode)))
@@ -181,8 +180,10 @@ namespace WindowsForms
             TreeNode nodeParent;
             if (entity is Location)
                 nodeParent = Nodes[0];
-            else
+            else if (entity is EquipmentBase)
                 nodeParent = dictNodes[((EquipmentBase)entity).Parent.GetSign()];
+            else
+                return;
 
             var indImage = ImageSettings.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);

@@ -1,7 +1,9 @@
 ﻿using BL;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -27,6 +29,11 @@ namespace WindowsForms
             using (var db = new BLContext())
             {
                 db.Database.Initialize(false);
+                //db.Histories.Load();
+                //var x = db.Histories.Local;
+                //var f = (FireCabinet)x[0].EquipmentBase;
+                //var e = (Extinguisher)x[1].EquipmentBase;
+
             }
 
             myTreeView.LoadTreeViewDb();
@@ -38,6 +45,7 @@ namespace WindowsForms
             TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
             StickersMenu.Click += StickersMenu_Click;
             SettingsMenu.Click += SettingsMenu_Click;
+
         }
         public void ShowContextMenu(EntitySign sign, Point e)
         {
