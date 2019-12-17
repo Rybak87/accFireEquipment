@@ -4,10 +4,9 @@ using System;
 namespace BL
 {
     [Table("Hydrants")]
-    public class Hydrant : EquipmentBase, INumber, IPoint
+    public class Hydrant : Equipment, INumber//, IPoint
     {
         public int FireCabinetId { get; set; }
-        public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]
@@ -20,10 +19,6 @@ namespace BL
         [Column("Повреждение")]
         [Control("CheckBox", false)]
         public bool IsDamage { get; set; }
-
-
-        //[Control("CheckBox", false)]
-        //public bool IsNeed { get; set; }
 
         public Hydrant()
         {

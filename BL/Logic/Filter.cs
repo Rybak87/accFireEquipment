@@ -9,16 +9,16 @@ namespace BL
 {
     public class Filter
     {
-        public Func<EquipmentBase, bool> Condition { get; }
-        public Func<EquipmentBase, string> Execution { get; }
+        public Func<Equipment, bool> Condition { get; }
+        public Func<Equipment, string> Execution { get; }
 
 
-        public Filter(Func<EquipmentBase, bool> condition, Func<EquipmentBase, string> execution)
+        public Filter(Func<Equipment, bool> condition, Func<Equipment, string> execution)
         {
             Condition = condition;
             Execution = execution;
         }
-        public Filter(Func<EquipmentBase, string> execution)
+        public Filter(Func<Equipment, string> execution)
         {
             Condition = ent => true;
             Execution = execution;
@@ -28,12 +28,12 @@ namespace BL
     {
         Filter[] Filters { get; }
         public bool Required { get; }
-        public FilterSet(Func<EquipmentBase, bool> condition, Func<EquipmentBase, string> execution, bool required = false)
+        public FilterSet(Func<Equipment, bool> condition, Func<Equipment, string> execution, bool required = false)
         {
             Required = required;
             Filters = new Filter[] { new Filter(condition, execution) };
         }
-        public FilterSet(Func<EquipmentBase, string> execution, bool required = false)
+        public FilterSet(Func<Equipment, string> execution, bool required = false)
         {
             Required = required;
             Filters = new Filter[] { new Filter(execution) };
@@ -69,7 +69,7 @@ namespace BL
         //    return Filters.GetEnumerator();
         //}
 
-        public string CreateResultString(EquipmentBase entity)
+        public string CreateResultString(Equipment entity)
         {
             string result = string.Empty;
             foreach (Filter filter in Filters)
@@ -80,7 +80,7 @@ namespace BL
     }
     public static class FilterWork
     {
-        public static string[] CreateResultStrings(EquipmentBase entity, FilterSet[] filterSet)
+        public static string[] CreateResultStrings(Equipment entity, FilterSet[] filterSet)
         {
             var countFilters = filterSet.Length;
             string[] result = new string[countFilters];

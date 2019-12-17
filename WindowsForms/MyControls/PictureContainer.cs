@@ -27,7 +27,14 @@ namespace BL
         }
         private void picBoxMain_DragEnter(object sender, DragEventArgs e)
         {
-            e.Effect = DragDropEffects.Move;
+            var dataNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+            var sign = dataNode.Tag as EntitySign;
+            using (var ec = new EntityController())
+            {
+                var parentLocation = ((Hierarchy)ec.GetEntity(sign)).GetLocation;
+                if (parentLocation.GetSign() == (EntitySign)Tag)
+                    e.Effect = DragDropEffects.Move;
+            }
         }
         private void picBoxMain_DragDrop(object sender, DragEventArgs e)
         {
@@ -39,6 +46,7 @@ namespace BL
                 icon = FindIcon(sign);
                 if (icon == null)
                 {
+                    
                     icon = AddNewIcon(e, sign);
                 }
                 else
@@ -63,11 +71,11 @@ namespace BL
             string textIcon;
             using (var ec = new EntityController())
             {
-                var entity = ec.GetEntity(sign) as IPoint;
+                var entity = ec.GetEntity(sign) as Equipment;
                 textIcon = entity.ToString();
             }
             this.SuspendDrawing();
-            icon = CreateNewIcon(sign, new ScalePoint(new Point(e.X, e.Y), this), ImageSettings.IconsImage(sign.Type), textIcon);
+            icon = CreateIcon(sign, new ScalePoint(new Point(e.X, e.Y), this), ImageSettings.IconsImage(sign.Type), textIcon);
             this.ResumeDrawing();
             return icon;
         }
@@ -76,17 +84,11 @@ namespace BL
         {
             using (var ec = new EntityController())
             {
-                //var parentLocation = ec.ParentLocation(sign,true);
-                Location parentLocation;
-                var entity = ec.GetEntity(sign);
-                if (entity is Location)
-                    parentLocation = (Location)entity;
-                else
-                    parentLocation = ((EquipmentBase)entity).GetLocation;
+                var parentLocation = ec.GetParentLocation(sign);
                 if (parentLocation.GetSign() == ((EntitySign)Tag))
                     return;
                 Tag = parentLocation.GetSign();
-                var byteImage = parentLocation?.Plan;
+                var byteImage = parentLocation.Plan;
                 this.SuspendDrawing();
                 Controls.Clear();
                 if (byteImage == null)
@@ -98,8 +100,9 @@ namespace BL
 
                 Image = Image.FromStream(new MemoryStream(byteImage));
                 ResizeRelativePosition();
-
-                CreateIcons(parentLocation);
+                var drawEquipment = ec.GetDrawEquipment(parentLocation);
+                foreach (var eq in drawEquipment)
+                    CreateIcon(eq.GetSign(), eq.Point, ImageSettings.IconsImage(eq.GetType()), eq.ToString());
             }
             this.ResumeDrawing();
         }
@@ -113,24 +116,7 @@ namespace BL
             ResizeRelativePosition();
             this.ResumeDrawing();
         }
-        private void CreateIcons(Location parentLocation)
-        {
-            foreach (var fc in parentLocation.FireCabinets)
-            {
-                if (!fc.Point.Empty)
-                    CreateNewIcon(fc.GetSign(), fc.Point, ImageSettings.IconsImage(typeof(FireCabinet)), fc.ToString());
-                foreach (var ex in fc.Extinguishers)
-                    if (!ex.Point.Empty)
-                        CreateNewIcon(ex.GetSign(), ex.Point, ImageSettings.IconsImage(typeof(Extinguisher)), ex.ToString());
-                foreach (var hose in fc.Hoses)
-                    if (!hose.Point.Empty)
-                        CreateNewIcon(hose.GetSign(), hose.Point, ImageSettings.IconsImage(typeof(Hose)), hose.ToString());
-                foreach (var hyd in fc.Hydrants)
-                    if (!hyd.Point.Empty)
-                        CreateNewIcon(hyd.GetSign(), hyd.Point, ImageSettings.IconsImage(typeof(Hydrant)), hyd.ToString());
-            }
-        }
-        public IconEntity CreateNewIcon(EntitySign sign, ScalePoint scalePoint, Image img, string textLabel)
+        public IconEntity CreateIcon(EntitySign sign, ScalePoint scalePoint, Image img, string textLabel)
         {
             var icon = new IconEntity(this, img, sign, scalePoint, textLabel);
             icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => EditEntity(sign));
@@ -150,7 +136,6 @@ namespace BL
         {
             if (e.Button == MouseButtons.Right)
             {
-                //var x = PointToClient(e.Location);
                 var y = ((IconEntity)sender).PointToScreen(e.Location);
                 RightClick?.Invoke(((IconEntity)sender).Sign, y);
             }

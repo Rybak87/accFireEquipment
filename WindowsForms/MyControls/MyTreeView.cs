@@ -29,11 +29,12 @@ namespace WindowsForms
 
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
-            var entitySign = (EntitySign)((TreeNode)e.Item).Tag;
+            var sign = (EntitySign)((TreeNode)e.Item).Tag;
 
-            if (entitySign?.Type == null || entitySign.Type == typeof(Location))
+            if (sign?.Type == null || sign.Type == typeof(Location))
                 return;
-
+            
+                
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
@@ -70,7 +71,7 @@ namespace WindowsForms
                     var signNewParent = (EntitySign)targetNode.Tag;
                     using (var ec = new EntityController())
                     {
-                        var entity = ec.GetEntity(sign) as EquipmentBase;
+                        var entity = ec.GetEntity(sign) as Equipment;
                         entity.Parent = ec.GetEntity(signNewParent);
                         ec.SaveChanges();
                     }
@@ -180,8 +181,8 @@ namespace WindowsForms
             TreeNode nodeParent;
             if (entity is Location)
                 nodeParent = Nodes[0];
-            else if (entity is EquipmentBase)
-                nodeParent = dictNodes[((EquipmentBase)entity).Parent.GetSign()];
+            else if (entity is Equipment)
+                nodeParent = dictNodes[((Equipment)entity).Parent.GetSign()];
             else
                 return;
 
@@ -197,7 +198,7 @@ namespace WindowsForms
         {
             var saveSelectedNode = SelectedNode;
             var currNode = dictNodes[entity.GetSign()];
-            var entityParent = ((EquipmentBase)entity).Parent;
+            var entityParent = ((Equipment)entity).Parent;
             TreeNode newNodeParent;
             if (entityParent == null)
                 newNodeParent = Nodes[0];

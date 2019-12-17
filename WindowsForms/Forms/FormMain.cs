@@ -80,14 +80,7 @@ namespace WindowsForms
                 return;
             picContainer.ResizeRelativePosition();
         }
-        //private void MenuAdd_MouseClick(object sender, EventArgs e)
-        //{
-        //    var menuItem = (ToolStripMenuItem)sender;
-        //    var typeNewEntity = (Type)menuItem.Tag;
-        //    var parentSign = (EntitySign)myTreeView.SelectedNode.Tag;
-        //    AddDialog(typeNewEntity, parentSign);
-        //}
-        private void MenuAdd_MouseClick2(object sender, EventArgs e)
+        private void MenuAdd_MouseClick(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var parentSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
@@ -96,26 +89,14 @@ namespace WindowsForms
 
             
         }
-        //private void MenuEdit_MouseClick(object sender, EventArgs e)
-        //{
-        //    var editSign = (EntitySign)myTreeView.SelectedNode.Tag;
-        //    EditDialog(editSign);
-        //}
-        private void MenuEdit_MouseClick2(object sender, EventArgs e)
+        private void MenuEdit_MouseClick(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var editSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
             //var editSign = (EntitySign)myTreeView.SelectedNode.Tag;
             EditDialog(editSign);
         }
-        //private void MenuRemove_MouseClick(object sender, EventArgs e)
-        //{
-        //    var removeSign = (EntitySign)myTreeView.SelectedNode.Tag;
-        //    var ec = new EntityController();
-        //    ec.entityRemove += myTreeView.NodeRemove;
-        //    ec.RemoveEntity(removeSign);
-        //}
-        private void MenuRemove_MouseClick2(object sender, EventArgs e)
+        private void MenuRemove_MouseClick(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
@@ -123,6 +104,7 @@ namespace WindowsForms
             {
                 ec.entityRemove += myTreeView.NodeRemove;
                 ec.RemoveEntity(removeSign);
+                ec.SaveChanges();
             }
         }
         private void MenuRemoveIcon_MouseClick2(object sender, EventArgs e)

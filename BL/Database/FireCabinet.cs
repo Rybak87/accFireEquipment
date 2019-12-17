@@ -7,7 +7,7 @@ using System.Linq;
 namespace BL
 {
     [Table("FireCabinets")]
-    public class FireCabinet : EquipmentBase,  INumber, IPoint, ISticker
+    public class FireCabinet : Equipment,  INumber/*, IPoint*/, ISticker
     {
         public int LocationId { get; set; }
         public int TypeFireCabinetId { get; set; }
@@ -16,7 +16,7 @@ namespace BL
         public virtual ICollection<Hydrant> Hydrants { get; set; }//Установленный пожарный кран
         //public virtual ICollection<FireCabinetHistory> Histories { get; set; }
         
-        public ScalePoint Point { get; set; }
+        //public ScalePoint Point { get; set; }
 
         [Column("Помещение")]
         [Control("ComboBox", true, "Locations", true)]

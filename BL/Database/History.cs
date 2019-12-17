@@ -26,7 +26,7 @@ namespace BL
     public class History:EntityBase
     {
         //public int Id { get; set; }
-        public virtual EquipmentBase EquipmentBase { get; set; }
+        public virtual Equipment EquipmentBase { get; set; }
         public int EquipmentBaseId { get; set; }
         //public virtual Inspection Inspection { get; set; }
         //public int InspectionId { get; set; }

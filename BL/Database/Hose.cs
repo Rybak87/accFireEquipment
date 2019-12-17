@@ -5,11 +5,10 @@ using System.Linq;
 namespace BL
 {
     [Table("Hoses")]
-    public class Hose : EquipmentBase, INumber, IPoint
+    public class Hose : Equipment, INumber//, IPoint
     {
         public int TypeHoseId { get; set; }
         public int FireCabinetId { get; set; }
-        public ScalePoint Point { get; set; }
 
         [Column("Пожарный шкаф")]
         [Control("ComboBox", true, "FireCabinets", true)]

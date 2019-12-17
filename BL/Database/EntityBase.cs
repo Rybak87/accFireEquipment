@@ -38,13 +38,20 @@ namespace BL
         public new Type GetType() => ObjectContext.GetObjectType(base.GetType());
     }
     //[Table("EquipmentBase")]
-    abstract public class EquipmentBase : EntityBase
+    abstract public class Equipment : Hierarchy
     {
         [NotMapped]
         abstract public EntityBase Parent { get; set; }
+        //[NotMapped]
+        //abstract public Location GetLocation { get; }
+        public ScalePoint Point { get; set; }
+        public virtual ICollection<History> Histories { get; set; }
+    }
+
+    abstract public class Hierarchy: EntityBase
+    {
         [NotMapped]
         abstract public Location GetLocation { get; }
-        public virtual ICollection<History> Histories { get; set; }
     }
     abstract public class SpeciesBase : EntityBase
     {
@@ -55,6 +62,8 @@ namespace BL
         [Column("Производитель")]
         [Control("TextBox", false)]
         public string Manufacturer { get; set; }//Производитель
+
+        
         public bool EqualsValues(SpeciesBase obj)
         {
             if (GetType() != obj.GetType())

@@ -11,20 +11,25 @@ namespace BL
     public class EntityController : BLContext
     {
         public event Action<EntityBase> entityAdd;
-        public event Action<EntityBase> entityEdit;
+        //public event Action<EntityBase> entityEdit;
         public event Action<EntityBase> entityRemove;
 
-        public EntityBase CreateEntity(Type typeEntity) => (EntityBase)GetTable(typeEntity).Create();
+        public EntityBase CreateEntity(Type typeEntity) => (EntityBase)Set(typeEntity).Create();
 
         /// <summary>Возвращает сущность по его метке.
         /// Второй параметр NoTracking.
         /// </summary>
         public EntityBase GetEntity(EntitySign sign, bool noTracking = false)
         {
-            var table = GetIQueryable(sign.Type);
+            //var table = Set(sign.Type);
+            //if (noTracking)
+            //    table = (DbSet)table.AsNoTracking();
+            //return (EntityBase)table.Find(sign.Id);
+            var result = (EntityBase)Set(sign.Type).Find(sign.Id);
             if (noTracking)
-                table = table.AsNoTracking();
-            return table.FirstOrDefault(ent => ent.Id == sign.Id);
+                Entry(result).State = EntityState.Detached;
+            return result;
+
         }
 
         /// <summary>
@@ -33,15 +38,15 @@ namespace BL
         /// </summary>
         public void AddEntity(EntityBase entity)
         {
-            GetTable(entity.GetType()).Add(entity);
-            SaveChanges();
-            if (entity is EquipmentBase)
+            Set(entity.GetType()).Add(entity);
+            //SaveChanges();
+            if (entity is Equipment)
             {
-                var s2 = GetValues(entity as EquipmentBase);
-                var s1 = new List<string>(s2.Count);
-                for (int i = 0; i < s2.Count; i++)
-                    s1.Add("");
-                AddHistory(entity as EquipmentBase, s1, s2);
+                var newValues = GetValues(entity as Equipment);
+                var oldValues = new List<string>(newValues.Count);
+                for (int i = 0; i < newValues.Count; i++)
+                    oldValues.Add("");
+                AddHistory(entity as Equipment, oldValues, newValues);
             }
 
             entityAdd?.Invoke(entity);
@@ -66,12 +71,12 @@ namespace BL
         /// Сохраняет изменения в БД.
         /// Вызывает событие по изменению сущности.
         /// </summary>
-        public void EditEntity(EntitySign sign)
-        {
-            Entry(GetEntity(sign)).State = EntityState.Modified;
-            entityEdit?.Invoke(GetEntity(sign));
-            SaveChanges();
-        }
+        //public void EditEntity(EntityBase entity)
+        //{
+        //    Entry(entity).State = EntityState.Modified;
+        //    entityEdit?.Invoke(entity);
+        //    SaveChanges();
+        //}
 
         /// <summary>
         /// Копирует и возврщает сущность.
@@ -80,7 +85,7 @@ namespace BL
         {
             var entitySourse = GetEntity(sign);
             var newEntity = CreateEntity(sign.Type);
-            GetTable(sign.Type).Attach(newEntity);
+            Set(sign.Type).Attach(newEntity);
             EntityBase temp = (EntityBase)Entry(entitySourse).CurrentValues.ToObject();
             temp.Id = newEntity.Id;
             Entry(newEntity).CurrentValues.SetValues(temp);
@@ -103,71 +108,18 @@ namespace BL
                 }
             }
 
-            GetTable(sign.Type).Remove(entity);
-            SaveChanges();
-        }
-
-        /// <summary>
-        /// Возвращает таблицу из БД.
-        /// </summary>
-        public DbSet GetTable(Type typeEntity)
-        {
-            if (typeEntity == typeof(Location))
-                return Locations;
-            else if (typeEntity == typeof(FireCabinet))
-                return FireCabinets;
-            else if (typeEntity == typeof(Extinguisher))
-                return Extinguishers;
-            else if (typeEntity == typeof(Hose))
-                return Hoses;
-            else if (typeEntity == typeof(Hydrant))
-                return Hydrants;
-            else if (typeEntity == typeof(SpeciesExtinguisher))
-                return TypeExtinguishers;
-            else if (typeEntity == typeof(SpeciesFireCabinet))
-                return TypeFireCabinets;
-            else if (typeEntity == typeof(SpeciesHose))
-                return TypeHoses;
-            else if (typeEntity == typeof(History))
-                return Histories;
-            return null;
-        }
-
-        /// <summary>
-        /// Возвращает IQueryable<EntityBase> из БД.
-        /// </summary>
-        public IQueryable<EntityBase> GetIQueryable(Type typeEntity)
-        {
-            if (typeEntity == typeof(Location))
-                return Locations;
-            else if (typeEntity == typeof(FireCabinet))
-                return FireCabinets;
-            else if (typeEntity == typeof(Extinguisher))
-                return Extinguishers;
-            else if (typeEntity == typeof(Hose))
-                return Hoses;
-            else if (typeEntity == typeof(Hydrant))
-                return Hydrants;
-            else if (typeEntity == typeof(SpeciesExtinguisher))
-                return TypeExtinguishers;
-            else if (typeEntity == typeof(SpeciesFireCabinet))
-                return TypeFireCabinets;
-            else if (typeEntity == typeof(SpeciesHose))
-                return TypeHoses;
-            else if (typeEntity == typeof(History))
-                return Histories;
-            return null;
+            Set(sign.Type).Remove(entity);
         }
 
         /// <summary>
         /// Возвращает таблицу из БД в виде List.
         /// </summary>
-        public List<EntityBase> GetTableList(Type typeEntity) => ((IEnumerable<EntityBase>)GetTable(typeEntity)).ToList();
+        public List<EntityBase> GetTableList(Type typeEntity) => ((IQueryable<EntityBase>)Set(typeEntity)).ToList();
 
         /// <summary>
         /// Возвращает таблицу из БД в виде List.
         /// </summary>
-        public List<EntityBase> GetTableList(DbSet table) => ((IEnumerable<EntityBase>)table).ToList();
+        public List<EntityBase> GetTableList(DbSet table) => ((IQueryable<EntityBase>)table).ToList();
 
         /// <summary>
         /// Возвращает следующий по порядку номер подсущности.
@@ -190,7 +142,7 @@ namespace BL
         {
             var EntityBaseCollection = GetTableList(entity.GetType());
             var findedCollection = EntityBaseCollection.Cast<INumber>();
-            if (GetTable(entity.GetType()).Local.Count != 0)
+            if (findedCollection.Count() != 0)
                 return findedCollection.Max(e => e.Number) + 1;
             else
                 return 1;
@@ -198,13 +150,6 @@ namespace BL
         /// <summary>
         /// Возвращает родительский Location.
         /// </summary>
-        //public Location ParentLocation(EntitySign sign, bool noTracking = false)
-        //{
-        //    var entity = GetEntity(sign, noTracking);
-        //    if (sign.Type == typeof(Location))
-        //        return (Location)entity;
-        //    return ParentLocation(entity.Parent.GetSign());
-        //}
 
         public List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity)
         {
@@ -240,10 +185,11 @@ namespace BL
             }
         }
 
-        public void AddHistory(EquipmentBase currEntity, List<string> saveValues, List<string> currValues)
+        public void AddHistory(Equipment currEntity, List<string> saveValues, List<string> currValues)
         {
-            int i = 0;
-            foreach (var pr in GetProperties(currEntity).Select(j => j.Item1))
+            //int i = 0;
+            //foreach (var pr in GetProperties(currEntity).Select(j => j.Item1))
+            for (int i = 0; i < saveValues.Count(); i++)
             {
                 if (saveValues[i] != currValues[i])
                 {
@@ -256,13 +202,37 @@ namespace BL
                 }
                 i++;
             }
+            SaveChanges();
         }
-        public List<string> GetValues(EquipmentBase currEntity)
+        public List<string> GetValues(Equipment currEntity)
         {
             var result = new List<string>();
             foreach (var pr in GetProperties(currEntity))
                 result.Add(pr.Item1.GetValue(currEntity).ToString());
             return result;
+        }
+        public IEnumerable<Equipment> GetDrawEquipment(Location location)
+        {
+            var result = new List<Equipment>();
+
+            var fireCabinets = Entry(location).Collection(l => l.FireCabinets)?.Query().AsNoTracking();
+            var drawFireCabinets = fireCabinets.Where(f => !f.Point.Empty);
+            var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(e => !e.Point.Empty);
+            var drawHoses = fireCabinets.SelectMany(f => f.Hoses).Where(h => !h.Point.Empty);
+            var drawHydrants = fireCabinets.SelectMany(f => f.Hydrants).Where(hy => !hy.Point.Empty);
+            result.AddRange(drawFireCabinets);
+            result.AddRange(drawExtinguishers);
+            result.AddRange(drawHoses);
+            result.AddRange(drawHydrants);
+            return result;
+        }
+
+        public Location GetParentLocation(EntitySign sign)
+        {
+            var entity = GetEntity(sign, false);
+            if (!(entity is Hierarchy))
+                return null;
+            return ((Hierarchy)entity).GetLocation;
         }
     }
 }

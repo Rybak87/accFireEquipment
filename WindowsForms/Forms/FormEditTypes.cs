@@ -23,6 +23,24 @@ namespace WindowsForms
         private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesFireCabinet));
         private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesExtinguisher));
         private void HosesMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesHose));
+        private void LoadSpecies2(Type type)
+        {
+            if (!type.IsSubclassOf(typeof(SpeciesBase)))
+                return;
+            listView.Items.Clear();
+            using (var ec = new EntityController())
+            {
+                foreach (SpeciesBase species in ec.Set(type))
+                {
+                    var item = new ListViewItem(species.Name);
+                    var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
+                    item.SubItems.Add(subItem);
+                    item.Tag = species.GetSign();
+                    listView.Items.Add(item);
+                }
+            }
+            saveType = type;
+        }
         private void LoadSpecies(Type type)
         {
             if (!type.IsSubclassOf(typeof(SpeciesBase)))
@@ -30,7 +48,8 @@ namespace WindowsForms
             listView.Items.Clear();
             using (var ec = new EntityController())
             {
-                foreach (SpeciesBase species in ec.GetTable(type))
+                
+                foreach (SpeciesBase species in ec.Set(type))
                 {
                     var item = new ListViewItem(species.Name);
                     var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
@@ -75,6 +94,7 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 ec.RemoveEntity(sign);
+                ec.SaveChanges();
             }
             LoadSpecies(saveType);
         }
@@ -141,7 +161,7 @@ namespace WindowsForms
 
                 using (var ec = new EntityController())
                 {
-                    var table = ec.GetTable(type);
+                    var table = ec.Set(type);
                     while ((line = sr.ReadLine()) != null)
                     {
                         var curr = (SpeciesBase)ec.CreateEntity(type);
@@ -210,7 +230,7 @@ namespace WindowsForms
                 sw.WriteLine();
                 using (var ec = new EntityController())
                 {
-                    var table = ec.GetTable(saveType);
+                    var table = ec.Set(saveType);
                     foreach (var item in table)
                     {
                         foreach (var prop in properties)

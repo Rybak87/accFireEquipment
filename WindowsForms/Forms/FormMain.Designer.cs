@@ -321,18 +321,18 @@ namespace WindowsForms
             AddHoseContextMenu.Tag = typeof(Hose);
             AddHydrantContextMenu.Tag = typeof(Hydrant);
 
-            AddLocationContextMenu.Click += MenuAdd_MouseClick2;
-            AddFireCabinetContextMenu.Click += MenuAdd_MouseClick2;
-            AddExtinguisherContextMenu.Click += MenuAdd_MouseClick2;
-            AddHoseContextMenu.Click += MenuAdd_MouseClick2;
-            AddHydrantContextMenu.Click += MenuAdd_MouseClick2;
+            AddLocationContextMenu.Click += MenuAdd_MouseClick;
+            AddFireCabinetContextMenu.Click += MenuAdd_MouseClick;
+            AddExtinguisherContextMenu.Click += MenuAdd_MouseClick;
+            AddHoseContextMenu.Click += MenuAdd_MouseClick;
+            AddHydrantContextMenu.Click += MenuAdd_MouseClick;
 
-            EditContextMenu1.Click += MenuEdit_MouseClick2;
-            EditContextMenu2.Click += MenuEdit_MouseClick2;
-            EditContextMenu3.Click += MenuEdit_MouseClick2;
-            DeleteContextMenu1.Click += MenuRemove_MouseClick2;
-            DeleteContextMenu2.Click += MenuRemove_MouseClick2;
-            DeleteContextMenu3.Click += MenuRemove_MouseClick2;
+            EditContextMenu1.Click += MenuEdit_MouseClick;
+            EditContextMenu2.Click += MenuEdit_MouseClick;
+            EditContextMenu3.Click += MenuEdit_MouseClick;
+            DeleteContextMenu1.Click += MenuRemove_MouseClick;
+            DeleteContextMenu2.Click += MenuRemove_MouseClick;
+            DeleteContextMenu3.Click += MenuRemove_MouseClick;
             DeleteIconContextMenu1.Click += MenuRemoveIcon_MouseClick2;
             DeleteIconContextMenu2.Click += MenuRemoveIcon_MouseClick2;
         }

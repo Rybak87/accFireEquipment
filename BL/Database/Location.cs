@@ -7,7 +7,7 @@ using System.Linq;
 namespace BL
 {
     [Table("Locations")]
-    public class Location : EntityBase, INumber
+    public class Location : Hierarchy, INumber
     {
         public virtual ICollection<FireCabinet> FireCabinets { get; set; }
         [Column ("Номер")]
@@ -22,12 +22,16 @@ namespace BL
         [Control("Image", false)]
         public virtual byte[] Plan { get; set; }
 
+        public override Location GetLocation => this;
+
         public Location()
         { }
+
         public override string ToString()
         {
             return Name;
         }
-        //public override EntityBase Parent { get => null; set => Parent = value;}
+
+        
     }
 }

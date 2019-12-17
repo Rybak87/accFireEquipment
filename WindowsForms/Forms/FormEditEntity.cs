@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace WindowsForms
         public event Action<EntityBase> EntityAdd;
         public event Action<EntityBase> EntityEdit;
         int yPosControl;
-        List<string> saveValues;
+        List<string> oldValues;
 
         public int CountCopy { get => (int)numCountCopy.Value; }
 
@@ -44,15 +45,15 @@ namespace WindowsForms
             if (currEntity.GetType() == typeof(Location))
                 currPlan = ((Location)currEntity).Plan;
             bindSource = CreateBindSourse(currEntity, ec);
-            if (currEntity is EquipmentBase)
+            if (currEntity is Equipment)
             {
-                saveValues = ec.GetValues(currEntity as EquipmentBase);
+                oldValues = ec.GetValues(currEntity as Equipment);
             }
-                
+
             CreateControls(currEntity);
         }
 
-        
+
 
         public FormEditEntity(Type entityType, EntitySign parentSign)
         {
@@ -71,8 +72,8 @@ namespace WindowsForms
             }
             else
             {
-                ((EquipmentBase)currEntity).Parent = ec.GetEntity(parentSign);
-                ((INumber)currEntity).Number = ec.GetNumberChild(((EquipmentBase)currEntity).Parent, entityType);
+                ((Equipment)currEntity).Parent = ec.GetEntity(parentSign);
+                ((INumber)currEntity).Number = ec.GetNumberChild(((Equipment)currEntity).Parent, entityType);
             }
             Text = "Добавить";
             bindSource = CreateBindSourse(currEntity, ec);
@@ -98,12 +99,13 @@ namespace WindowsForms
         {
             var bindSource = new BindingSource
             {
-                DataSource = ec.GetTable(entity.GetType()).Local////
+                DataSource = ec.Set(entity.GetType()).Local////
             };
             if (bindSource.IndexOf(entity) < 1)
                 bindSource.Add(entity);
             bindSource.Position = bindSource.IndexOf(entity);
             return bindSource;
+
         }
         private void CreateControls(EntityBase entity)
         {
@@ -292,7 +294,7 @@ namespace WindowsForms
         private void BtnOK_Click(object sender, EventArgs e)
         {
             ec.entityAdd += EntityAdd;
-            ec.entityEdit += EntityEdit;
+            //ec.entityEdit += EntityEdit;
             foreach (var cntrl in needControls)
             {
                 switch (cntrl.GetType().Name)
@@ -327,19 +329,30 @@ namespace WindowsForms
                 ((FormMain)Owner).picContainer.LoadImage(currPlan);
             }
             if (mode == "Add")
+            {
                 ec.AddRangeEntity(currEntity, CountCopy);
+                ec.SaveChanges();
+            }
+                
             else if (mode == "Edit")
             {
-                ec.EditEntity(currEntity.GetSign());
-                if (currEntity is EquipmentBase)
+                //ec.EditEntity(currEntity);
+                ec.Entry(currEntity).State = EntityState.Modified;
+                EntityEdit?.Invoke(currEntity);
+                ec.SaveChanges();
+                if (currEntity is Equipment)
                 {
-                    var currValues = ec.GetValues(currEntity as EquipmentBase);
-                    ec.AddHistory(currEntity as EquipmentBase, currValues, saveValues);
+                    var newValues = ec.GetValues(currEntity as Equipment);
+                    ec.AddHistory(currEntity as Equipment, newValues, oldValues);
                 }
             }
 
             else if (mode == "AddType")
+            {
                 ec.AddEntity(currEntity);
+                ec.SaveChanges();
+            }
+                
 
             void AbortDialogResult()
             {

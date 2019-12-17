@@ -6,10 +6,10 @@ namespace BL
     {
         int Number { get; set; }
     }
-    public interface IPoint
-    {
-        ScalePoint Point { get; set; }
-    }
+    //public interface IPoint
+    //{
+    //    ScalePoint Point { get; set; }
+    //}
     //public interface ITypes
     //{
     //    string Name { get; set; }
