@@ -60,7 +60,7 @@ namespace BL
         public string Name { get; set; }//Марка
 
         [Column("Производитель")]
-        [Control("TextBox", false)]
+        [Control("TextBox", true)]
         public string Manufacturer { get; set; }//Производитель
 
         

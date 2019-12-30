@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class FormEditTypes
+    partial class FormTypes
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormEditTypes));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormTypes));
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.FireCabinetsMenu = new System.Windows.Forms.ToolStripButton();
             this.ExtinguishersMenu = new System.Windows.Forms.ToolStripButton();

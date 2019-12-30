@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BL
@@ -13,27 +15,65 @@ namespace BL
         //public event Action<EntitySign> PicDrop;
         public event Action<EntitySign> EditEntity;
         public event Action<EntitySign, Point> RightClick;
-        public event Action CoerciveResize;
+        public event Action<Size> CoerciveResize;
+        public int RatioIconSize { get; set; }
 
         public PictureContainer()
         {
             AllowDrop = true;
             DragEnter += new DragEventHandler(picBoxMain_DragEnter);
             DragDrop += new DragEventHandler(picBoxMain_DragDrop);
+            RatioIconSize = Properties.Settings.Default.RatioIconSize;
         }
+
+        private Size GetSizeIcons()
+        {
+            var side = (Width / RatioIconSize);
+            return new Size(side, side);
+        }
+
         public void DoCoerciveResize()
         {
-            CoerciveResize?.Invoke();
+            RatioIconSize = Properties.Settings.Default.RatioIconSize;
+            this.SuspendDrawing();
+            CoerciveResize?.Invoke(GetSizeIcons());
+            this.ResumeDrawing();
+        }
+        public void DoRenameIcons(Type type)
+        {
+            using (var ec = new EntityController())
+            {
+                ec.Set(type).Load();
+                foreach (IconEntity icon in GetIcons())
+                {
+
+                    if (icon.Sign.Type == type)
+                    {
+                        var entity = ec.GetEntity(icon.Sign);
+                        icon.TextIcon = entity.ToString();
+                        icon.LabelRedraw();
+                    }
+                }
+            }
         }
         private void picBoxMain_DragEnter(object sender, DragEventArgs e)
         {
-            var dataNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
-            var sign = dataNode.Tag as EntitySign;
-            using (var ec = new EntityController())
+
+
+            if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
-                var parentLocation = ((Hierarchy)ec.GetEntity(sign)).GetLocation;
-                if (parentLocation.GetSign() == (EntitySign)Tag)
-                    e.Effect = DragDropEffects.Move;
+                var dataNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
+                var sign = dataNode.Tag as EntitySign;
+                using (var ec = new EntityController())
+                {
+                    var parentLocation = ((Hierarchy)ec.GetEntity(sign)).GetLocation;
+                    if (parentLocation.GetSign() == (EntitySign)Tag)
+                        e.Effect = DragDropEffects.Move;
+                }
+            }
+            else if (e.Data.GetDataPresent(typeof(IconEntity)))
+            {
+                e.Effect = DragDropEffects.Move;
             }
         }
         private void picBoxMain_DragDrop(object sender, DragEventArgs e)
@@ -46,7 +86,7 @@ namespace BL
                 icon = FindIcon(sign);
                 if (icon == null)
                 {
-                    
+
                     icon = AddNewIcon(e, sign);
                 }
                 else
@@ -79,6 +119,8 @@ namespace BL
             this.ResumeDrawing();
             return icon;
         }
+
+
 
         public void LoadImage(EntitySign sign)
         {
@@ -120,7 +162,6 @@ namespace BL
         {
             var icon = new IconEntity(this, img, sign, scalePoint, textLabel);
             icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => EditEntity(sign));
-            Resize += (s, e) => icon.Parent_Resize();
             CoerciveResize += icon.Parent_Resize;
             icon.MouseClick += Icon_MouseClick;
             return icon;
@@ -177,6 +218,7 @@ namespace BL
                 Left = (Parent.Width - Width) / 2;
                 Top = 0;
             }
+            CoerciveResize?.Invoke(GetSizeIcons());
         }
     }
 }

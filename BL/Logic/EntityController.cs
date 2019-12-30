@@ -10,7 +10,7 @@ namespace BL
 {
     public class EntityController : BLContext
     {
-        public event Action<EntityBase> entityAdd;
+        public event Action<Hierarchy> entityAdd;
         //public event Action<EntityBase> entityEdit;
         public event Action<EntityBase> entityRemove;
 
@@ -39,17 +39,15 @@ namespace BL
         public void AddEntity(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
-            //SaveChanges();
             if (entity is Equipment)
             {
-                var newValues = GetValues(entity as Equipment);
-                var oldValues = new List<string>(newValues.Count);
-                for (int i = 0; i < newValues.Count; i++)
-                    oldValues.Add("");
-                AddHistory(entity as Equipment, oldValues, newValues);
+                var historySet = new HistorySet(entity as Equipment);
+                historySet.SetNewValues();
+                historySet.SetOldValuesEmpty();
+                historySet.Save(this);
             }
-
-            entityAdd?.Invoke(entity);
+            if (entity is Hierarchy)
+                entityAdd?.Invoke((Hierarchy)entity);
         }
 
         /// <summary>Добавляет сущности в БД.</summary>
@@ -147,11 +145,9 @@ namespace BL
             else
                 return 1;
         }
-        /// <summary>
-        /// Возвращает родительский Location.
-        /// </summary>
+        
 
-        public List<(PropertyInfo, ControlAttribute, string)> GetProperties(EntityBase entity)
+        public List<(PropertyInfo, ControlAttribute, string)> GetEditProperties(EntityBase entity)
         {
             var result = new List<(PropertyInfo, ControlAttribute, string)>();
             foreach (PropertyInfo prop in entity?.GetType().GetProperties())
@@ -185,32 +181,6 @@ namespace BL
             }
         }
 
-        public void AddHistory(Equipment currEntity, List<string> saveValues, List<string> currValues)
-        {
-            //int i = 0;
-            //foreach (var pr in GetProperties(currEntity).Select(j => j.Item1))
-            for (int i = 0; i < saveValues.Count(); i++)
-            {
-                if (saveValues[i] != currValues[i])
-                {
-                    var hy = (History)CreateEntity(typeof(History));
-                    hy.EquipmentBase = currEntity;
-                    hy.Property = pr.Name;
-                    hy.OldValue = saveValues[i];
-                    hy.NewValue = currValues[i];
-                    AddEntity(hy);
-                }
-                i++;
-            }
-            SaveChanges();
-        }
-        public List<string> GetValues(Equipment currEntity)
-        {
-            var result = new List<string>();
-            foreach (var pr in GetProperties(currEntity))
-                result.Add(pr.Item1.GetValue(currEntity).ToString());
-            return result;
-        }
         public IEnumerable<Equipment> GetDrawEquipment(Location location)
         {
             var result = new List<Equipment>();
@@ -227,6 +197,9 @@ namespace BL
             return result;
         }
 
+        /// <summary>
+        /// Возвращает родительский Location.
+        /// </summary>
         public Location GetParentLocation(EntitySign sign)
         {
             var entity = GetEntity(sign, false);

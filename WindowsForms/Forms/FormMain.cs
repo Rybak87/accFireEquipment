@@ -36,13 +36,13 @@ namespace WindowsForms
 
             }
 
-            myTreeView.LoadTreeViewDb();
+            myTreeView.LoadFromContext();
             myTreeView.ButtonMouseClick += picContainer.LoadImage;
             myTreeView.ButtonMouseDoubleClick += EditDialog;
             picContainer.EditEntity += EditDialog;
             picContainer.RightClick += ShowContextMenu;
             ReportMenu.Click += ReportMenu_Click;
-            TypesEquipmentMenu.Click += (s, e) => new FormEditTypes().ShowDialog(this);
+            TypesEquipmentMenu.Click += (s, e) => new FormTypes().ShowDialog(this);
             StickersMenu.Click += StickersMenu_Click;
             SettingsMenu.Click += SettingsMenu_Click;
 
@@ -70,6 +70,7 @@ namespace WindowsForms
         {
             var frm = new FormSettings();
             frm.ChangeSample += myTreeView.RenameNodesOfType;
+            frm.ChangeSample += picContainer.DoRenameIcons;
             frm.ChangeIconSize += picContainer.DoCoerciveResize;
             frm.Show(this);
         }
@@ -115,7 +116,7 @@ namespace WindowsForms
         }
         private void AddDialog(Type typeEntity, EntitySign parentSign)
         {
-            var AddEssForm = new FormEditEntity(typeEntity, parentSign);
+            var AddEssForm = new FormAddEntity(typeEntity, parentSign);
             AddEssForm.EntityAdd += myTreeView.NodeAdd;
             DialogResult result = AddEssForm.ShowDialog(this);
             if (result == DialogResult.Cancel)
@@ -127,6 +128,7 @@ namespace WindowsForms
             //    return;
 
             var AddEssForm = new FormEditEntity(sign);
+            AddEssForm.EntityEdit += myTreeView.NodeMove;
             DialogResult result = AddEssForm.ShowDialog(this);
             if (result == DialogResult.Cancel)
                 return;

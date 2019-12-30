@@ -4,6 +4,7 @@ using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
 using BL;
+using System.Data.Entity;
 
 namespace WindowsForms
 {
@@ -103,6 +104,7 @@ namespace WindowsForms
             var nodes = dictNodes.Where(i => i.Key.Type == type);
             using (var ec = new EntityController())
             {
+                ec.Set(type).Load();
                 foreach (var node in nodes)
                     node.Value.Text = ec.GetEntity(node.Key).ToString();
             }
@@ -124,7 +126,7 @@ namespace WindowsForms
             }
             else base.WndProc(ref m);
         }
-        public void LoadTreeViewDb()
+        public void LoadFromContext()
         {
             this.SuspendDrawing();
             using (var ec = new EntityController())
@@ -176,7 +178,7 @@ namespace WindowsForms
                 return child;
             }
         }
-        public void NodeAdd(EntityBase entity)
+        public void NodeAdd(Hierarchy entity)
         {
             TreeNode nodeParent;
             if (entity is Location)

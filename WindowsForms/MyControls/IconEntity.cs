@@ -9,8 +9,9 @@ namespace BL
     {
         //public IPoint entity;
         private Point MouseDownPosition;
-        private Label label;
+        public Label label;
         public EntitySign Sign { get; }
+        public string TextIcon { get => label.Text; set => label.Text = value; }
         private ScalePoint scalePoint;
 
         double ScaleLeft { get => (double)Left / Parent.Width; }
@@ -47,17 +48,18 @@ namespace BL
             label.BringToFront();
         }
 
-        public void Parent_Resize()
+        public void Parent_Resize(Size size)
         {
             if (Parent == null)
                 return;
-            var ratioIconSize = Properties.Settings.Default.RatioIconSize;
-            Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);
+            //var ratioIconSize = Properties.Settings.Default.RatioIconSize;
+            //Size = new Size(Parent.Width / ratioIconSize, Parent.Width / ratioIconSize);////
+            Size = size;
             Left = (int)(scalePoint.PercentLeft * Parent.Width);
             Top = (int)(scalePoint.PercentTop * Parent.Height);
         }
 
-        private void LabelRedraw()
+        public void LabelRedraw()
         {
             if (Width == 0 || Height == 0)
                 return;
@@ -76,6 +78,7 @@ namespace BL
             if (e.Button == MouseButtons.Left)
                 MouseDownPosition = e.Location;
         }
+        //IconEntity temp;
         private void PictureEntity_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Left)
@@ -86,8 +89,17 @@ namespace BL
             if (Math.Abs(dx) >= SystemInformation.DoubleClickSize.Width || Math.Abs(dy) >= SystemInformation.DoubleClickSize.Height)
             {
                 DoDragDrop(sender, DragDropEffects.Move);
+                ////var icon = sender as IconEntity;
+                ////icon.Location = Parent.PointToClient(e.Location);
+                //if (temp == null)
+                //    temp = new IconEntity((PictureBox)Parent, Image, null, scalePoint, "");
+                //else
+                //{
+                //    temp.Location = ((IconEntity)sender).PointToClient(e.Location);
+                //}
             }
         }
+
         public void SavePointEntity()
         {
             using (var ec = new EntityController())

@@ -9,10 +9,10 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
-    public partial class FormEditTypes : Form
+    public partial class FormTypes : Form
     {
         Type saveType;
-        public FormEditTypes()
+        public FormTypes()
         {
             InitializeComponent();
             FireCabinetsMenu.Image = ImageSettings.IconsImage(typeof(FireCabinet));
@@ -64,7 +64,7 @@ namespace WindowsForms
         {
             if (saveType == null)
                 return;
-            using (var AddEssForm = new FormEditEntity(saveType))
+            using (var AddEssForm = new FormAddSpecie(saveType))
             {
                 DialogResult result = AddEssForm.ShowDialog(this);
                 if (result == DialogResult.Cancel)
