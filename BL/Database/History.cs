@@ -31,7 +31,7 @@ namespace BL
         //public virtual Inspection Inspection { get; set; }
         //public int InspectionId { get; set; }
         public string Property { get; set; }
-        public string OldValue { get; set; }
+        //public string OldValue { get; set; }
         public string NewValue { get; set; }
         public DateTime DateChange { get; set; }
         public History()

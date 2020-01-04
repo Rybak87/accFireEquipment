@@ -25,7 +25,7 @@ namespace BL
         {
             var result = new List<string>();
             foreach (var pr in Properties)
-                result.Add(pr.GetValue(currEntity)?.ToString());
+                result.Add(pr.GetValue(currEntity).ToString());
             return result;
         }
 
@@ -53,7 +53,7 @@ namespace BL
 
         public void SetOldValuesEmpty()
         {
-            var OldValues = new List<string>(Properties.Count);
+            OldValues = new List<string>(Properties.Count);
             for (int i = 0; i < Properties.Count; i++)
                 OldValues.Add("");
         }
@@ -76,7 +76,7 @@ namespace BL
                     var hy = (History)ec.CreateEntity(typeof(History));
                     hy.EquipmentBase = equipment;
                     hy.Property = Properties[i].Name;
-                    hy.OldValue = OldValues[i];
+                    //hy.OldValue = OldValues[i];
                     hy.NewValue = NewValues[i];
                     ec.AddEntity(hy);
                 }

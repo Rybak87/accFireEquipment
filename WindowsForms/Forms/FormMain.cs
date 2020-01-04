@@ -88,7 +88,7 @@ namespace WindowsForms
             var typeNewEntity = (Type)menuItem.Tag;
             AddDialog(typeNewEntity, parentSign);
 
-            
+
         }
         private void MenuEdit_MouseClick(object sender, EventArgs e)
         {
@@ -139,6 +139,17 @@ namespace WindowsForms
                 return (ContextMenuStrip)finded.Owner;
             else
                 return FindContextMenuStrip(((ToolStripDropDownMenu)finded.Owner).OwnerItem);
+        }
+
+        private void ПаспортToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var ec = new EntityController())
+            {
+                var ex = ec.Extinguishers.First();
+                var wrd = new WordApp();
+
+                wrd.CreateNewDocument(ex);
+            }
         }
     }
 }

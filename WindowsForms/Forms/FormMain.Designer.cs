@@ -45,6 +45,7 @@ namespace WindowsForms
             this.AddHydrantContextMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.EditContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.DeleteIconContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
             this.EditContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.contextMenuProject = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -56,8 +57,8 @@ namespace WindowsForms
             this.contextMenuEquipment = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.EditContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteIconContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteIconContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.паспортToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.contextMenuFireCabinet.SuspendLayout();
             this.contextMenuProject.SuspendLayout();
@@ -72,11 +73,11 @@ namespace WindowsForms
             this.toolStripMenuItem1,
             this.ReportMenu,
             this.StickersMenu,
-            this.SettingsMenu});
+            this.SettingsMenu,
+            this.паспортToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.menuStrip1.Size = new System.Drawing.Size(1222, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1528, 28);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -86,37 +87,37 @@ namespace WindowsForms
             this.открытьПроектToolStripMenuItem,
             this.TypesEquipmentMenu});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(63, 20);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(77, 24);
             this.toolStripMenuItem1.Text = "Главная";
             // 
             // открытьПроектToolStripMenuItem
             // 
             this.открытьПроектToolStripMenuItem.Name = "открытьПроектToolStripMenuItem";
-            this.открытьПроектToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.открытьПроектToolStripMenuItem.Size = new System.Drawing.Size(204, 26);
             this.открытьПроектToolStripMenuItem.Text = "Открыть проект...";
             // 
             // TypesEquipmentMenu
             // 
             this.TypesEquipmentMenu.Name = "TypesEquipmentMenu";
-            this.TypesEquipmentMenu.Size = new System.Drawing.Size(171, 22);
+            this.TypesEquipmentMenu.Size = new System.Drawing.Size(204, 26);
             this.TypesEquipmentMenu.Text = "Типы оснащения";
             // 
             // ReportMenu
             // 
             this.ReportMenu.Name = "ReportMenu";
-            this.ReportMenu.Size = new System.Drawing.Size(60, 20);
+            this.ReportMenu.Size = new System.Drawing.Size(71, 24);
             this.ReportMenu.Text = "Отчеты";
             // 
             // StickersMenu
             // 
             this.StickersMenu.Name = "StickersMenu";
-            this.StickersMenu.Size = new System.Drawing.Size(73, 20);
+            this.StickersMenu.Size = new System.Drawing.Size(88, 24);
             this.StickersMenu.Text = "Наклейки";
             // 
             // SettingsMenu
             // 
             this.SettingsMenu.Name = "SettingsMenu";
-            this.SettingsMenu.Size = new System.Drawing.Size(79, 20);
+            this.SettingsMenu.Size = new System.Drawing.Size(96, 24);
             this.SettingsMenu.Text = "Настройки";
             // 
             // contextMenuFireCabinet
@@ -128,7 +129,7 @@ namespace WindowsForms
             this.DeleteContextMenu2,
             this.DeleteIconContextMenu1});
             this.contextMenuFireCabinet.Name = "contextMenuEquipment";
-            this.contextMenuFireCabinet.Size = new System.Drawing.Size(164, 92);
+            this.contextMenuFireCabinet.Size = new System.Drawing.Size(192, 100);
             // 
             // AddContextMenu
             // 
@@ -137,43 +138,49 @@ namespace WindowsForms
             this.AddHoseContextMenu,
             this.AddHydrantContextMenu});
             this.AddContextMenu.Name = "AddContextMenu";
-            this.AddContextMenu.Size = new System.Drawing.Size(163, 22);
+            this.AddContextMenu.Size = new System.Drawing.Size(191, 24);
             this.AddContextMenu.Text = "Добавить";
             // 
             // AddExtinguisherContextMenu
             // 
             this.AddExtinguisherContextMenu.Name = "AddExtinguisherContextMenu";
-            this.AddExtinguisherContextMenu.Size = new System.Drawing.Size(180, 22);
+            this.AddExtinguisherContextMenu.Size = new System.Drawing.Size(198, 26);
             this.AddExtinguisherContextMenu.Text = "Огнетушитель";
             // 
             // AddHoseContextMenu
             // 
             this.AddHoseContextMenu.Name = "AddHoseContextMenu";
-            this.AddHoseContextMenu.Size = new System.Drawing.Size(180, 22);
+            this.AddHoseContextMenu.Size = new System.Drawing.Size(198, 26);
             this.AddHoseContextMenu.Text = "Рукав";
             // 
             // AddHydrantContextMenu
             // 
             this.AddHydrantContextMenu.Name = "AddHydrantContextMenu";
-            this.AddHydrantContextMenu.Size = new System.Drawing.Size(180, 22);
+            this.AddHydrantContextMenu.Size = new System.Drawing.Size(198, 26);
             this.AddHydrantContextMenu.Text = "Пожарный кран";
             // 
             // EditContextMenu2
             // 
             this.EditContextMenu2.Name = "EditContextMenu2";
-            this.EditContextMenu2.Size = new System.Drawing.Size(163, 22);
+            this.EditContextMenu2.Size = new System.Drawing.Size(191, 24);
             this.EditContextMenu2.Text = "Редактировать";
             // 
             // DeleteContextMenu2
             // 
             this.DeleteContextMenu2.Name = "DeleteContextMenu2";
-            this.DeleteContextMenu2.Size = new System.Drawing.Size(163, 22);
+            this.DeleteContextMenu2.Size = new System.Drawing.Size(191, 24);
             this.DeleteContextMenu2.Text = "Удалить";
+            // 
+            // DeleteIconContextMenu1
+            // 
+            this.DeleteIconContextMenu1.Name = "DeleteIconContextMenu1";
+            this.DeleteIconContextMenu1.Size = new System.Drawing.Size(191, 24);
+            this.DeleteIconContextMenu1.Text = "Удалить с плана";
             // 
             // EditContextMenu1
             // 
             this.EditContextMenu1.Name = "EditContextMenu1";
-            this.EditContextMenu1.Size = new System.Drawing.Size(231, 22);
+            this.EditContextMenu1.Size = new System.Drawing.Size(275, 24);
             this.EditContextMenu1.Text = "Редактировать";
             // 
             // imageList
@@ -192,12 +199,12 @@ namespace WindowsForms
             this.contextMenuProject.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.AddLocationContextMenu});
             this.contextMenuProject.Name = "contextMenuLocations";
-            this.contextMenuProject.Size = new System.Drawing.Size(177, 26);
+            this.contextMenuProject.Size = new System.Drawing.Size(209, 28);
             // 
             // AddLocationContextMenu
             // 
             this.AddLocationContextMenu.Name = "AddLocationContextMenu";
-            this.AddLocationContextMenu.Size = new System.Drawing.Size(176, 22);
+            this.AddLocationContextMenu.Size = new System.Drawing.Size(208, 24);
             this.AddLocationContextMenu.Text = "Добавить локации";
             // 
             // contextMenuLocation
@@ -208,27 +215,27 @@ namespace WindowsForms
             this.EditContextMenu1,
             this.DeleteContextMenu1});
             this.contextMenuLocation.Name = "contextMenuFireCabinets";
-            this.contextMenuLocation.Size = new System.Drawing.Size(232, 70);
+            this.contextMenuLocation.Size = new System.Drawing.Size(276, 76);
             // 
             // AddFireCabinetContextMenu
             // 
             this.AddFireCabinetContextMenu.Name = "AddFireCabinetContextMenu";
-            this.AddFireCabinetContextMenu.Size = new System.Drawing.Size(231, 22);
+            this.AddFireCabinetContextMenu.Size = new System.Drawing.Size(275, 24);
             this.AddFireCabinetContextMenu.Text = "Добавить пожарные шкафы";
             // 
             // DeleteContextMenu1
             // 
             this.DeleteContextMenu1.Name = "DeleteContextMenu1";
-            this.DeleteContextMenu1.Size = new System.Drawing.Size(231, 22);
+            this.DeleteContextMenu1.Size = new System.Drawing.Size(275, 24);
             this.DeleteContextMenu1.Text = "Удалить";
             // 
             // rightPanel
             // 
             this.rightPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rightPanel.Location = new System.Drawing.Point(0, 24);
+            this.rightPanel.Location = new System.Drawing.Point(0, 28);
             this.rightPanel.Margin = new System.Windows.Forms.Padding(2);
             this.rightPanel.Name = "rightPanel";
-            this.rightPanel.Size = new System.Drawing.Size(1222, 574);
+            this.rightPanel.Size = new System.Drawing.Size(1528, 720);
             this.rightPanel.TabIndex = 4;
             // 
             // contextMenuEquipment
@@ -239,44 +246,45 @@ namespace WindowsForms
             this.DeleteContextMenu3,
             this.DeleteIconContextMenu2});
             this.contextMenuEquipment.Name = "contextMenuEquipment";
-            this.contextMenuEquipment.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuEquipment.Size = new System.Drawing.Size(192, 76);
             // 
             // EditContextMenu3
             // 
             this.EditContextMenu3.Name = "EditContextMenu3";
-            this.EditContextMenu3.Size = new System.Drawing.Size(180, 22);
+            this.EditContextMenu3.Size = new System.Drawing.Size(191, 24);
             this.EditContextMenu3.Text = "Редактировать";
             // 
             // DeleteContextMenu3
             // 
             this.DeleteContextMenu3.Name = "DeleteContextMenu3";
-            this.DeleteContextMenu3.Size = new System.Drawing.Size(180, 22);
+            this.DeleteContextMenu3.Size = new System.Drawing.Size(191, 24);
             this.DeleteContextMenu3.Text = "Удалить";
-            // 
-            // DeleteIconContextMenu1
-            // 
-            this.DeleteIconContextMenu1.Name = "DeleteIconContextMenu1";
-            this.DeleteIconContextMenu1.Size = new System.Drawing.Size(163, 22);
-            this.DeleteIconContextMenu1.Text = "Удалить с плана";
             // 
             // DeleteIconContextMenu2
             // 
             this.DeleteIconContextMenu2.Name = "DeleteIconContextMenu2";
-            this.DeleteIconContextMenu2.Size = new System.Drawing.Size(180, 22);
+            this.DeleteIconContextMenu2.Size = new System.Drawing.Size(191, 24);
             this.DeleteIconContextMenu2.Text = "Удалить с плана";
+            // 
+            // паспортToolStripMenuItem
+            // 
+            this.паспортToolStripMenuItem.Name = "паспортToolStripMenuItem";
+            this.паспортToolStripMenuItem.Size = new System.Drawing.Size(80, 24);
+            this.паспортToolStripMenuItem.Text = "Паспорт";
+            this.паспортToolStripMenuItem.Click += new System.EventHandler(this.ПаспортToolStripMenuItem_Click);
             // 
             // FormMain
             // 
             this.AllowDrop = true;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(1222, 598);
+            this.ClientSize = new System.Drawing.Size(1528, 748);
             this.Controls.Add(this.rightPanel);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(643, 488);
+            this.MinimumSize = new System.Drawing.Size(799, 598);
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
@@ -369,5 +377,6 @@ namespace WindowsForms
         private System.Windows.Forms.ToolStripMenuItem StickersMenu;
         private System.Windows.Forms.ToolStripMenuItem DeleteIconContextMenu1;
         private System.Windows.Forms.ToolStripMenuItem DeleteIconContextMenu2;
+        private System.Windows.Forms.ToolStripMenuItem паспортToolStripMenuItem;
     }
 }
