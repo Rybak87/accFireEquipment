@@ -10,31 +10,14 @@ namespace WindowsForms
     public partial class FormReport : Form
     {
         public event Action<EntitySign> EditEntity;
-        private FilterSet filterName = new FilterSet(ent => ent.ToString());
-        private FilterSet filterParent = new FilterSet(ent => ent.GetLocation.ToString());
-        private FilterSet filterParentParent = new FilterSet(ent => ent.GetLocation.ToString());
-        private FilterSet filterFireCabinetFault = new FilterSet(true,
-                                    new Filter(ent => ((FireCabinet)ent).IsDented, ent => "Поврежден; "),
-                                    new Filter(ent => !((FireCabinet)ent).IsSticker, ent => "Без наклейки; ")
-                                    );
-        private FilterSet filterExtinguisherFault = new FilterSet(true,
-                                    new Filter(ent => ((Extinguisher)ent).IsDented, ent => "Поврежден; "),
-                                    new Filter(ent => !((Extinguisher)ent).IsSticker, ent => "Без наклейки; "),
-                                    new Filter(ent => !((Extinguisher)ent).IsHose, ent => "Нет шланга; "),
-                                    new Filter(ent => ((Extinguisher)ent).IsLabelDamage, ent => "Повреждена этикетка; "),
-                                    new Filter(ent => ((Extinguisher)ent).IsPaintDamage, ent => "Повреждена краска; "),
-                                    new Filter(ent => ((Extinguisher)ent).IsPressureGaugeFault, ent => "Поврежден манометр; "),
-                                    new Filter(ent => ((Extinguisher)ent).Pressure < ((Extinguisher)ent).TypeExtinguisher.MinPressure, ent => "Давление менее допустимого; "),
-                                    new Filter(ent => ((Extinguisher)ent).Weight < ((Extinguisher)ent).TypeExtinguisher.MinWeight, ent => "Вес менее допустимого; ")
-                                    );
-        private FilterSet filterHoseFault = new FilterSet(true,
-                                    new Filter(ent => ((Hose)ent).IsRagged, ent => "Порван; "),
-                                    new Filter(ent => ((Hose)ent).DateRolling.Subtract(DateTime.Now).Days < 30, ent => "Необходима перекатка; ")
-                                    );
-        private FilterSet filterHydrantFault = new FilterSet(ent => ((Hydrant)ent).IsDamage, ent => "Поврежден; ", true);
-        private FilterSet filterExtinguisherRecharge = new FilterSet(true,
-            new Filter(ent => ((Extinguisher)ent).DateRecharge.Subtract(DateTime.Now).Days < 365, ent => ((Extinguisher)ent).DateRecharge.SubtractMonths(DateTime.Now).ToString())
-        );
+        private FilterSet filterName = HelperListView.filterName;
+        private FilterSet filterParent = HelperListView.filterParent;
+        private FilterSet filterLocation = HelperListView.filterLocation;
+        private FilterSet filterFireCabinetFault = HelperListView.filterFireCabinetFault;
+        private FilterSet filterExtinguisherFault = HelperListView.filterExtinguisherFault;
+        private FilterSet filterHoseFault = HelperListView.filterHoseFault;
+        private FilterSet filterHydrantFault = HelperListView.filterHydrantFault;
+        private FilterSet filterExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
 
         public FormReport()
         {
@@ -56,35 +39,35 @@ namespace WindowsForms
         private void FullReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), filterParent, filterName, filterName, filterFireCabinetFault);
-            listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherFault);
-            listView.EntityReport(typeof(Hose), filterParentParent, filterName, filterParent, filterHoseFault);
-            listView.EntityReport(typeof(Hydrant), filterParentParent, filterName, filterParent, filterHydrantFault);
+            listView.EntityReport(typeof(FireCabinet), filterLocation, filterName, filterName, filterFireCabinetFault);
+            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherFault);
+            listView.EntityReport(typeof(Hose), filterLocation, filterName, filterParent, filterHoseFault);
+            listView.EntityReport(typeof(Hydrant), filterLocation, filterName, filterParent, filterHydrantFault);
         }
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), filterParent, filterName, filterFireCabinetFault);
+            listView.EntityReport(typeof(FireCabinet), filterLocation, filterName, filterFireCabinetFault);
         }
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherFault);
+            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherFault);
         }
         private void HosesReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hose), filterParentParent, filterName, filterParent, filterHoseFault);
+            listView.EntityReport(typeof(Hose), filterLocation, filterName, filterParent, filterHoseFault);
         }
         private void HydrantsReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hydrant), filterParentParent, filterName, filterParent, filterHydrantFault);
+            listView.EntityReport(typeof(Hydrant), filterLocation, filterName, filterParent, filterHydrantFault);
         }
         private void RechargeExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
-            listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherRecharge);
+            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherRecharge);
         }
         private void InitColumns(params string[] columnsNames)
         {

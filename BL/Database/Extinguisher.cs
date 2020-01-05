@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BL
 {
@@ -70,15 +71,16 @@ namespace BL
         [Column("Повреждение этикетки")]
         [Control("CheckBox", false)]
         public bool IsLabelDamage { get; set; }//Повреждение этикетки
-        public override EntityBase Parent
+
+        public override Hierarchy Parent
         {
             get => FireCabinet;
             set
             {
                 if (value is FireCabinet)
                     FireCabinet = (FireCabinet)value;
-                else if (value is SpeciesExtinguisher)
-                    TypeExtinguisher = (SpeciesExtinguisher)value;
+                //else if (value is SpeciesExtinguisher)
+                //    TypeExtinguisher = (SpeciesExtinguisher)value;
                 else
                     throw new Exception("Нельзя преобразовать object");
             }

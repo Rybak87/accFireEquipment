@@ -27,15 +27,15 @@ namespace WindowsForms
             NodeMouseClick += TreeViewDB_MouseClick;
             DoubleLeftButtonMouseClick += (s, e) => ButtonMouseDoubleClick((EntitySign)e.Node.Tag);
         }
-
+        #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             var sign = (EntitySign)((TreeNode)e.Item).Tag;
 
             if (sign?.Type == null || sign.Type == typeof(Location))
                 return;
-            
-                
+
+
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
@@ -73,7 +73,7 @@ namespace WindowsForms
                     using (var ec = new EntityController())
                     {
                         var entity = ec.GetEntity(sign) as Equipment;
-                        entity.Parent = ec.GetEntity(signNewParent);
+                        entity.Parent = (Hierarchy)ec.GetEntity(signNewParent);
                         ec.SaveChanges();
                     }
                     draggedNode.Remove();
@@ -83,6 +83,7 @@ namespace WindowsForms
                 targetNode.Expand();
             }
         }
+        #endregion
         private void TreeViewDB_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -96,7 +97,7 @@ namespace WindowsForms
             if (e.Button != MouseButtons.Left || e.Node.Tag == null)
                 return;
             var entitySign = (EntitySign)e.Node.Tag;
-
+            SelectedNode = e.Node;
             ButtonMouseClick?.Invoke(entitySign);
         }
         public void RenameNodesOfType(Type type)
@@ -121,6 +122,7 @@ namespace WindowsForms
         {
             if (m.Msg == 0x203) // определение двойного клика
             {
+                //var localPos = PointToClient(Cursor.Position);
                 DoubleLeftButtonMouseClick?.Invoke(this, new TreeNodeEventArgs(SelectedNode));
                 m.Result = IntPtr.Zero;
             }
@@ -196,11 +198,13 @@ namespace WindowsForms
             dictNodes.Add(entity.GetSign(), newNode);
             SelectedNode = newNode;
         }
-        public void NodeMove(EntityBase entity)
+        public void NodeMove(Hierarchy entity)
         {
             var saveSelectedNode = SelectedNode;
             var currNode = dictNodes[entity.GetSign()];
-            var entityParent = ((Equipment)entity).Parent;
+            Hierarchy entityParent = null;
+            if (entity is Equipment)
+                entityParent = ((Equipment)entity).Parent;
             TreeNode newNodeParent;
             if (entityParent == null)
                 newNodeParent = Nodes[0];

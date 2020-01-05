@@ -62,6 +62,33 @@ namespace BL
 
     public static class HelperListView
     {
+        public static FilterSet filterName = new FilterSet(ent => ent.ToString());
+        public static FilterSet filterParent = new FilterSet(ent => ent.Parent.ToString());
+        public static FilterSet filterLocation = new FilterSet(ent => ent.GetLocation.ToString());
+        public static FilterSet filterFireCabinetFault = new FilterSet(true,
+                                    new Filter(ent => ((FireCabinet)ent).IsDented, ent => "Поврежден; "),
+                                    new Filter(ent => !((FireCabinet)ent).IsSticker, ent => "Без наклейки; ")
+                                    );
+        public static FilterSet filterExtinguisherFault = new FilterSet(true,
+                                    new Filter(ent => ((Extinguisher)ent).IsDented, ent => "Поврежден; "),
+                                    new Filter(ent => !((Extinguisher)ent).IsSticker, ent => "Без наклейки; "),
+                                    new Filter(ent => !((Extinguisher)ent).IsHose, ent => "Нет шланга; "),
+                                    new Filter(ent => ((Extinguisher)ent).IsLabelDamage, ent => "Повреждена этикетка; "),
+                                    new Filter(ent => ((Extinguisher)ent).IsPaintDamage, ent => "Повреждена краска; "),
+                                    new Filter(ent => ((Extinguisher)ent).IsPressureGaugeFault, ent => "Поврежден манометр; "),
+                                    new Filter(ent => ((Extinguisher)ent).Pressure < ((Extinguisher)ent).TypeExtinguisher.MinPressure, ent => "Давление менее допустимого; "),
+                                    new Filter(ent => ((Extinguisher)ent).Weight < ((Extinguisher)ent).TypeExtinguisher.MinWeight, ent => "Вес менее допустимого; ")
+                                    );
+        public static FilterSet filterHoseFault = new FilterSet(true,
+                                    new Filter(ent => ((Hose)ent).IsRagged, ent => "Порван; "),
+                                    new Filter(ent => ((Hose)ent).DateRolling.Subtract(DateTime.Now).Days < 30, ent => "Необходима перекатка; ")
+                                    );
+        public static FilterSet filterHydrantFault = new FilterSet(ent => ((Hydrant)ent).IsDamage, ent => "Поврежден; ", true);
+        public static FilterSet filterExtinguisherRecharge = new FilterSet(true,
+            new Filter(ent => ((Extinguisher)ent).DateRecharge.Subtract(DateTime.Now).Days < 365, ent => ((Extinguisher)ent).DateRecharge.SubtractMonths(DateTime.Now).ToString())
+        );
+
+
         /// <summary>
         /// Заполняет TreeView данными из БД.
         /// </summary>

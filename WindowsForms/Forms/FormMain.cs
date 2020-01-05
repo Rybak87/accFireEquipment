@@ -20,7 +20,7 @@ namespace WindowsForms
                 [0.GetType()] = (contextMenuProject),
                 [typeof(Location)] = (contextMenuLocation),
                 [typeof(FireCabinet)] = (contextMenuFireCabinet),
-                [typeof(Extinguisher)] = (contextMenuEquipment),
+                [typeof(Extinguisher)] = (contextMenuExtinguisher),
                 [typeof(Hose)] = (contextMenuEquipment),
                 [typeof(Hydrant)] = (contextMenuEquipment)
             };
@@ -29,11 +29,6 @@ namespace WindowsForms
             using (var db = new BLContext())
             {
                 db.Database.Initialize(false);
-                //db.Histories.Load();
-                //var x = db.Histories.Local;
-                //var f = (FireCabinet)x[0].EquipmentBase;
-                //var e = (Extinguisher)x[1].EquipmentBase;
-
             }
 
             myTreeView.LoadFromContext();
@@ -87,14 +82,11 @@ namespace WindowsForms
             var parentSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
             var typeNewEntity = (Type)menuItem.Tag;
             AddDialog(typeNewEntity, parentSign);
-
-
         }
         private void MenuEdit_MouseClick(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var editSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            //var editSign = (EntitySign)myTreeView.SelectedNode.Tag;
             EditDialog(editSign);
         }
         private void MenuRemove_MouseClick(object sender, EventArgs e)
@@ -108,7 +100,7 @@ namespace WindowsForms
                 ec.SaveChanges();
             }
         }
-        private void MenuRemoveIcon_MouseClick2(object sender, EventArgs e)
+        private void MenuRemoveIcon_MouseClick(object sender, EventArgs e)
         {
             var menuItem = (ToolStripMenuItem)sender;
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
@@ -126,7 +118,6 @@ namespace WindowsForms
         {
             //if (sign == null)
             //    return;
-
             var AddEssForm = new FormEditEntity(sign);
             AddEssForm.EntityEdit += myTreeView.NodeMove;
             DialogResult result = AddEssForm.ShowDialog(this);
@@ -141,14 +132,17 @@ namespace WindowsForms
                 return FindContextMenuStrip(((ToolStripDropDownMenu)finded.Owner).OwnerItem);
         }
 
-        private void ПаспортToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CreatePassportContext_Click(object sender, EventArgs e)
         {
+            var menuItem = (ToolStripMenuItem)sender;
+            var sign = FindContextMenuStrip(menuItem).Tag as EntitySign;
             using (var ec = new EntityController())
             {
-                var ex = ec.Extinguishers.First();
-                var wrd = new WordApp();
+                var ex = ec.GetEntity(sign) as Extinguisher;
 
-                wrd.CreateNewDocument(ex);
+                var path = Application.StartupPath.ToString();
+                var wrd = new WordDocument(path + "\\PassportExtinguisher.dotx", true);
+                wrd.CreatePassportExtinguisher(ex);
             }
         }
     }

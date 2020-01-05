@@ -109,8 +109,8 @@ namespace WindowsForms
                 yPosControl += 25;
             }
             this.Height = yPosControl + 100;
-            if (cbxTypeExtinguisher != null)
-                GetWeightPressure(cbxTypeExtinguisher);
+            //if (cbxTypeExtinguisher != null)
+            //    GetWeightPressure(cbxTypeExtinguisher);
         }
 
         private Control CreateButtonsForImage(Size halfSize, Point centerLocation, Point centerHalfLocation)
@@ -146,13 +146,13 @@ namespace WindowsForms
             ((ComboBox)cntrl).DataSource = parents.Local;
 
             Controls.Add(cntrl);
+            var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
+            cntrl.DataBindings.Add(bind);
+            cntrl.DataBindings[0].WriteValue();
             if (prop.Name == "TypeExtinguisher")
             {
                 ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
             }
-            var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
-            cntrl.DataBindings.Add(bind);
-            cntrl.DataBindings[0].WriteValue();
             return cntrl;
         }
         private Control CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)

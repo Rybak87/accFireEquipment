@@ -49,15 +49,15 @@ namespace BL
             return sample;
         }
 
-        public override EntityBase Parent
+        public override Hierarchy Parent
         {
             get => FireCabinet;
             set
             {
                 if (value is FireCabinet)
                     FireCabinet = (FireCabinet)value;
-                else if (value is SpeciesHose)
-                    TypeHose = (SpeciesHose)value;
+                //else if (value is SpeciesHose)
+                //    TypeHose = (SpeciesHose)value;
                 else
                     throw new Exception("Нельзя преобразовать object");
             }

@@ -41,7 +41,7 @@ namespace BL
     abstract public class Equipment : Hierarchy
     {
         [NotMapped]
-        abstract public EntityBase Parent { get; set; }
+        abstract public Hierarchy Parent { get; set; }
         //[NotMapped]
         //abstract public Location GetLocation { get; }
         public ScalePoint Point { get; set; }

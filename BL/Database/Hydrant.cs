@@ -40,7 +40,7 @@ namespace BL
             sample = sample.Replace("#D", Number.ToString());
             return sample;
         }
-        public override EntityBase Parent
+        public override Hierarchy Parent
         {
             get => FireCabinet;
             set

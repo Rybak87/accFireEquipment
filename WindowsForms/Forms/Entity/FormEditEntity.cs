@@ -12,7 +12,8 @@ namespace WindowsForms
 {
     public partial class FormEditEntity : FormEntity
     {
-        public event Action<EntityBase> EntityEdit;
+        //public event Action<out EntityBase> EntityEdit;
+        public event Action<Hierarchy> EntityEdit;
         protected HistorySet historySet;
 
         public FormEditEntity(EntitySign sign)
@@ -34,7 +35,7 @@ namespace WindowsForms
         {
             base.BtnOK_Click(sender, e);
             ec.Entry(currEntity).State = EntityState.Modified;
-            EntityEdit(currEntity);
+            EntityEdit?.Invoke((Hierarchy)currEntity);
             ec.SaveChanges();
             if (currEntity is Equipment)
             {

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    public class Inspection
-    {
-        public int Id { get; set; }
-        public virtual ICollection<FireCabinetHistory> FireCabinets { get; set; }
-    }
+    //public class Inspection
+    //{
+    //    public int Id { get; set; }
+    //    public virtual ICollection<FireCabinetHistory> FireCabinets { get; set; }
+    //}
 }

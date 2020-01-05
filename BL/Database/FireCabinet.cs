@@ -51,7 +51,7 @@ namespace BL
             return sample;
         }
 
-        public override EntityBase Parent
+        public override Hierarchy Parent
         {
             get => Location;
             set

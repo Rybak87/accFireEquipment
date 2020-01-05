@@ -45,7 +45,7 @@ namespace WindowsForms
             }
             else
             {
-                ((Equipment)currEntity).Parent = ec.GetEntity(parentSign);
+                ((Equipment)currEntity).Parent = (Hierarchy)ec.GetEntity(parentSign);
                 ((INumber)currEntity).Number = ec.GetNumberChild(((Equipment)currEntity).Parent, entityType);
             }
             Text = "Добавить";

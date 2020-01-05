@@ -69,6 +69,7 @@ namespace BL
         }
         public void Save(EntityController ec)
         {
+            var datetime = DateTime.Now;
             for (int i = 0; i < OldValues.Count(); i++)
             {
                 if (OldValues[i] != NewValues[i])
@@ -76,6 +77,7 @@ namespace BL
                     var hy = (History)ec.CreateEntity(typeof(History));
                     hy.EquipmentBase = equipment;
                     hy.Property = Properties[i].Name;
+                    hy.DateChange = datetime;
                     //hy.OldValue = OldValues[i];
                     hy.NewValue = NewValues[i];
                     ec.AddEntity(hy);

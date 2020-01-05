@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace BL
 {
-    public class FireCabinetHistory
-    {
-        public virtual FireCabinet FireCabinet { get; set; }
-        public int FireCabinetId { get; set; }
-        public virtual Inspection Inspection { get; set; }
-        public int InspectionId { get; set; }
-        public string Property { get; set; }
-        public string OldValue { get; set; }
-        public string NewValue { get; set; }
-        public DateTime DateChange { get; set; }
-        public FireCabinetHistory()
-        {
-            DateChange = DateTime.Now;
-        }
-    }
+    //public class FireCabinetHistory
+    //{
+    //    public virtual FireCabinet FireCabinet { get; set; }
+    //    public int FireCabinetId { get; set; }
+    //    public virtual Inspection Inspection { get; set; }
+    //    public int InspectionId { get; set; }
+    //    public string Property { get; set; }
+    //    public string OldValue { get; set; }
+    //    public string NewValue { get; set; }
+    //    public DateTime DateChange { get; set; }
+    //    public FireCabinetHistory()
+    //    {
+    //        DateChange = DateTime.Now;
+    //    }
+    //}
     [Table("History")]
-    public class History:EntityBase
+    public class History : EntityBase
     {
         //public int Id { get; set; }
         public virtual Equipment EquipmentBase { get; set; }
