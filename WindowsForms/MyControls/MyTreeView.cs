@@ -10,9 +10,8 @@ namespace WindowsForms
 {
     public class MyTreeView : TreeView
     {
-        public event TreeNodeEventHandler DoubleLeftButtonMouseClick;
-        public event Action<EntitySign> ButtonMouseClick;
-        public event Action<EntitySign> ButtonMouseDoubleClick;
+        public event Action<EntitySign> LeftMouseClick;
+        public event Action<EntitySign> LeftMouseDoubleClick;
         private Dictionary<Type, ContextMenuStrip> dictMenu;
         private Dictionary<EntitySign, TreeNode> dictNodes;
         public MyTreeView(Dictionary<Type, ContextMenuStrip> dictMenu)
@@ -25,7 +24,6 @@ namespace WindowsForms
             DragOver += treeView_DragOver;
             DragDrop += treeView_DragDrop;
             NodeMouseClick += TreeViewDB_MouseClick;
-            DoubleLeftButtonMouseClick += (s, e) => ButtonMouseDoubleClick((EntitySign)e.Node.Tag);
         }
         #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
@@ -98,7 +96,7 @@ namespace WindowsForms
                 return;
             var entitySign = (EntitySign)e.Node.Tag;
             SelectedNode = e.Node;
-            ButtonMouseClick?.Invoke(entitySign);
+            LeftMouseClick?.Invoke(entitySign);
         }
         public void RenameNodesOfType(Type type)
         {
@@ -122,8 +120,14 @@ namespace WindowsForms
         {
             if (m.Msg == 0x203) // определение двойного клика
             {
-                //var localPos = PointToClient(Cursor.Position);
-                DoubleLeftButtonMouseClick?.Invoke(this, new TreeNodeEventArgs(SelectedNode));
+                var localPos = PointToClient(Cursor.Position);
+                var localNode = GetNodeAt(localPos);
+                if (localNode != null)
+                {
+                    SelectedNode = localNode;
+                    LeftMouseDoubleClick?.Invoke((EntitySign)localNode.Tag);
+                }
+                    
                 m.Result = IntPtr.Zero;
             }
             else base.WndProc(ref m);
@@ -223,16 +227,6 @@ namespace WindowsForms
         {
             Nodes.Remove(dictNodes[entity.GetSign()]);
             dictNodes.Remove(entity.GetSign());
-        }
-    }
-    public delegate void TreeNodeEventHandler(object sender, TreeNodeEventArgs e);
-    public class TreeNodeEventArgs : EventArgs
-    {
-        public TreeNode Node { get; }
-
-        public TreeNodeEventArgs(TreeNode node)
-        {
-            Node = node;
         }
     }
 }

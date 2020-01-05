@@ -69,7 +69,7 @@
     <Compile Include="Database\Hydrant.cs" />
     <Compile Include="Database\ImageLocation.cs" />
     <Compile Include="Logic\ImageSettings.cs" />
-    <Compile Include="Logic\WordDocument.cs" />
+    <Compile Include="Logic\WordPassportExtinguisher.cs" />
     <Compile Include="Model\ScalePoint.cs" />
     <Compile Include="Model\EntitySign.cs" />
     <Compile Include="Properties\Icons.Designer.cs">
@@ -92,11 +92,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Template.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Template.resx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Icons.resx">
@@ -106,16 +101,15 @@
     <EmbeddedResource Include="Properties\TypesCSV.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TypesCSV.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Template.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Template.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Resources\PassportExtinguisher.dotx" />
+    <None Include="Resources\PassportExtinguisher.dotx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\typesExtinguisher.csv" />
     <None Include="Resources\typesFireCabinet.csv" />
     <None Include="Resources\typesHose.csv" />

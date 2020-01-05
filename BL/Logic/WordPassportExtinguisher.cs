@@ -5,26 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
+using BL;
+using System.IO;
 
 namespace BL
 {
-    public class WordDocument
+    public class WordPassportExtinguisher
     {
         Word.Application word = new Word.Application();
         Word.Document workBook;
         IEnumerable<Word.Bookmark> bookmarks;
 
-        public WordDocument()
+        public WordPassportExtinguisher()
         {
             workBook = word.Documents.Add(Type.Missing);
             word.Visible = true;
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
         }
 
-        public WordDocument(string file, bool readOnly = false)
+        public WordPassportExtinguisher(string file, bool readOnly = false)
         {
-            workBook = word.Documents.Open(file, false, readOnly);
-            word.Visible = true;
+            //workBook = word.Documents.Open(file, false, readOnly);
+            var template = AppDomain.CurrentDomain.BaseDirectory + "Resources\\PassportExtinguisher.dotx";
+            workBook = word.Documents.Add(template);
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
         }
         public void CreatePassportExtinguisher(Extinguisher ex)
@@ -38,10 +41,12 @@ namespace BL
             ReplaceBookmark("Specie", ex.TypeExtinguisher.Name + "\t");
             ReplaceBookmark("WeightOTV", ex.TypeExtinguisher.WeightExtinguishingAgent + " кг.\t");
             FillTable(ex);
+            word.Visible = true;
         }
 
         private void FillTable(Extinguisher ex)
         {
+            var useTime = Properties.Settings.Default.UseTime;
             var settTable = new Dictionary<string, int>()
             {
                 ["Date"] = 1,
@@ -52,13 +57,22 @@ namespace BL
 
             var table = workBook.Tables[1];
             int row = 3;
-            var dates = ex.Histories.Select(h => h.DateChange).Distinct();
+            IEnumerable<DateTime> dates;
+            if (useTime)
+                dates = ex.Histories.Select(h => h.DateChange).Distinct();
+            else
+                dates = ex.Histories.Select(h => h.DateChange.Date).Distinct();
             IEnumerable<History> oldHysOnDate = Enumerable.Empty<History>();
 
             foreach (var date in dates)
             {
                 table.Rows.Add();
-                var hysOnDate = GetLastHistoriesOnDate(ex, date);
+                IEnumerable<History> hysOnDate;
+                if (useTime)
+                    hysOnDate = GetLastHistoriesOnDate(ex, date);
+                else
+                    hysOnDate = GetLastHistoriesOnDate(ex, date.AddDays(1));
+
                 if (hysOnDate.SequenceEqual(oldHysOnDate))
                     continue;
                 oldHysOnDate = hysOnDate;
@@ -67,37 +81,21 @@ namespace BL
                 foreach (var hys in hysOnDate)
                 {
                     if (hys.Property == "Weight")
-                    {
                         table.Cell(row, settTable["Weight"]).Range.Text = hys.NewValue + "кг.";
-                    }
                     else if (hys.Property == "Pressure")
-                    {
                         table.Cell(row, settTable["Pressure"]).Range.Text = hys.NewValue + "кгс/см2";
-                    }
                     else if (hys.Property == "IsDented" && hys.NewValue == "True")
-                    {
                         tempStatus += "Поврежден корпус\n";
-                    }
                     else if (hys.Property == "IsPaintDamage" && hys.NewValue == "True")
-                    {
                         tempStatus += "Повреждена краска\n";
-                    }
                     else if (hys.Property == "IsHandleDamage" && hys.NewValue == "True")
-                    {
-                        tempStatus += "Поврежден ЗПУ\n";
-                    }
+                        tempStatus += "Повреждено ЗПУ\n";
                     else if (hys.Property == "IsHose" && hys.NewValue == "False")
-                    {
                         tempStatus += "Отсутствует шланг\n";
-                    }
                     else if (hys.Property == "IsPressureGaugeFault" && hys.NewValue == "True")
-                    {
                         tempStatus += "Поврежден манометр\n";
-                    }
                     else if (hys.Property == "IsLabelDamage" && hys.NewValue == "True")
-                    {
                         tempStatus += "Повреждена этикетка\n";
-                    }
                 }
                 table.Cell(row, settTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
                 if (tempStatus == "")
@@ -113,13 +111,7 @@ namespace BL
 
         public IEnumerable<History> GetLastHistoriesOnDate(Extinguisher ex, DateTime dateTime)
         {
-            //TODO: Дату прибавить на одну.
             return ex.Histories.Where(h => h.DateChange <= dateTime).GroupBy(h => h.Property).Select(g => g.Last());
         }
-    }
-
-    struct StatusExtinguisher
-    {
-
     }
 }

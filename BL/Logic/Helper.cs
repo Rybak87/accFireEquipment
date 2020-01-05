@@ -74,6 +74,7 @@ namespace BL
                                     new Filter(ent => !((Extinguisher)ent).IsSticker, ent => "Без наклейки; "),
                                     new Filter(ent => !((Extinguisher)ent).IsHose, ent => "Нет шланга; "),
                                     new Filter(ent => ((Extinguisher)ent).IsLabelDamage, ent => "Повреждена этикетка; "),
+                                    new Filter(ent => ((Extinguisher)ent).IsHandleDamage, ent => "Повреждено ЗПУ; "),
                                     new Filter(ent => ((Extinguisher)ent).IsPaintDamage, ent => "Повреждена краска; "),
                                     new Filter(ent => ((Extinguisher)ent).IsPressureGaugeFault, ent => "Поврежден манометр; "),
                                     new Filter(ent => ((Extinguisher)ent).Pressure < ((Extinguisher)ent).TypeExtinguisher.MinPressure, ent => "Давление менее допустимого; "),

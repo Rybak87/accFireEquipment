@@ -32,8 +32,8 @@ namespace WindowsForms
             }
 
             myTreeView.LoadFromContext();
-            myTreeView.ButtonMouseClick += picContainer.LoadImage;
-            myTreeView.ButtonMouseDoubleClick += EditDialog;
+            myTreeView.LeftMouseClick += picContainer.LoadImage;
+            myTreeView.LeftMouseDoubleClick += EditDialog;
             picContainer.EditEntity += EditDialog;
             picContainer.RightClick += ShowContextMenu;
             ReportMenu.Click += ReportMenu_Click;
@@ -141,7 +141,7 @@ namespace WindowsForms
                 var ex = ec.GetEntity(sign) as Extinguisher;
 
                 var path = Application.StartupPath.ToString();
-                var wrd = new WordDocument(path + "\\PassportExtinguisher.dotx", true);
+                var wrd = new WordPassportExtinguisher(path + "\\PassportExtinguisher.dotx", true);
                 wrd.CreatePassportExtinguisher(ex);
             }
         }

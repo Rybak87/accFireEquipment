@@ -86,26 +86,25 @@ namespace WindowsForms
                     stickers.Add(str);
                 }
 
-            var ex = new Excel.Application();
-            ex.Visible = true;
+            var exl = new Excel.Application();
+            exl.Visible = true;
             //Добавить рабочую книгу
-            var workBook = ex.Workbooks.Add(Type.Missing);
+            var workBook = exl.Workbooks.Add(Type.Missing);
             //Отключить отображение окон с сообщениями
-            ex.DisplayAlerts = false;
+            exl.DisplayAlerts = false;
             //Получаем первый лист документа (счет начинается с 1)
-            var sheet = (Excel.Worksheet)ex.Worksheets.get_Item(1);
+            var sheet = (Excel.Worksheet)exl.Worksheets.get_Item(1);
             //Название листа (вкладки снизу)
             sheet.Name = "Наклейки";
-            sheet.Columns.ColumnWidth = 80 / numColumns.Value;
-            sheet.Rows.RowHeight = 732 / numRows.Value;
-            ex.ActiveWindow.Zoom = 70;
-            ex.ActiveWindow.View = Excel.XlWindowView.xlPageLayoutView;
+
+            //sheet.Columns.ColumnWidth = 80 / numColumns.Value;
+            //sheet.Rows.RowHeight = 732 / numRows.Value;
+            exl.ActiveWindow.Zoom = 70;
+            exl.ActiveWindow.View = Excel.XlWindowView.xlPageLayoutView;
 
             sheet.Columns.HorizontalAlignment = Excel.XlVAlign.xlVAlignCenter;
             sheet.Columns.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
-            double currWidth = sheet.Columns.ColumnWidth;
-            var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
-            sheet.Columns.Font.Size = sizeFont;
+
             int i = 1;
             int j = 1;
             foreach (var item in stickers)
@@ -117,8 +116,34 @@ namespace WindowsForms
                     j = 1; i++;
                 }
             }
-
+            SetColumnsWidth(exl, sheet);
+            SetRowssWidth(exl, sheet);
+            double currWidth = sheet.Columns.ColumnWidth;
+            var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
+            sheet.Columns.Font.Size = sizeFont;
         }
+
+        private void SetColumnsWidth(Excel.Application exl, Excel.Worksheet sheet)
+        {
+            var pageWidth = exl.Application.CentimetersToPoints(21);
+            var leftMargin = sheet.PageSetup.LeftMargin;
+            var rightMargin = sheet.PageSetup.RightMargin;
+            var contentWidth = pageWidth - leftMargin - rightMargin;
+            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
+            var rate = (double)firstCell.Width / (double)firstCell.ColumnWidth;
+            sheet.Columns.ColumnWidth = (contentWidth / rate / (double)numColumns.Value);
+        }
+        private void SetRowssWidth(Excel.Application exl, Excel.Worksheet sheet)
+        {
+            var pageHeight = exl.Application.CentimetersToPoints(29.7);
+            var topMargin = sheet.PageSetup.TopMargin;
+            var bottomMargin = sheet.PageSetup.BottomMargin;
+            var contentHeight = pageHeight - topMargin - bottomMargin;
+            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
+            var rate = firstCell.Height / firstCell.RowHeight;
+            sheet.Columns.RowHeight = (contentHeight / rate / (double)numRows.Value);
+        }
+
         private static int CalcFontSize(string template, double currWidth)
         {
             int currSizeFont = 8;
@@ -133,7 +158,7 @@ namespace WindowsForms
         }
         private void chkWithoutStickers_CheckedChanged(object sender, EventArgs e)
         {
-            if(chkWithoutStickers.Checked)
+            if (chkWithoutStickers.Checked)
             {
                 filterFireCabinetSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerFireCabinet));
                 filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
@@ -143,7 +168,7 @@ namespace WindowsForms
                 filterFireCabinetSticker = new FilterSet(true, new Filter(CreateStickerFireCabinet));
                 filterExtinguisherSticker = new FilterSet(true, new Filter(CreateStickerExtinguisher));
             }
-            
+
             if (lastType == typeof(FireCabinet))
                 FireCabinetsReport();
             else if (lastType == typeof(Extinguisher))

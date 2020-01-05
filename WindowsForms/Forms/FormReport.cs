@@ -1,7 +1,5 @@
 ﻿using BL;
 using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -10,14 +8,15 @@ namespace WindowsForms
     public partial class FormReport : Form
     {
         public event Action<EntitySign> EditEntity;
-        private FilterSet filterName = HelperListView.filterName;
-        private FilterSet filterParent = HelperListView.filterParent;
-        private FilterSet filterLocation = HelperListView.filterLocation;
-        private FilterSet filterFireCabinetFault = HelperListView.filterFireCabinetFault;
-        private FilterSet filterExtinguisherFault = HelperListView.filterExtinguisherFault;
-        private FilterSet filterHoseFault = HelperListView.filterHoseFault;
-        private FilterSet filterHydrantFault = HelperListView.filterHydrantFault;
-        private FilterSet filterExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
+        private Action lastReport;
+        private FilterSet fName = HelperListView.filterName;
+        private FilterSet fParent = HelperListView.filterParent;
+        private FilterSet fLocation = HelperListView.filterLocation;
+        private FilterSet fFireCabinetFault = HelperListView.filterFireCabinetFault;
+        private FilterSet fExtinguisherFault = HelperListView.filterExtinguisherFault;
+        private FilterSet fHoseFault = HelperListView.filterHoseFault;
+        private FilterSet fHydrantFault = HelperListView.filterHydrantFault;
+        private FilterSet fExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
 
         public FormReport()
         {
@@ -30,44 +29,55 @@ namespace WindowsForms
             RechargeExtinguishersMenu.Image = ImageSettings.IconsImage(typeof(Extinguisher));
 
             FullMenu.Click += (s, e) => FullReport();
+            FullMenu.Click += (s, e) => lastReport = () => FullReport();
+
             FireCabinetsMenu.Click += (s, e) => FireCabinetsReport();
+            FireCabinetsMenu.Click += (s, e) => lastReport = () => FireCabinetsReport();
+
             ExtinguishersMenu.Click += (s, e) => ExtinguishersReport();
+            ExtinguishersMenu.Click += (s, e) => lastReport = () => ExtinguishersReport();
+
             HosesMenu.Click += (s, e) => HosesReport();
+            HosesMenu.Click += (s, e) => lastReport = () => HosesReport();
+
             HydrantsMenu.Click += (s, e) => HydrantsReport();
+            HydrantsMenu.Click += (s, e) => lastReport = () => HydrantsReport();
+
             RechargeExtinguishersMenu.Click += (s, e) => RechargeExtinguishersReport();
+            RechargeExtinguishersMenu.Click += (s, e) => lastReport = () => RechargeExtinguishersReport();
         }
         private void FullReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), filterLocation, filterName, filterName, filterFireCabinetFault);
-            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherFault);
-            listView.EntityReport(typeof(Hose), filterLocation, filterName, filterParent, filterHoseFault);
-            listView.EntityReport(typeof(Hydrant), filterLocation, filterName, filterParent, filterHydrantFault);
+            listView.EntityReport(typeof(FireCabinet), fLocation, fName, fName, fFireCabinetFault);
+            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
+            listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
+            listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
         }
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), filterLocation, filterName, filterFireCabinetFault);
+            listView.EntityReport(typeof(FireCabinet), fLocation, fName, fFireCabinetFault);
         }
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherFault);
+            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
         }
         private void HosesReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hose), filterLocation, filterName, filterParent, filterHoseFault);
+            listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
         }
         private void HydrantsReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hydrant), filterLocation, filterName, filterParent, filterHydrantFault);
+            listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
         }
         private void RechargeExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
-            listView.EntityReport(typeof(Extinguisher), filterLocation, filterName, filterParent, filterExtinguisherRecharge);
+            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherRecharge);
         }
         private void InitColumns(params string[] columnsNames)
         {
@@ -96,6 +106,7 @@ namespace WindowsForms
             var item = listView.SelectedItems[0];
             var sign = (EntitySign)item.Tag;
             EditEntity?.Invoke(sign);
+            lastReport?.Invoke();
         }
     }
 }
