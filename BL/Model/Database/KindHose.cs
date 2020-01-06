@@ -5,7 +5,7 @@ using System.Linq;
 namespace BL
 {
     [Table("SpeciesHoses")]
-    public class SpeciesHose : SpeciesBase//EntityBase, ITypes
+    public class KindHose : KindBase//EntityBase, ITypes
     {
         public virtual ICollection<Hose> Hoses { get; set; }
 
@@ -13,7 +13,7 @@ namespace BL
         [Control("TextBox", false)]
         public string Species { get; set; } //Вид
         public override ICollection<EntityBase> Childs { get => Hoses.Cast<EntityBase>().ToList(); }
-        public SpeciesHose()
+        public KindHose()
         { }
         public override string ToString()
         {

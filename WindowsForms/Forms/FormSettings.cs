@@ -1,6 +1,5 @@
 ﻿using BL;
 using System;
-using System.Linq;
 using System.Windows.Forms;
 using Sett = BL.Properties.Settings;
 
@@ -10,7 +9,8 @@ namespace WindowsForms
     {
         public event Action<Type> ChangeSample;
         public event Action ChangeIconSize;
-        int prevAbsoluteIconsSize;
+
+        private int prevAbsoluteIconsSize;
         public FormSettings()
         {
             InitializeComponent();

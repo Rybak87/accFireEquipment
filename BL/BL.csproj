@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\BL.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -50,8 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Database\History.cs" />
-    <Compile Include="Database\Inspection.cs" />
+    <Compile Include="Model\Abstract\Equipment.cs" />
+    <Compile Include="Model\Abstract\Hierarchy.cs" />
+    <Compile Include="Model\Abstract\SpeciesBase.cs" />
+    <Compile Include="Model\Database\History.cs" />
+    <Compile Include="Model\Database\Inspection.cs" />
     <Compile Include="Logic\BLContext.cs" />
     <Compile Include="Logic\Delegates.cs" />
     <Compile Include="Logic\Filter.cs" />
@@ -59,15 +63,14 @@
     <Compile Include="Logic\EntityController.cs" />
     <Compile Include="Logic\HistorySet.cs" />
     <Compile Include="Logic\Interfaces.cs" />
-    <Compile Include="Logic\ControlAttribute.cs" />
-    <Compile Include="Logic\Project.cs" />
+    <Compile Include="Model\ControlAttribute.cs" />
     <Compile Include="Logic\Repository.cs" />
-    <Compile Include="Database\EntityBase.cs" />
-    <Compile Include="Database\Extinguisher.cs" />
-    <Compile Include="Database\FireCabinet.cs" />
-    <Compile Include="Database\Hose.cs" />
-    <Compile Include="Database\Hydrant.cs" />
-    <Compile Include="Database\ImageLocation.cs" />
+    <Compile Include="Model\Abstract\EntityBase.cs" />
+    <Compile Include="Model\Database\Extinguisher.cs" />
+    <Compile Include="Model\Database\FireCabinet.cs" />
+    <Compile Include="Model\Database\Hose.cs" />
+    <Compile Include="Model\Database\Hydrant.cs" />
+    <Compile Include="Model\Database\ImageLocation.cs" />
     <Compile Include="Logic\ImageSettings.cs" />
     <Compile Include="Logic\WordPassportExtinguisher.cs" />
     <Compile Include="Model\ScalePoint.cs" />
@@ -77,10 +80,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Icons.resx</DependentUpon>
     </Compile>
-    <Compile Include="Database\Location.cs" />
-    <Compile Include="Database\SpeciesExtinguisher.cs" />
-    <Compile Include="Database\SpeciesFireCabinet.cs" />
-    <Compile Include="Database\SpeciesHose.cs" />
+    <Compile Include="Model\Database\Location.cs" />
+    <Compile Include="Model\Database\KindExtinguisher.cs" />
+    <Compile Include="Model\Database\KindFireCabinet.cs" />
+    <Compile Include="Model\Database\KindHose.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\TypesCSV.Designer.cs">
       <AutoGen>True</AutoGen>

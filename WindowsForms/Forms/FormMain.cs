@@ -1,9 +1,7 @@
 ﻿using BL;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -124,7 +122,8 @@ namespace WindowsForms
             if (result == DialogResult.Cancel)
                 return;
         }
-        ContextMenuStrip FindContextMenuStrip(ToolStripItem finded)
+
+        private ContextMenuStrip FindContextMenuStrip(ToolStripItem finded)
         {
             if (finded.Owner.GetType() == typeof(ContextMenuStrip))
                 return (ContextMenuStrip)finded.Owner;

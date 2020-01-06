@@ -11,7 +11,7 @@ namespace WindowsForms
 {
     public partial class FormTypes : Form
     {
-        Type saveType;
+        private Type saveType;
         public FormTypes()
         {
             InitializeComponent();
@@ -20,17 +20,17 @@ namespace WindowsForms
             HosesMenu.Image = ImageSettings.IconsImage(typeof(Hose));
         }
 
-        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesFireCabinet));
-        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesExtinguisher));
-        private void HosesMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(SpeciesHose));
+        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindFireCabinet));
+        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindExtinguisher));
+        private void HosesMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindHose));
         private void LoadSpecies2(Type type)
         {
-            if (!type.IsSubclassOf(typeof(SpeciesBase)))
+            if (!type.IsSubclassOf(typeof(KindBase)))
                 return;
             listView.Items.Clear();
             using (var ec = new EntityController())
             {
-                foreach (SpeciesBase species in ec.Set(type))
+                foreach (KindBase species in ec.Set(type))
                 {
                     var item = new ListViewItem(species.Name);
                     var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
@@ -43,13 +43,13 @@ namespace WindowsForms
         }
         private void LoadSpecies(Type type)
         {
-            if (!type.IsSubclassOf(typeof(SpeciesBase)))
+            if (!type.IsSubclassOf(typeof(KindBase)))
                 return;
             listView.Items.Clear();
             using (var ec = new EntityController())
             {
-                
-                foreach (SpeciesBase species in ec.Set(type))
+
+                foreach (KindBase species in ec.Set(type))
                 {
                     var item = new ListViewItem(species.Name);
                     var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
@@ -164,7 +164,7 @@ namespace WindowsForms
                     var table = ec.Set(type);
                     while ((line = sr.ReadLine()) != null)
                     {
-                        var curr = (SpeciesBase)ec.CreateEntity(type);
+                        var curr = (KindBase)ec.CreateEntity(type);
                         var values = line.Split(';');
                         for (int i = 0; i < properties.Count; i++)
                         {
@@ -173,7 +173,7 @@ namespace WindowsForms
                             else if (properties[i].PropertyType == typeof(double))
                                 properties[i].SetValue(curr, Double.Parse(values[i]));
                         }
-                        if (!ec.GetTableList(table).Any(ent => ((SpeciesBase)ent).EqualsValues(curr)))
+                        if (!ec.GetTableList(table).Any(ent => ((KindBase)ent).EqualsValues(curr)))
                             table.Add(curr);
                     }
                     ec.SaveChanges();
@@ -186,11 +186,11 @@ namespace WindowsForms
                 char[] semicolon = new char[] { ';' };
                 string typeString = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries)[0];
                 var type = Type.GetType("BL." + typeString + ", BL");
-                if (type==null)
+                if (type == null)
                     return 1;
-                if (!type.IsSubclassOf(typeof(SpeciesBase)))
+                if (!type.IsSubclassOf(typeof(KindBase)))
                     return 1;
-                
+
                 var headers = sr.ReadLine().Split(semicolon, StringSplitOptions.RemoveEmptyEntries);
                 var properties = type.GetProperties().Where(p => headers.Contains(p.Name)).ToArray();
                 var propertiesName = properties.Select(p => p.Name);

@@ -2,16 +2,35 @@
 
 namespace BL
 {
+    /// <summary>
+    /// Идентификатор сущности
+    /// </summary>
     public class EntitySign
     {
-        public Type Type { get;  }
-        public int Id { get; }
-
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public EntitySign(Type typeEntity, int idEntity)
         {
-            this.Type = typeEntity;
-            this.Id = idEntity;
+            Type = typeEntity;
+            Id = idEntity;
         }
+
+        /// <summary>
+        /// Тип сущности.
+        /// </summary>
+        public Type Type { get; }
+
+        /// <summary>
+        /// Первичный ключ сущности.
+        /// </summary>
+        public int Id { get; }
+
+        /// <summary>
+        /// Сравнивает объекты по типу и первичному ключу
+        /// </summary>
+        /// <param name="obj">Объект для сравнения</param>
+        /// <returns>Идентичны ли объекты</returns>
         public override bool Equals(object obj)
         {
             if (obj.GetType() != GetType())
@@ -20,17 +39,14 @@ namespace BL
                 return true;
             return false;
         }
-        public override int GetHashCode()
-        {
-            return Type.GetHashCode() + Id.GetHashCode();
-        }
-        public static bool operator ==(EntitySign e1, object e2)
-        {
-            return Equals(e1, e2);
-        }
-        public static bool operator !=(EntitySign e1, object e2)
-        {
-            return !Equals(e1, e2);
-        }
+
+        /// <returns>Возвращает хэш-код</returns>
+        public override int GetHashCode() => Type.GetHashCode() + Id.GetHashCode();
+
+        /// <returns>Результат сравнения на равенство</returns>
+        public static bool operator ==(EntitySign e1, object e2) => Equals(e1, e2);
+
+        /// <returns>Результат сравнения на неравенство</returns>
+        public static bool operator !=(EntitySign e1, object e2) => !Equals(e1, e2);
     }
 }

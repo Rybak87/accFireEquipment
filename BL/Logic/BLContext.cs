@@ -16,9 +16,9 @@ namespace BL
         public DbSet<Hose> Hoses { get; set; }
         public DbSet<Hydrant> Hydrants { get; set; }
         public DbSet<Location> Locations { get; set; }
-        public DbSet<SpeciesExtinguisher> TypeExtinguishers { get; set; }
-        public DbSet<SpeciesHose> TypeHoses { get; set; }
-        public DbSet<SpeciesFireCabinet> TypeFireCabinets { get; set; }
+        public DbSet<KindExtinguisher> KindExtinguishers { get; set; }
+        public DbSet<KindHose> KindHoses { get; set; }
+        public DbSet<KindFireCabinet> KindFireCabinets { get; set; }
         public DbSet<History> Histories { get; set; }
         //public DbSet<FireCabinetHistory> HistoriesFireCabinet { get; set; }
 
@@ -44,21 +44,23 @@ namespace BL
         }
     }
 
-    class MyContextInitializer : DropCreateDatabaseAlways<BLContext>
+    internal class MyContextInitializer : DropCreateDatabaseAlways<BLContext>
     {
         protected override void Seed(BLContext db)
         {
             InitDatabaseHelper.Seed(db);
         }
     }
-    class MyContextInitializer2 : DropCreateDatabaseIfModelChanges<BLContext>
+
+    internal class MyContextInitializer2 : DropCreateDatabaseIfModelChanges<BLContext>
     {
         protected override void Seed(BLContext db)
         {
             InitDatabaseHelper.Seed(db);
         }
     }
-    class MyContextInitializer3 : CreateDatabaseIfNotExists<BLContext>
+
+    internal class MyContextInitializer3 : CreateDatabaseIfNotExists<BLContext>
     {
         protected override void Seed(BLContext db)
         {
@@ -70,12 +72,12 @@ namespace BL
     {
         public static void Seed(BLContext db)
         {
-            var tf = InitDefaultTypes<SpeciesFireCabinet>(Properties.TypesCSV.typesFireCabinet);
-            db.TypeFireCabinets.AddRange(tf);
-            var te = InitDefaultTypes<SpeciesExtinguisher>(Properties.TypesCSV.typesExtinguisher);
-            db.TypeExtinguishers.AddRange(te);
-            var th = InitDefaultTypes<SpeciesHose>(Properties.TypesCSV.typesHose);
-            db.TypeHoses.AddRange(th);
+            var tf = InitDefaultTypes<KindFireCabinet>(Properties.TypesCSV.typesFireCabinet);
+            db.KindFireCabinets.AddRange(tf);
+            var te = InitDefaultTypes<KindExtinguisher>(Properties.TypesCSV.typesExtinguisher);
+            db.KindExtinguishers.AddRange(te);
+            var th = InitDefaultTypes<KindHose>(Properties.TypesCSV.typesHose);
+            db.KindHoses.AddRange(th);
 
             Location l1 = new Location { Name = "Блок 1", Number = 1 };
             Location l2 = new Location { Name = "Блок 2", Number = 2 };
@@ -86,19 +88,19 @@ namespace BL
             db.Locations.Add(l3);
             db.Locations.Add(l4);
 
-            FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, TypeFireCabinet = tf[0] };
-            FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, TypeFireCabinet = tf[0] };
-            FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, TypeFireCabinet = tf[0] };
+            FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, KindFireCabinet = tf[0] };
+            FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, KindFireCabinet = tf[0] };
+            FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, KindFireCabinet = tf[0] };
             db.FireCabinets.Add(f1);
             db.FireCabinets.Add(f2);
             db.FireCabinets.Add(f3);
 
-            Extinguisher e1 = new Extinguisher { FireCabinet = f1, Number = 1, TypeExtinguisher = te[0] };
-            Extinguisher e2 = new Extinguisher { FireCabinet = f2, Number = 1, TypeExtinguisher = te[1] };
+            Extinguisher e1 = new Extinguisher { FireCabinet = f1, Number = 1, KindExtinguisher = te[0] };
+            Extinguisher e2 = new Extinguisher { FireCabinet = f2, Number = 1, KindExtinguisher = te[1] };
             db.Extinguishers.Add(e1);
             db.Extinguishers.Add(e2);
 
-            Hose h1 = new Hose { FireCabinet = f1, Number = 1, TypeHose = th[0] };
+            Hose h1 = new Hose { FireCabinet = f1, Number = 1, KindHose = th[0] };
             db.Hoses.Add(h1);
 
             db.SaveChanges();

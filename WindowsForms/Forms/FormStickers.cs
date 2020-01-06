@@ -1,12 +1,8 @@
 ﻿using BL;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Sett = BL.Properties.Settings;
@@ -182,7 +178,8 @@ namespace WindowsForms
             var sign = (EntitySign)item.Tag;
             EditEntity?.Invoke(sign);
         }
-        string CreateStickerExtinguisher(EntityBase entityBase2)
+
+        private string CreateStickerExtinguisher(EntityBase entityBase2)
         {
             Extinguisher entityBase = (Extinguisher)entityBase2;
             var sample = txbExtinguishers.Text;
@@ -191,7 +188,8 @@ namespace WindowsForms
             sample = sample.Replace("#E", entityBase.Number.ToString());
             return sample;
         }
-        string CreateStickerFireCabinet(EntityBase entityBase2)
+
+        private string CreateStickerFireCabinet(EntityBase entityBase2)
         {
             FireCabinet entityBase = (FireCabinet)entityBase2;
             var sample = txbFireCabinets.Text;

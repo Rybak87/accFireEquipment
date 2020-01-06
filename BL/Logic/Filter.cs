@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL
 {
@@ -26,7 +21,7 @@ namespace BL
     }
     public class FilterSet
     {
-        Filter[] Filters { get; }
+        private Filter[] Filters { get; }
         public bool Required { get; }
         public FilterSet(Func<Equipment, bool> condition, Func<Equipment, string> execution, bool required = false)
         {

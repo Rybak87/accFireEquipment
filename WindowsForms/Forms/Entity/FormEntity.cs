@@ -1,11 +1,9 @@
 ﻿using BL;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -108,7 +106,7 @@ namespace WindowsForms
                 }
                 yPosControl += 25;
             }
-            this.Height = yPosControl + 100;
+            Height = yPosControl + 100;
             //if (cbxTypeExtinguisher != null)
             //    GetWeightPressure(cbxTypeExtinguisher);
         }
@@ -149,7 +147,7 @@ namespace WindowsForms
             var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             cntrl.DataBindings.Add(bind);
             cntrl.DataBindings[0].WriteValue();
-            if (prop.Name == "TypeExtinguisher")
+            if (prop.Name == "KindExtinguisher")
             {
                 ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
             }
@@ -222,8 +220,8 @@ namespace WindowsForms
 
         private void GetWeightPressure(ComboBox cntrl)
         {
-            double weight = ((SpeciesExtinguisher)cntrl.SelectedItem).NominalWeight;
-            double pressure = ((SpeciesExtinguisher)cntrl.SelectedItem).NominalPressure;
+            double weight = ((KindExtinguisher)cntrl.SelectedItem).NominalWeight;
+            double pressure = ((KindExtinguisher)cntrl.SelectedItem).NominalPressure;
             cntrl.DataBindings[0].WriteValue();
             this.weight.Value = (decimal)weight;
             this.pressure.Value = (decimal)pressure;

@@ -1,23 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace BL
+﻿namespace BL
 {
-    public interface INumber
-    {
-        int Number { get; set; }
-    }
-    //public interface IPoint
-    //{
-    //    ScalePoint Point { get; set; }
-    //}
-    //public interface ITypes
-    //{
-    //    string Name { get; set; }
-    //    string Manufacturer { get; set; }
-    //    bool EqualsValues(EntityBase obj);
-    //}
+    /// <summary>
+    /// Наклейка.
+    /// </summary>
     public interface ISticker
     {
+        /// <summary>
+        /// Наличие наклейки.
+        /// </summary>
         bool IsSticker { get; set; }
     }
 }

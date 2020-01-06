@@ -4,8 +4,11 @@ using System.Linq;
 
 namespace BL
 {
+    /// <summary>
+    /// Вид пожарного шкафа.
+    /// </summary>
     [Table("SpeciesFireCabinets")]
-    public class SpeciesFireCabinet : SpeciesBase// EntityBase, ITypes
+    public class KindFireCabinet : KindBase// EntityBase, ITypes
     {
         public virtual ICollection<FireCabinet> FireCabinets { get; set; }
 
@@ -13,7 +16,7 @@ namespace BL
         [Control("TextBox", false)]
         public string Species { get; set; } //Вид
 
-        public SpeciesFireCabinet()
+        public KindFireCabinet()
         { }
         public override string ToString()
         {

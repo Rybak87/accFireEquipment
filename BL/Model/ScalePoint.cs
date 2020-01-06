@@ -1,40 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace BL
 {
+    /// <summary>
+    /// Относительная точка.
+    /// </summary>
     [ComplexType]
     public class ScalePoint
     {
-        public double PercentLeft { get; set; }
-        public double PercentTop { get; set; }
-        public bool Empty { get; set; }
-
-        public ScalePoint(double percentLeft, double percentTop, bool empty)
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="percentLeft">Относительное расположение слева от 0 до 1.</param>
+        /// <param name="percentTop">Относительное расположение сверху от 0 до 1.</param>
+        /// <param name="displayed">Условие отображения.</param>
+        public ScalePoint(double percentLeft, double percentTop, bool displayed)
         {
             PercentLeft = percentLeft;
             PercentTop = percentTop;
-            Empty = empty;
+            Displayed = displayed;
         }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public ScalePoint()
         {
             PercentLeft = 0;
             PercentTop = 0;
-            Empty = true;
+            Displayed = false;
         }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="mousePoint"></param>
+        /// <param name="control"></param>
         public ScalePoint(Point mousePoint, Control control)
         {
             var point = control.PointToClient(mousePoint);
             PercentLeft = (double)point.X / control.Width;
             PercentTop = (double)point.Y / control.Height;
-            Empty = false;
+            Displayed = true;
         }
+
+        /// <summary>
+        /// Относительное расположение слева от 0 до 1.
+        /// </summary>
+        public double PercentLeft { get; set; }
+
+        /// <summary>
+        /// Относительное расположение слева от 0 до 1.
+        /// </summary>
+        public double PercentTop { get; set; }
+
+        /// <summary>
+        /// Условие отображения.
+        /// </summary>
+        public bool Displayed { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace BL
         public string TextIcon { get => label.Text; set => label.Text = value; }
         private ScalePoint scalePoint;
 
-        double ScaleLeft { get => (double)Left / Parent.Width; }
-        double ScaleTop { get => (double)Top / Parent.Height; }
+        private double ScaleLeft { get => (double)Left / Parent.Width; }
+        private double ScaleTop { get => (double)Top / Parent.Height; }
 
         public IconEntity(PictureBox parent, Image image, EntitySign sign, ScalePoint scalePoint, string textLabel)
         {
@@ -122,7 +122,7 @@ namespace BL
             using (var ec = new EntityController())
             {
                 var entity = ec.GetEntity(Sign);
-                ((Equipment)entity).Point.Empty = true;
+                ((Equipment)entity).Point.Displayed = false;
                 ec.Entry(entity).State = EntityState.Modified;
                 ec.SaveChanges();
             }

@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace BL
 {
     [Table("SpeciesExtinguishers")]
-    public class SpeciesExtinguisher: SpeciesBase//EntityBase, ITypes
+    public class KindExtinguisher : KindBase//EntityBase, ITypes
     {
         public virtual ICollection<Extinguisher> Extinguishers { get; set; }//Огнетушитель
 
@@ -34,6 +33,10 @@ namespace BL
         [Control("NumericUpDownDecimal", false)]
         public double WeightExtinguishingAgent { get; set; }//Масса ОТВ
 
+        [Column("Марка ОТВ")]
+        [Control("TextBox", false)]
+        public double BrandExtinguishingAgent { get; set; }//Масса ОТВ
+
         [Column("Объем")]
         [Control("NumericUpDownDecimal", false)]
         public double Volume { get; set; }//Объём
@@ -52,7 +55,7 @@ namespace BL
 
         public override ICollection<EntityBase> Childs { get => Extinguishers.Cast<EntityBase>().ToList(); }
 
-        public SpeciesExtinguisher()
+        public KindExtinguisher()
         { }
         public override string ToString()
         {

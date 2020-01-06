@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Word = Microsoft.Office.Interop.Word;
-using BL;
-using System.IO;
 
 namespace BL
 {
     public class WordPassportExtinguisher
     {
-        Word.Application word = new Word.Application();
-        Word.Document workBook;
-        IEnumerable<Word.Bookmark> bookmarks;
+        private Word.Application word = new Word.Application();
+        private Word.Document workBook;
+        private IEnumerable<Word.Bookmark> bookmarks;
 
         public WordPassportExtinguisher()
         {
@@ -36,10 +31,10 @@ namespace BL
             ReplaceBookmark("DateCommissioning", ex.Histories.First().DateChange.ToShortDateString() + "\t");
             ReplaceBookmark("DateCreate", ex.DateProduction.ToShortDateString() + "\t");
             ReplaceBookmark("Location", ex.FireCabinet.ToString() + "\t");
-            ReplaceBookmark("Manufacturer", ex.TypeExtinguisher.Manufacturer + "\t");
+            ReplaceBookmark("Manufacturer", ex.KindExtinguisher.Manufacturer + "\t");
             ReplaceBookmark("PlantNumber", "№ " + ex.SerialNumber + "\t");
-            ReplaceBookmark("Specie", ex.TypeExtinguisher.Name + "\t");
-            ReplaceBookmark("WeightOTV", ex.TypeExtinguisher.WeightExtinguishingAgent + " кг.\t");
+            ReplaceBookmark("Specie", ex.KindExtinguisher.Name + "\t");
+            ReplaceBookmark("WeightOTV", ex.KindExtinguisher.WeightExtinguishingAgent + " кг.\t");
             FillTable(ex);
             word.Visible = true;
         }

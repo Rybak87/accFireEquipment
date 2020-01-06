@@ -1,10 +1,10 @@
-﻿using System;
+﻿using BL;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Drawing;
-using System.Windows.Forms;
-using BL;
 using System.Data.Entity;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace WindowsForms
 {
@@ -127,7 +127,7 @@ namespace WindowsForms
                     SelectedNode = localNode;
                     LeftMouseDoubleClick?.Invoke((EntitySign)localNode.Tag);
                 }
-                    
+
                 m.Result = IntPtr.Zero;
             }
             else base.WndProc(ref m);

@@ -51,15 +51,15 @@ namespace BL
         }
 
         /// <summary>Добавляет сущности в БД.</summary>
-        public void AddRangeEntity(EntityBase entity, int count)
+        public void AddRangeEntity(Hierarchy entity, int count)
         {
             AddEntity(entity);
-            int currNumber = ((INumber)entity).Number;
+            int currNumber = entity.Number;
             for (int i = 1; i < count; i++)
             {
                 currNumber++;
                 var copyEntity = CopyEntity(entity.GetSign());
-                ((INumber)copyEntity).Number = currNumber;
+                ((Hierarchy)copyEntity).Number = currNumber;
                 AddEntity(copyEntity);
             }
         }
@@ -97,9 +97,9 @@ namespace BL
         {
             var entity = GetEntity(sign);
             entityRemove?.Invoke(entity);
-            if (sign.Type.IsSubclassOf(typeof(SpeciesBase)))
+            if (sign.Type.IsSubclassOf(typeof(KindBase)))
             {
-                if (((SpeciesBase)entity).Childs.Count != 0)
+                if (((KindBase)entity).Childs.Count != 0)
                 {
                     MessageBox.Show("Существует инвентарь с этим типом");
                     return;
@@ -122,12 +122,12 @@ namespace BL
         /// <summary>
         /// Возвращает следующий по порядку номер подсущности.
         /// </summary>
-        public int GetNumberChild(EntityBase entity, Type childType)
+        public int GetNumberChild(Hierarchy entity, Type childType)
         {
             var propertiesEntity = entity.GetType().GetProperties();
             var desiredType = typeof(ICollection<>).MakeGenericType(childType);
             var findedProperty = propertiesEntity.Single(p => p.PropertyType == desiredType);
-            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<INumber>;
+            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<Hierarchy>;
             if (findedCollection.Count() != 0)
                 return findedCollection.Max(ch => ch.Number) + 1;
             else
@@ -136,16 +136,16 @@ namespace BL
         /// <summary>
         /// Возвращает следующий по порядку номер сущности.
         /// </summary>
-        public int GetNumber(EntityBase entity)
+        public int GetNumber(Hierarchy entity)
         {
             var EntityBaseCollection = GetTableList(entity.GetType());
-            var findedCollection = EntityBaseCollection.Cast<INumber>();
+            var findedCollection = EntityBaseCollection.Cast<Hierarchy>();
             if (findedCollection.Count() != 0)
                 return findedCollection.Max(e => e.Number) + 1;
             else
                 return 1;
         }
-        
+
 
         public List<(PropertyInfo, ControlAttribute, string)> GetEditProperties(EntityBase entity)
         {
@@ -154,10 +154,6 @@ namespace BL
             {
                 var controlAttr = GetControlAttribute(prop);
                 if (controlAttr == null)
-                    continue;
-
-                bool controlHide = controlAttr.IsCanHide;
-                if (controlHide)
                     continue;
 
                 var nameAttr = GetColumnAttribute(prop)?.Name;
@@ -186,10 +182,10 @@ namespace BL
             var result = new List<Equipment>();
 
             var fireCabinets = Entry(location).Collection(l => l.FireCabinets)?.Query().AsNoTracking();
-            var drawFireCabinets = fireCabinets.Where(f => !f.Point.Empty);
-            var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(e => !e.Point.Empty);
-            var drawHoses = fireCabinets.SelectMany(f => f.Hoses).Where(h => !h.Point.Empty);
-            var drawHydrants = fireCabinets.SelectMany(f => f.Hydrants).Where(hy => !hy.Point.Empty);
+            var drawFireCabinets = fireCabinets.Where(f => f.Point.Displayed);
+            var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(e => e.Point.Displayed);
+            var drawHoses = fireCabinets.SelectMany(f => f.Hoses).Where(h => h.Point.Displayed);
+            var drawHydrants = fireCabinets.SelectMany(f => f.Hydrants).Where(hy => hy.Point.Displayed);
             result.AddRange(drawFireCabinets);
             result.AddRange(drawExtinguishers);
             result.AddRange(drawHoses);
