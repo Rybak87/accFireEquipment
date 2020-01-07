@@ -4,20 +4,26 @@ using System.Linq;
 
 namespace BL
 {
+    /// <summary>
+    /// Вид рукава.
+    /// </summary>
     [Table("SpeciesHoses")]
-    public class KindHose : KindBase//EntityBase, ITypes
+    public class KindHose : KindBase
     {
-        public virtual ICollection<Hose> Hoses { get; set; }
-
-        [Column("Вид")]
-        [Control("TextBox", false)]
-        public string Species { get; set; } //Вид
-        public override ICollection<EntityBase> Childs { get => Hoses.Cast<EntityBase>().ToList(); }
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public KindHose()
         { }
-        public override string ToString()
-        {
-            return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
-        }
+
+        /// <summary>
+        /// Коллекция пожарного инвентаря данного типа.
+        /// </summary>
+        public override ICollection<EntityBase> Childs { get => Hoses.Cast<EntityBase>().ToList(); }
+
+        /// <summary>
+        /// Коллекция рукавов данного типа.
+        /// </summary>
+        public virtual ICollection<Hose> Hoses { get; set; }
     }
 }

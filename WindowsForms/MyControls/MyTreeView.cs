@@ -8,12 +8,25 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Частный TreeView
+    /// </summary>
     public class MyTreeView : TreeView
     {
-        public event Action<EntitySign> LeftMouseClick;
-        public event Action<EntitySign> LeftMouseDoubleClick;
+        /// <summary>
+        /// Коллекция выпадающих меню по типу.
+        /// </summary>
         private Dictionary<Type, ContextMenuStrip> dictMenu;
+
+        /// <summary>
+        /// Коллекция узлов по идентификатору.
+        /// </summary>
         private Dictionary<EntitySign, TreeNode> dictNodes;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="dictMenu"></param>
         public MyTreeView(Dictionary<Type, ContextMenuStrip> dictMenu)
         {
             dictNodes = new Dictionary<EntitySign, TreeNode>();
@@ -25,6 +38,17 @@ namespace WindowsForms
             DragDrop += treeView_DragDrop;
             NodeMouseClick += TreeViewDB_MouseClick;
         }
+
+        /// <summary>
+        /// Событие по левому клику мышью.
+        /// </summary>
+        public event Action<EntitySign> LeftMouseClick;
+
+        /// <summary>
+        /// Событие по двойному левому клику мышью.
+        /// </summary>
+        public event Action<EntitySign> LeftMouseDoubleClick;
+
         #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -82,6 +106,12 @@ namespace WindowsForms
             }
         }
         #endregion
+
+        /// <summary>
+        /// Обработчик события клика мышью.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TreeViewDB_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Button == MouseButtons.Right)
@@ -98,6 +128,11 @@ namespace WindowsForms
             SelectedNode = e.Node;
             LeftMouseClick?.Invoke(entitySign);
         }
+
+        /// <summary>
+        /// Переименование узлов определенного типа.
+        /// </summary>
+        /// <param name="type">Тип.</param>
         public void RenameNodesOfType(Type type)
         {
             var nodes = dictNodes.Where(i => i.Key.Type == type);
@@ -108,14 +143,20 @@ namespace WindowsForms
                     node.Value.Text = ec.GetEntity(node.Key).ToString();
             }
         }
-        private bool ContainsNode(TreeNode node1, TreeNode node2)
-        {
-            if (node2 == null)
-                return false;
-            if (node2.Parent == null) return false;
-            if (node2.Parent.Equals(node1)) return true;
-            return ContainsNode(node1, node2.Parent);
-        }
+
+        //private bool ContainsNode(TreeNode node1, TreeNode node2)
+        //{
+        //    if (node2 == null)
+        //        return false;
+        //    if (node2.Parent == null) return false;
+        //    if (node2.Parent.Equals(node1)) return true;
+        //    return ContainsNode(node1, node2.Parent);
+        //}
+
+        /// <summary>
+        /// Обрабатывает сообщения Windows.
+        /// </summary>
+        /// <param name="m">Сообщение.</param>
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == 0x203) // определение двойного клика
@@ -132,6 +173,10 @@ namespace WindowsForms
             }
             else base.WndProc(ref m);
         }
+
+        /// <summary>
+        /// Заполнить данными.
+        /// </summary>
         public void LoadFromContext()
         {
             this.SuspendDrawing();
@@ -184,6 +229,11 @@ namespace WindowsForms
                 return child;
             }
         }
+
+        /// <summary>
+        /// Добавить узел.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
         public void NodeAdd(Hierarchy entity)
         {
             TreeNode nodeParent;
@@ -202,6 +252,11 @@ namespace WindowsForms
             dictNodes.Add(entity.GetSign(), newNode);
             SelectedNode = newNode;
         }
+
+        /// <summary>
+        /// Переместить узел.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
         public void NodeMove(Hierarchy entity)
         {
             var saveSelectedNode = SelectedNode;
@@ -223,6 +278,11 @@ namespace WindowsForms
             currNode.Text = entity.ToString();
             SelectedNode = saveSelectedNode;
         }
+
+        /// <summary>
+        /// Удалить узел.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
         public void NodeRemove(EntityBase entity)
         {
             Nodes.Remove(dictNodes[entity.GetSign()]);

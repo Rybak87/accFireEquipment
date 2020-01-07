@@ -4,62 +4,96 @@ using System.Linq;
 
 namespace BL
 {
+    /// <summary>
+    /// Вид огнетушителя.
+    /// </summary>
     [Table("SpeciesExtinguishers")]
-    public class KindExtinguisher : KindBase//EntityBase, ITypes
+    public class KindExtinguisher : KindBase
     {
-        public virtual ICollection<Extinguisher> Extinguishers { get; set; }//Огнетушитель
-
-        [Column("Вид")]
-        [Control("TextBox", false)]
-        public string Species { get; set; } //Вид
-
-        [Column("Номинальная масса")]
-        [Control("NumericUpDownDecimal", false)]
-        public double NominalWeight { get; set; }//Номинальная масса
-
-        [Column("Номинальное давление")]
-        [Control("NumericUpDownDecimal", false)]
-        public double NominalPressure { get; set; }//Номинальное давление
-
-        [Column("Минимальная масса")]
-        [Control("NumericUpDownDecimal", false)]
-        public double MinWeight { get; set; }//Минимальная масса
-
-        [Column("Минимальное давление")]
-        [Control("NumericUpDownDecimal", false)]
-        public double MinPressure { get; set; }//Минимальное давление
-
-        [Column("Масса ОТВ")]
-        [Control("NumericUpDownDecimal", false)]
-        public double WeightExtinguishingAgent { get; set; }//Масса ОТВ
-
-        [Column("Марка ОТВ")]
-        [Control("TextBox", false)]
-        public double BrandExtinguishingAgent { get; set; }//Масса ОТВ
-
-        [Column("Объем")]
-        [Control("NumericUpDownDecimal", false)]
-        public double Volume { get; set; }//Объём
-
-        [Column("Время выхода ОТВ")]
-        [Control("NumericUpDownDecimal", false)]
-        public double OutputTime { get; set; }//Время выхода ОТВ
-
-        [Column("Длина струи")]
-        [Control("NumericUpDownDecimal", false)]
-        public double LengthStream { get; set; }//Длина струи
-
-        [Column("Класс пожара")]
-        [Control("TextBox", false)]
-        public string FireClass { get; set; }//Класс пожара
-
-        public override ICollection<EntityBase> Childs { get => Extinguishers.Cast<EntityBase>().ToList(); }
-
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public KindExtinguisher()
         { }
-        public override string ToString()
-        {
-            return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
-        }
+
+        /// <summary>
+        /// Коллекция пожарного инвентаря данного типа.
+        /// </summary>
+        public override ICollection<EntityBase> Childs { get => Extinguishers.Cast<EntityBase>().ToList(); }
+
+        /// <summary>
+        /// Коллекция огнетушителей данного типа.
+        /// </summary>
+        public virtual ICollection<Extinguisher> Extinguishers { get; set; }
+
+        /// <summary>
+        /// Номинальная масса.
+        /// </summary>
+        [Column("Номинальная масса")]
+        [Control("NumericUpDownDecimal", false)]
+        public double NominalWeight { get; set; }
+
+        /// <summary>
+        /// Номинальное давление.
+        /// </summary>
+        [Column("Номинальное давление")]
+        [Control("NumericUpDownDecimal", false)]
+        public double NominalPressure { get; set; }
+
+        /// <summary>
+        /// Минимально допустимая масса.
+        /// </summary>
+        [Column("Минимальная масса")]
+        [Control("NumericUpDownDecimal", false)]
+        public double MinWeight { get; set; }
+
+        /// <summary>
+        /// Минимально допустимок давление.
+        /// </summary>
+        [Column("Минимальное давление")]
+        [Control("NumericUpDownDecimal", false)]
+        public double MinPressure { get; set; }
+
+        /// <summary>
+        /// Масса ОТВ.
+        /// </summary>
+        [Column("Масса ОТВ")]
+        [Control("NumericUpDownDecimal", false)]
+        public double WeightExtinguishingAgent { get; set; }
+
+        /// <summary>
+        /// Марка ОТВ.
+        /// </summary>
+        [Column("Марка ОТВ")]
+        [Control("TextBox", false)]
+        public double BrandExtinguishingAgent { get; set; }
+
+        /// <summary>
+        /// Объём.
+        /// </summary>
+        [Column("Объем")]
+        [Control("NumericUpDownDecimal", false)]
+        public double Volume { get; set; }
+
+        /// <summary>
+        /// Время выхода ОТВ.
+        /// </summary>
+        [Column("Время выхода ОТВ")]
+        [Control("NumericUpDownDecimal", false)]
+        public double OutputTime { get; set; }
+
+        /// <summary>
+        /// Длина струи.
+        /// </summary>
+        [Column("Длина струи")]
+        [Control("NumericUpDownDecimal", false)]
+        public double LengthStream { get; set; }
+
+        /// <summary>
+        /// Класс пожара.
+        /// </summary>
+        [Column("Класс пожара")]
+        [Control("TextBox", false)]
+        public string FireClass { get; set; }
     }
 }

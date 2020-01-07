@@ -7,8 +7,6 @@ namespace WindowsForms
 {
     public partial class FormReport : Form
     {
-        public event Action<EntitySign> EditEntity;
-        private Action lastReport;
         private FilterSet fName = HelperListView.filterName;
         private FilterSet fParent = HelperListView.filterParent;
         private FilterSet fLocation = HelperListView.filterLocation;
@@ -18,6 +16,9 @@ namespace WindowsForms
         private FilterSet fHydrantFault = HelperListView.filterHydrantFault;
         private FilterSet fExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public FormReport()
         {
             InitializeComponent();
@@ -46,6 +47,20 @@ namespace WindowsForms
             RechargeExtinguishersMenu.Click += (s, e) => RechargeExtinguishersReport();
             RechargeExtinguishersMenu.Click += (s, e) => lastReport = () => RechargeExtinguishersReport();
         }
+
+        /// <summary>
+        /// Пос
+        /// </summary>
+        private Action lastReport;
+
+        /// <summary>
+        /// Событие по двойному клику мышью.
+        /// </summary>
+        public event Action<EntitySign> ListViewDoubleClick;
+
+        /// <summary>
+        /// Вывод полного отчета.
+        /// </summary>
         private void FullReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
@@ -54,31 +69,56 @@ namespace WindowsForms
             listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
             listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
         }
+
+        /// <summary>
+        /// Отчет по пожарным шкафам.
+        /// </summary>
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Недостатки");
             listView.EntityReport(typeof(FireCabinet), fLocation, fName, fFireCabinetFault);
         }
+
+        /// <summary>
+        /// Отчет по огнетушителям.
+        /// </summary>
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
         }
+
+        /// <summary>
+        /// Отчет по рукавам.
+        /// </summary>
         private void HosesReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
         }
+
+        /// <summary>
+        /// Отчет по пожарным кранам.
+        /// </summary>
         private void HydrantsReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
         }
+
+        /// <summary>
+        /// Отчет по перезарядке огнетушителей.
+        /// </summary>
         private void RechargeExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
             listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherRecharge);
         }
+
+        /// <summary>
+        /// Инициализация колонок в ListView.
+        /// </summary>
+        /// <param name="columnsNames"></param>
         private void InitColumns(params string[] columnsNames)
         {
             listView.Clear();
@@ -99,13 +139,19 @@ namespace WindowsForms
             }
             listView.Columns.AddRange(columnHeaders);
         }
+
+        /// <summary>
+        /// Обработчик события двойного клика ListView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void listView_DoubleClick(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0)
                 return;
             var item = listView.SelectedItems[0];
             var sign = (EntitySign)item.Tag;
-            EditEntity?.Invoke(sign);
+            ListViewDoubleClick?.Invoke(sign);
             lastReport?.Invoke();
         }
     }

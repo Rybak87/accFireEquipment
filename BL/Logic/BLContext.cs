@@ -6,41 +6,79 @@ using System.Reflection;
 
 namespace BL
 {
+    /// <summary>
+    /// Контекст.
+    /// </summary>
     public class BLContext : DbContext
     {
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public BLContext() : base("AccExtinguisherConnection")
         { }
 
-        public DbSet<Extinguisher> Extinguishers { get; set; }
-        public DbSet<FireCabinet> FireCabinets { get; set; }
-        public DbSet<Hose> Hoses { get; set; }
-        public DbSet<Hydrant> Hydrants { get; set; }
-        public DbSet<Location> Locations { get; set; }
-        public DbSet<KindExtinguisher> KindExtinguishers { get; set; }
-        public DbSet<KindHose> KindHoses { get; set; }
-        public DbSet<KindFireCabinet> KindFireCabinets { get; set; }
-        public DbSet<History> Histories { get; set; }
-        //public DbSet<FireCabinetHistory> HistoriesFireCabinet { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            //modelBuilder.Entity<Location>()
-            //    .HasMany(l => l.FireCabinets)
-            //    .WithRequired(l => l.Location)
-            //    .HasForeignKey(s => s.LocationId)
-            //    .WillCascadeOnDelete(true);
-            //    modelBuilder.Entity<FireCabinet>()
-            //.HasMany(c => c.Extinguishers)
-            //.WithRequired(o => o.FireCabinet)
-            //.HasForeignKey(s => s.FireCabinetId)
-            //.WillCascadeOnDelete(true);
-            //modelBuilder.Entity<History>().HasAlternateKey(u => new { u.Type, u.Id });
-        }
+        /// <summary>
+        /// Статический конструктор.
+        /// </summary>
         static BLContext()
         {
             //Database.SetInitializer(new MyContextInitializer());
             Database.SetInitializer(new MyContextInitializer2());
             //Database.SetInitializer(new MyContextInitializer3());
+        }
+
+        /// <summary>
+        /// Огнетушители.
+        /// </summary>
+        public DbSet<Extinguisher> Extinguishers { get; set; }
+
+        /// <summary>
+        /// Пожарные шкафы.
+        /// </summary>
+        public DbSet<FireCabinet> FireCabinets { get; set; }
+
+        /// <summary>
+        /// Рукава.
+        /// </summary>
+        public DbSet<Hose> Hoses { get; set; }
+
+        /// <summary>
+        /// Пожарные краны.
+        /// </summary>
+        public DbSet<Hydrant> Hydrants { get; set; }
+
+        /// <summary>
+        /// Помещения.
+        /// </summary>
+        public DbSet<Location> Locations { get; set; }
+
+        /// <summary>
+        /// Виды огнетушителей.
+        /// </summary>
+        public DbSet<KindExtinguisher> KindExtinguishers { get; set; }
+
+        /// <summary>
+        /// Виды рукавов.
+        /// </summary>
+        public DbSet<KindHose> KindHoses { get; set; }
+
+        /// <summary>
+        /// Виды пожарных шкафов.
+        /// </summary>
+        public DbSet<KindFireCabinet> KindFireCabinets { get; set; }
+
+        /// <summary>
+        /// Изменения пожарного инвентаря.
+        /// </summary>
+        public DbSet<History> Histories { get; set; }
+
+        /// <summary>
+        /// Инициализатор связей, настроек БД.
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
         }
     }
 
@@ -68,8 +106,15 @@ namespace BL
         }
     }
 
+    /// <summary>
+    /// Инициализатор БД.
+    /// </summary>
     public static class InitDatabaseHelper
     {
+        /// <summary>
+        /// Инициализатор БД.
+        /// </summary>
+        /// <param name="db">Контекст БД.</param>
         public static void Seed(BLContext db)
         {
             var tf = InitDefaultTypes<KindFireCabinet>(Properties.TypesCSV.typesFireCabinet);
@@ -105,6 +150,12 @@ namespace BL
 
             db.SaveChanges();
         }
+
+        /// <summary>
+        /// Возвращает коллекцию видов пожарного инвентаря.
+        /// </summary>
+        /// <typeparam name="T">Вид пожарного инвентаря.</typeparam>
+        /// <param name="fileBinary">Файл для чтения.</param>
         private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T : class, new()
         {
             Stream stream = new MemoryStream(fileBinary);

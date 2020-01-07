@@ -18,8 +18,11 @@ namespace WindowsForms
         private FilterSet filterFireCabinetSticker;
         private FilterSet filterExtinguisherSticker;
         private Type lastType;
-        public event Action<EntitySign> EditEntity;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public FormStickers()
         {
             InitializeComponent();
@@ -33,18 +36,35 @@ namespace WindowsForms
             filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
         }
 
+        /// <summary>
+        /// Событие по двойному клику по ListView.
+        /// </summary>
+        public event Action<EntitySign> ListViewDoubleClick;
+
+        /// <summary>
+        /// Вывод пожарных шкафов в ListView.
+        /// </summary>
         private void FireCabinetsReport()
         {
             InitColumns("Тип", "Наклейка");
             lastType = typeof(FireCabinet);
             listView.EntityReport(typeof(FireCabinet), filterParent, filterName, filterFireCabinetSticker);
         }
+
+        /// <summary>
+        /// Вывод огнетушителей в ListView.
+        /// </summary>
         private void ExtinguishersReport()
         {
             InitColumns("Тип", "Пожарный шкаф", "Наклейка");
             lastType = typeof(Extinguisher);
             listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherSticker);
         }
+
+        /// <summary>
+        /// Инициализация колонок ListView.
+        /// </summary>
+        /// <param name="columnsNames"></param>
         private void InitColumns(params string[] columnsNames)
         {
             listView.Clear();
@@ -64,6 +84,36 @@ namespace WindowsForms
             }
             listView.Columns.AddRange(columnHeaders);
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            if (!txbFireCabinets.Text.CorrectSample('L', 'F'))
+            {
+                MessageBox.Show("Неккоректный шаблон: Пожарные шкафы");
+                return;
+            }
+            if (!txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
+            {
+                MessageBox.Show("Неккоректный шаблон: Огнетушители");
+                return;
+            }
+
+            if (lastType == typeof(FireCabinet))
+                FireCabinetsReport();
+            else if (lastType == typeof(Extinguisher))
+                ExtinguishersReport();
+        }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
             var stickers = new List<string>();
@@ -119,39 +169,25 @@ namespace WindowsForms
             sheet.Columns.Font.Size = sizeFont;
         }
 
-        private void SetColumnsWidth(Excel.Application exl, Excel.Worksheet sheet)
+        /// <summary>
+        /// Обработчик события двойного клика ListView.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void listView_DoubleClick(object sender, EventArgs e)
         {
-            var pageWidth = exl.Application.CentimetersToPoints(21);
-            var leftMargin = sheet.PageSetup.LeftMargin;
-            var rightMargin = sheet.PageSetup.RightMargin;
-            var contentWidth = pageWidth - leftMargin - rightMargin;
-            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
-            var rate = (double)firstCell.Width / (double)firstCell.ColumnWidth;
-            sheet.Columns.ColumnWidth = (contentWidth / rate / (double)numColumns.Value);
-        }
-        private void SetRowssWidth(Excel.Application exl, Excel.Worksheet sheet)
-        {
-            var pageHeight = exl.Application.CentimetersToPoints(29.7);
-            var topMargin = sheet.PageSetup.TopMargin;
-            var bottomMargin = sheet.PageSetup.BottomMargin;
-            var contentHeight = pageHeight - topMargin - bottomMargin;
-            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
-            var rate = firstCell.Height / firstCell.RowHeight;
-            sheet.Columns.RowHeight = (contentHeight / rate / (double)numRows.Value);
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var item = listView.SelectedItems[0];
+            var sign = (EntitySign)item.Tag;
+            ListViewDoubleClick?.Invoke(sign);
         }
 
-        private static int CalcFontSize(string template, double currWidth)
-        {
-            int currSizeFont = 8;
-            int len;
-            do
-            {
-                currSizeFont += 2;
-                var f = new Font("Calibri", currSizeFont, FontStyle.Regular);
-                len = TextRenderer.MeasureText(template, f).Width;
-            } while (currWidth * 7 > len);
-            return currSizeFont;
-        }
+        /// <summary>
+        /// Обработчик события изменения значения CheckBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void chkWithoutStickers_CheckedChanged(object sender, EventArgs e)
         {
             if (chkWithoutStickers.Checked)
@@ -170,15 +206,12 @@ namespace WindowsForms
             else if (lastType == typeof(Extinguisher))
                 ExtinguishersReport();
         }
-        private void listView_DoubleClick(object sender, EventArgs e)
-        {
-            if (listView.SelectedItems.Count == 0)
-                return;
-            var item = listView.SelectedItems[0];
-            var sign = (EntitySign)item.Tag;
-            EditEntity?.Invoke(sign);
-        }
 
+        /// <summary>
+        /// Возвращает строку шаблона именования огнетушителя.
+        /// </summary>
+        /// <param name="entityBase2"></param>
+        /// <returns></returns>
         private string CreateStickerExtinguisher(EntityBase entityBase2)
         {
             Extinguisher entityBase = (Extinguisher)entityBase2;
@@ -189,6 +222,11 @@ namespace WindowsForms
             return sample;
         }
 
+        /// <summary>
+        /// Возвращает строку шаблона именования пожарного шкафа.
+        /// </summary>
+        /// <param name="entityBase2"></param>
+        /// <returns></returns>
         private string CreateStickerFireCabinet(EntityBase entityBase2)
         {
             FireCabinet entityBase = (FireCabinet)entityBase2;
@@ -198,23 +236,55 @@ namespace WindowsForms
             return sample;
         }
 
-        private void btnApply_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Установка ширины колонок в Excel.
+        /// </summary>
+        /// <param name="exl"></param>
+        /// <param name="sheet"></param>
+        private void SetColumnsWidth(Excel.Application exl, Excel.Worksheet sheet)
         {
-            if (!txbFireCabinets.Text.CorrectSample('L', 'F'))
-            {
-                MessageBox.Show("Неккоректный шаблон: Пожарные шкафы");
-                return;
-            }
-            if (!txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
-            {
-                MessageBox.Show("Неккоректный шаблон: Огнетушители");
-                return;
-            }
+            var pageWidth = exl.Application.CentimetersToPoints(21);
+            var leftMargin = sheet.PageSetup.LeftMargin;
+            var rightMargin = sheet.PageSetup.RightMargin;
+            var contentWidth = pageWidth - leftMargin - rightMargin;
+            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
+            var rate = (double)firstCell.Width / (double)firstCell.ColumnWidth;
+            sheet.Columns.ColumnWidth = (contentWidth / rate / (double)numColumns.Value);
+        }
 
-            if (lastType == typeof(FireCabinet))
-                FireCabinetsReport();
-            else if (lastType == typeof(Extinguisher))
-                ExtinguishersReport();
+        /// <summary>
+        /// Установка высоты строк в Excel.
+        /// </summary>
+        /// <param name="exl"></param>
+        /// <param name="sheet"></param>
+        private void SetRowssWidth(Excel.Application exl, Excel.Worksheet sheet)
+        {
+            var pageHeight = exl.Application.CentimetersToPoints(29.7);
+            var topMargin = sheet.PageSetup.TopMargin;
+            var bottomMargin = sheet.PageSetup.BottomMargin;
+            var contentHeight = pageHeight - topMargin - bottomMargin;
+            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
+            var rate = firstCell.Height / firstCell.RowHeight;
+            sheet.Columns.RowHeight = (contentHeight / rate / (double)numRows.Value);
+        }
+
+        /// <summary>
+        /// Вычисление размера шрифта.
+        /// </summary>
+        /// <param name="template"></param>
+        /// <param name="currWidth"></param>
+        /// <returns></returns>
+        private static int CalcFontSize(string template, double currWidth)
+        {
+            int currSizeFont = 8;
+            int len;
+            do
+            {
+                currSizeFont += 2;
+                var f = new Font("Calibri", currSizeFont, FontStyle.Regular);
+                len = TextRenderer.MeasureText(template, f).Width;
+            } while (currWidth * 7 > len);
+            return currSizeFont;
         }
     }
 }

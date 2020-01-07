@@ -23,6 +23,24 @@ namespace BL
         public string Manufacturer { get; set; }
 
         /// <summary>
+        /// Вид.
+        /// </summary>
+        [Column("Вид")]
+        [Control("TextBox", false)]
+        public string Kind { get; set; }
+
+        /// <summary>
+        /// Коллекция пожарного инвентаря данного типа.
+        /// </summary>
+        [NotMapped]
+        public abstract ICollection<EntityBase> Childs { get; }
+
+        /// <summary>
+        /// Возвращает именование.
+        /// </summary>
+        public override string ToString() => Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
+
+        /// <summary>
         /// Сравнение типов пожарного инвентаря по типу, марке, производителю.
         /// </summary>
         public bool EqualsValues(KindBase obj)
@@ -34,10 +52,5 @@ namespace BL
                 return true;
             return false;
         }
-        /// <summary>
-        /// Коллекция пожарного инвентаря данного типа.
-        /// </summary>
-        [NotMapped]
-        public abstract ICollection<EntityBase> Childs { get; }
     }
 }

@@ -8,12 +8,109 @@ using System.Windows.Forms;
 
 namespace BL
 {
+    /// <summary>
+    /// Контроллер сущностей.
+    /// </summary>
     public class EntityController : BLContext
     {
-        public event Action<Hierarchy> entityAdd;
-        //public event Action<EntityBase> entityEdit;
-        public event Action<EntityBase> entityRemove;
+        /// <summary>
+        /// Событие по добавлению иерархической сущности в БД.
+        /// </summary>
+        public event Action<Hierarchy> EntityAdd;
 
+        /// <summary>
+        /// Событие по удалению иерархической сущности в БД.
+        /// </summary>
+        public event Action<EntityBase> EntityRemove;
+
+        //public event Action<EntityBase> entityEdit;
+
+        /// <summary>
+        /// Добавляет сущность в БД.
+        /// Вызывает событие по добавлению сущности.
+        /// </summary>
+        public void AddEntity(EntityBase entity)
+        {
+            Set(entity.GetType()).Add(entity);
+            if (entity is Equipment)
+            {
+                var historySet = new HistorySet(entity as Equipment);
+                historySet.SetNewValues();
+                historySet.SetOldValuesEmpty();
+                historySet.Save(this);
+            }
+            if (entity is Hierarchy)
+                EntityAdd?.Invoke((Hierarchy)entity);
+        }
+
+        /// <summary>
+        /// Добавляет сущности в БД.
+        /// </summary>
+        public void AddRangeEntity(Hierarchy entity, int count)
+        {
+            AddEntity(entity);
+            int currNumber = entity.Number;
+            for (int i = 1; i < count; i++)
+            {
+                currNumber++;
+                var copyEntity = CopyEntity(entity.GetSign());
+                ((Hierarchy)copyEntity).Number = currNumber;
+                AddEntity(copyEntity);
+            }
+        }
+
+        /// <summary>
+        /// Удаляет сущность.
+        /// </summary>
+        public void RemoveEntity(EntitySign sign)
+        {
+            var entity = GetEntity(sign);
+            EntityRemove?.Invoke(entity);
+            if (sign.Type.IsSubclassOf(typeof(KindBase)))
+            {
+                if (((KindBase)entity).Childs.Count != 0)
+                {
+                    MessageBox.Show("Существует инвентарь с этим типом");
+                    return;
+                }
+            }
+
+            Set(sign.Type).Remove(entity);
+        }
+
+        /// <summary>
+        /// Возвращает следующий по порядку номер подсущности.
+        /// </summary>
+        public int GetNumberChild(Hierarchy entity, Type childType)
+        {
+            var propertiesEntity = entity.GetType().GetProperties();
+            var desiredType = typeof(ICollection<>).MakeGenericType(childType);
+            var findedProperty = propertiesEntity.Single(p => p.PropertyType == desiredType);
+            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<Hierarchy>;
+            if (findedCollection.Count() != 0)
+                return findedCollection.Max(ch => ch.Number) + 1;
+            else
+                return 1;
+        }
+
+        /// <summary>
+        /// Возвращает следующий по порядку номер сущности.
+        /// </summary>
+        public int GetNumber(Hierarchy entity)
+        {
+            var EntityBaseCollection = GetTableList(entity.GetType());
+            var findedCollection = EntityBaseCollection.Cast<Hierarchy>();
+            if (findedCollection.Count() != 0)
+                return findedCollection.Max(e => e.Number) + 1;
+            else
+                return 1;
+        }
+
+        /// <summary>
+        /// Создает сущность по типу.
+        /// </summary>
+        /// <param name="typeEntity">Тип сущности.</param>
+        /// <returns></returns>
         public EntityBase CreateEntity(Type typeEntity) => (EntityBase)Set(typeEntity).Create();
 
         /// <summary>Возвращает сущность по его метке.
@@ -33,50 +130,6 @@ namespace BL
         }
 
         /// <summary>
-        /// Добавляет сущность в БД.
-        /// Вызывает событие по добавлению сущности.
-        /// </summary>
-        public void AddEntity(EntityBase entity)
-        {
-            Set(entity.GetType()).Add(entity);
-            if (entity is Equipment)
-            {
-                var historySet = new HistorySet(entity as Equipment);
-                historySet.SetNewValues();
-                historySet.SetOldValuesEmpty();
-                historySet.Save(this);
-            }
-            if (entity is Hierarchy)
-                entityAdd?.Invoke((Hierarchy)entity);
-        }
-
-        /// <summary>Добавляет сущности в БД.</summary>
-        public void AddRangeEntity(Hierarchy entity, int count)
-        {
-            AddEntity(entity);
-            int currNumber = entity.Number;
-            for (int i = 1; i < count; i++)
-            {
-                currNumber++;
-                var copyEntity = CopyEntity(entity.GetSign());
-                ((Hierarchy)copyEntity).Number = currNumber;
-                AddEntity(copyEntity);
-            }
-        }
-
-        /// <summary>
-        /// Помечает сущность как измененную.
-        /// Сохраняет изменения в БД.
-        /// Вызывает событие по изменению сущности.
-        /// </summary>
-        //public void EditEntity(EntityBase entity)
-        //{
-        //    Entry(entity).State = EntityState.Modified;
-        //    entityEdit?.Invoke(entity);
-        //    SaveChanges();
-        //}
-
-        /// <summary>
         /// Копирует и возврщает сущность.
         /// </summary>
         public EntityBase CopyEntity(EntitySign sign)
@@ -91,22 +144,14 @@ namespace BL
         }
 
         /// <summary>
-        /// Удаляет сущность.
+        /// Возвращает родительский Location.
         /// </summary>
-        public void RemoveEntity(EntitySign sign)
+        public Location GetParentLocation(EntitySign sign)
         {
-            var entity = GetEntity(sign);
-            entityRemove?.Invoke(entity);
-            if (sign.Type.IsSubclassOf(typeof(KindBase)))
-            {
-                if (((KindBase)entity).Childs.Count != 0)
-                {
-                    MessageBox.Show("Существует инвентарь с этим типом");
-                    return;
-                }
-            }
-
-            Set(sign.Type).Remove(entity);
+            var entity = GetEntity(sign, false);
+            if (!(entity is Hierarchy))
+                return null;
+            return ((Hierarchy)entity).GetLocation;
         }
 
         /// <summary>
@@ -120,33 +165,10 @@ namespace BL
         public List<EntityBase> GetTableList(DbSet table) => ((IQueryable<EntityBase>)table).ToList();
 
         /// <summary>
-        /// Возвращает следующий по порядку номер подсущности.
+        /// Возвращает коллекцию кортежей (свойство, атрибут элементов управления, название свойства)
         /// </summary>
-        public int GetNumberChild(Hierarchy entity, Type childType)
-        {
-            var propertiesEntity = entity.GetType().GetProperties();
-            var desiredType = typeof(ICollection<>).MakeGenericType(childType);
-            var findedProperty = propertiesEntity.Single(p => p.PropertyType == desiredType);
-            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<Hierarchy>;
-            if (findedCollection.Count() != 0)
-                return findedCollection.Max(ch => ch.Number) + 1;
-            else
-                return 1;
-        }
-        /// <summary>
-        /// Возвращает следующий по порядку номер сущности.
-        /// </summary>
-        public int GetNumber(Hierarchy entity)
-        {
-            var EntityBaseCollection = GetTableList(entity.GetType());
-            var findedCollection = EntityBaseCollection.Cast<Hierarchy>();
-            if (findedCollection.Count() != 0)
-                return findedCollection.Max(e => e.Number) + 1;
-            else
-                return 1;
-        }
-
-
+        /// <param name="entity">Сущность.</param>
+        /// <returns></returns>
         public List<(PropertyInfo, ControlAttribute, string)> GetEditProperties(EntityBase entity)
         {
             var result = new List<(PropertyInfo, ControlAttribute, string)>();
@@ -177,6 +199,10 @@ namespace BL
             }
         }
 
+        /// <summary>
+        /// Возвращает коллекцию отрисовываемого инвентаря в помещении.
+        /// </summary>
+        /// <param name="location">Помещение.</param>
         public IEnumerable<Equipment> GetDrawEquipment(Location location)
         {
             var result = new List<Equipment>();
@@ -191,17 +217,6 @@ namespace BL
             result.AddRange(drawHoses);
             result.AddRange(drawHydrants);
             return result;
-        }
-
-        /// <summary>
-        /// Возвращает родительский Location.
-        /// </summary>
-        public Location GetParentLocation(EntitySign sign)
-        {
-            var entity = GetEntity(sign, false);
-            if (!(entity is Hierarchy))
-                return null;
-            return ((Hierarchy)entity).GetLocation;
         }
     }
 }

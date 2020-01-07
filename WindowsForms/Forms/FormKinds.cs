@@ -9,10 +9,17 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
-    public partial class FormTypes : Form
+    /// <summary>
+    /// Форма для работы с видами пожарного инвентаря.
+    /// </summary>
+    public partial class FormKinds : Form
     {
         private Type saveType;
-        public FormTypes()
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public FormKinds()
         {
             InitializeComponent();
             FireCabinetsMenu.Image = ImageSettings.IconsImage(typeof(FireCabinet));
@@ -20,28 +27,32 @@ namespace WindowsForms
             HosesMenu.Image = ImageSettings.IconsImage(typeof(Hose));
         }
 
-        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindFireCabinet));
-        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindExtinguisher));
-        private void HosesMenu_Click(object sender, EventArgs e) => LoadSpecies(typeof(KindHose));
-        private void LoadSpecies2(Type type)
-        {
-            if (!type.IsSubclassOf(typeof(KindBase)))
-                return;
-            listView.Items.Clear();
-            using (var ec = new EntityController())
-            {
-                foreach (KindBase species in ec.Set(type))
-                {
-                    var item = new ListViewItem(species.Name);
-                    var subItem = new ListViewItem.ListViewSubItem(item, species.Manufacturer);
-                    item.SubItems.Add(subItem);
-                    item.Tag = species.GetSign();
-                    listView.Items.Add(item);
-                }
-            }
-            saveType = type;
-        }
-        private void LoadSpecies(Type type)
+        /// <summary>
+        /// Обработчик события меню.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FireCabinetsMenu_Click(object sender, EventArgs e) => LoadKinds(typeof(KindFireCabinet));
+
+        /// <summary>
+        /// Обработчик события меню.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExtinguishersMenu_Click(object sender, EventArgs e) => LoadKinds(typeof(KindExtinguisher));
+
+        /// <summary>
+        /// Обработчик события меню.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HosesMenu_Click(object sender, EventArgs e) => LoadKinds(typeof(KindHose));
+
+        /// <summary>
+        /// Загрузка видов пожарного инвентаря в ListView.
+        /// </summary>
+        /// <param name="type">Тип.</param>
+        private void LoadKinds(Type type)
         {
             if (!type.IsSubclassOf(typeof(KindBase)))
                 return;
@@ -60,18 +71,30 @@ namespace WindowsForms
             }
             saveType = type;
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             if (saveType == null)
                 return;
-            using (var AddEssForm = new FormAddSpecie(saveType))
+            using (var AddEssForm = new FormAddKind(saveType))
             {
                 DialogResult result = AddEssForm.ShowDialog(this);
                 if (result == DialogResult.Cancel)
                     return;
             }
-            LoadSpecies(saveType);
+            LoadKinds(saveType);
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0)
@@ -83,8 +106,14 @@ namespace WindowsForms
                 if (result == DialogResult.Cancel)
                     return;
             }
-            LoadSpecies(saveType);
+            LoadKinds(saveType);
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnRemove_Click(object sender, EventArgs e)
         {
             if (listView.SelectedItems.Count == 0)
@@ -96,8 +125,14 @@ namespace WindowsForms
                 ec.RemoveEntity(sign);
                 ec.SaveChanges();
             }
-            LoadSpecies(saveType);
+            LoadKinds(saveType);
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnImport_Click(object sender, EventArgs e)
         {
             using (var od = new OpenFileDialog())
@@ -116,6 +151,12 @@ namespace WindowsForms
                 }
             }
         }
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnExport_Click(object sender, EventArgs e)
         {
             if (saveType == null)
@@ -141,6 +182,11 @@ namespace WindowsForms
                 }
             }
         }
+
+        /// <summary>
+        /// Чтение видов из файла.
+        /// </summary>
+        /// <param name="fileStream"></param>
         private void ReadTypesFromFile(Stream fileStream)
         {
             using (StreamReader sr = new StreamReader(fileStream, Encoding.Default))
@@ -178,7 +224,7 @@ namespace WindowsForms
                     }
                     ec.SaveChanges();
                 }
-                LoadSpecies(type);
+                LoadKinds(type);
             }
 
             int CheckingFile(StreamReader sr)
@@ -215,6 +261,11 @@ namespace WindowsForms
 
             //TODO: изза перестановок заголовков не будет правильно читаться
         }
+
+        /// <summary>
+        /// Запись видов в файл.
+        /// </summary>
+        /// <param name="fileStream"></param>
         private void WriteTypesToFile(Stream fileStream)
         {
             using (StreamWriter sw = new StreamWriter(fileStream, Encoding.Default))

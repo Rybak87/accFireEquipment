@@ -5,12 +5,14 @@ using Sett = BL.Properties.Settings;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Форма настроек.
+    /// </summary>
     public partial class FormSettings : Form
     {
-        public event Action<Type> ChangeSample;
-        public event Action ChangeIconSize;
-
-        private int prevAbsoluteIconsSize;
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public FormSettings()
         {
             InitializeComponent();
@@ -23,6 +25,23 @@ namespace WindowsForms
             lblIconSize.Text = prevAbsoluteIconsSize.ToString();
         }
 
+        /// <summary>
+        /// Событие по изменению шаблона именования.
+        /// </summary>
+        public event Action<Type> ChangeSample;
+
+        /// <summary>
+        /// Событие по изменению настроек размеров иконок.
+        /// </summary>
+        public event Action ChangeIconSize;
+
+        private int prevAbsoluteIconsSize;
+
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
             if (txbFireCabinets.Text.CorrectSample('L', 'F'))
@@ -74,6 +93,11 @@ namespace WindowsForms
             Close();
         }
 
+        /// <summary>
+        /// Обработчик события скролла размера иконок.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void scrIconSize_ValueChanged(object sender, EventArgs e)
         {
             Sett.Default.RatioIconSize = InverseIconSize(scrIconSize.Value);
@@ -81,12 +105,22 @@ namespace WindowsForms
             lblIconSize.Text = scrIconSize.Value.ToString();
         }
 
+        /// <summary>
+        /// Обработчик события закрытия формы.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
             ChangeIconSize?.Invoke();
         }
 
+        /// <summary>
+        /// Инверсия размера иконок.
+        /// </summary>
+        /// <param name="size"></param>
+        /// <returns></returns>
         private int InverseIconSize(int size) => scrIconSize.Maximum + scrIconSize.Minimum - size;
     }
 }

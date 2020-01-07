@@ -51,14 +51,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logic\Filter\FilterSet.cs" />
+    <Compile Include="Logic\Filter\FilterWork.cs" />
     <Compile Include="Model\Abstract\Equipment.cs" />
     <Compile Include="Model\Abstract\Hierarchy.cs" />
-    <Compile Include="Model\Abstract\SpeciesBase.cs" />
+    <Compile Include="Model\Abstract\KindBase.cs" />
     <Compile Include="Model\Database\History.cs" />
     <Compile Include="Model\Database\Inspection.cs" />
     <Compile Include="Logic\BLContext.cs" />
     <Compile Include="Logic\Delegates.cs" />
-    <Compile Include="Logic\Filter.cs" />
+    <Compile Include="Logic\Filter\Filter.cs" />
     <Compile Include="Logic\Helper.cs" />
     <Compile Include="Logic\EntityController.cs" />
     <Compile Include="Logic\HistorySet.cs" />

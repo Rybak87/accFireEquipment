@@ -6,8 +6,14 @@ using System.Windows.Forms;
 
 namespace BL
 {
+    /// <summary>
+    /// Методы расширения.
+    /// </summary>
     public static class Helper
     {
+        /// <summary>
+        /// Посылка сообщений в приложение.
+        /// </summary>
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);
         private const int WM_SETREDRAW = 11;
@@ -35,10 +41,7 @@ namespace BL
         /// <summary>
         /// Возвращает разницу в месяцах.
         /// </summary>
-        public static int SubtractMonths(this DateTime dateTime1, DateTime dateTime2)
-        {
-            return dateTime1.Year * 12 + dateTime1.Month - dateTime2.Year * 12 - dateTime2.Month;
-        }
+        public static int SubtractMonths(this DateTime dt1, DateTime dt2) => dt1.Year * 12 + dt1.Month - dt2.Year * 12 - dt2.Month;
 
         /// <summary>
         /// Проверяет корректность шаблона именования.
@@ -60,6 +63,9 @@ namespace BL
         }
     }
 
+    /// <summary>
+    /// Методы расширения для ListView.
+    /// </summary>
     public static class HelperListView
     {
         public static FilterSet filterName = new FilterSet(ent => ent.ToString());

@@ -6,36 +6,30 @@ using System.Windows.Forms;
 
 namespace BL
 {
+    /// <summary>
+    /// Иконки.
+    /// </summary>
     [Serializable]
     public static class ImageSettings
     {
-        //public static int RatioIconSize { get; set; } = 50;
+        /// <summary>
+        /// Коллекция индексов иконок по типу.
+        /// </summary>
         public static Dictionary<Type, int> IconsImageIndex { get; } = new Dictionary<Type, int>()
         {
-            [0.GetType()] = (0),
-            [typeof(Location)] = (0),
-            [typeof(FireCabinet)] = (1),
-            [typeof(Extinguisher)] = (2),
-            [typeof(Hose)] = (3),
-            [typeof(Hydrant)] = (4)
+            [0.GetType()] = 0,
+            [typeof(Location)] = 0,
+            [typeof(FireCabinet)] = 1,
+            [typeof(Extinguisher)] = 2,
+            [typeof(Hose)] = 3,
+            [typeof(Hydrant)] = 4
         };
-        public static ImageList IconsImageList { get; }
 
+        /// <summary>
+        /// Констуктор. Заполение коллекции иконок.
+        /// </summary>
         static ImageSettings()
         {
-            //RatioIconSize = 50;
-
-            //IconsImageIndex = new Dictionary<Type, int>()
-            //{
-            //    [0.GetType()] = (0),
-            //    [typeof(Location)] = (0),
-            //    [typeof(FireCabinet)] = (1),
-            //    [typeof(Extinguisher)] = (2),
-            //    [typeof(Hose)] = (3),
-            //    [typeof(Hydrant)] = (4)
-            //};
-
-
             if (IconsImageList == null)
             {
                 IconsImageList = new ImageList();
@@ -54,7 +48,17 @@ namespace BL
                 IconsImageList.Images.SetKeyName(4, "Hydrant.ico");
             }
         }
-        public static Image IconsImage(Type type) => IconsImageList.Images[IconsImageIndex[type]];
 
+        /// <summary>
+        /// Коллекция иконок.
+        /// </summary>
+        public static ImageList IconsImageList { get; }
+
+        /// <summary>
+        /// Возвращает иконку по типу.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static Image IconsImage(Type type) => IconsImageList.Images[IconsImageIndex[type]];
     }
 }

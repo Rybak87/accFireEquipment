@@ -8,20 +8,22 @@ namespace BL
     /// Вид пожарного шкафа.
     /// </summary>
     [Table("SpeciesFireCabinets")]
-    public class KindFireCabinet : KindBase// EntityBase, ITypes
+    public class KindFireCabinet : KindBase
     {
-        public virtual ICollection<FireCabinet> FireCabinets { get; set; }
-
-        [Column("Вид")]
-        [Control("TextBox", false)]
-        public string Species { get; set; } //Вид
-
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public KindFireCabinet()
         { }
-        public override string ToString()
-        {
-            return Manufacturer == null ? Name : Name + " (" + Manufacturer + ")";
-        }
+
+        /// <summary>
+        /// Коллекция пожарного инвентаря данного типа.
+        /// </summary>
         public override ICollection<EntityBase> Childs { get => FireCabinets.Cast<EntityBase>().ToList(); }
+
+        /// <summary>
+        /// Коллекция пожарных шкафов данного типа.
+        /// </summary>
+        public virtual ICollection<FireCabinet> FireCabinets { get; set; }
     }
 }

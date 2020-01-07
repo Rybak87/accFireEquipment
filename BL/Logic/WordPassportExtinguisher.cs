@@ -5,12 +5,18 @@ using Word = Microsoft.Office.Interop.Word;
 
 namespace BL
 {
+    /// <summary>
+    /// Паспорт огнетушителя.
+    /// </summary>
     public class WordPassportExtinguisher
     {
         private Word.Application word = new Word.Application();
         private Word.Document workBook;
         private IEnumerable<Word.Bookmark> bookmarks;
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
         public WordPassportExtinguisher()
         {
             workBook = word.Documents.Add(Type.Missing);
@@ -18,6 +24,11 @@ namespace BL
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
         }
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="readOnly"></param>
         public WordPassportExtinguisher(string file, bool readOnly = false)
         {
             //workBook = word.Documents.Open(file, false, readOnly);
@@ -25,6 +36,11 @@ namespace BL
             workBook = word.Documents.Add(template);
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
         }
+
+        /// <summary>
+        /// Создать паспорт огнетушителя в приложении Word.
+        /// </summary>
+        /// <param name="ex">Огнетушитель.</param>
         public void CreatePassportExtinguisher(Extinguisher ex)
         {
             ReplaceBookmark("Number", ex.ToString() + "\t");
@@ -39,6 +55,10 @@ namespace BL
             word.Visible = true;
         }
 
+        /// <summary>
+        /// Заполнить таблицу в паспорте огнетушителя.
+        /// </summary>
+        /// <param name="ex">Огнетушитель.</param>
         private void FillTable(Extinguisher ex)
         {
             var useTime = Properties.Settings.Default.UseTime;
@@ -101,9 +121,24 @@ namespace BL
             }
         }
 
+        /// <summary>
+        /// Возвращает закладку в документе Word.
+        /// </summary>
+        /// <param name="name">Имя закладки.</param>
         private Word.Bookmark GetBookmark(string name) => bookmarks.First(b => b.Name == name);
+
+        /// <summary>
+        /// Меняет текст закладки.
+        /// </summary>
+        /// <param name="name">Имя закладки.</param>
+        /// <param name="text">Текст для замены.</param>
         private void ReplaceBookmark(string name, string text) => GetBookmark(name).Range.Text = text;
 
+        /// <summary>
+        /// Возвращает коллекцию изменений огнетушителя на дату.
+        /// </summary>
+        /// <param name="ex">Огнетушитель.</param>
+        /// <param name="dateTime">Дата.</param>
         public IEnumerable<History> GetLastHistoriesOnDate(Extinguisher ex, DateTime dateTime)
         {
             return ex.Histories.Where(h => h.DateChange <= dateTime).GroupBy(h => h.Property).Select(g => g.Last());

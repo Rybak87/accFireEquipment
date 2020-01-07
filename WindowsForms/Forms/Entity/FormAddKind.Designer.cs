@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms/*.Forms.Entity*/
 {
-    partial class FormAddEntity
+    partial class FormAddKind
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -30,12 +30,12 @@
         {
             this.SuspendLayout();
             // 
-            // FormAddEntity
+            // FormAddSpecie
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "FormAddEntity";
-            this.Load += new System.EventHandler(this.FormAddEntity_Load);
+            this.Name = "FormAddSpecie";
+            this.Load += new System.EventHandler(this.FormAddKind_Load);
             this.ResumeLayout(false);
 
         }
