@@ -41,7 +41,7 @@ namespace BL
         /// Повреждение.
         /// </summary>
         [Column("Повреждение")]
-        [Control("CheckBox", false)]
+        [Control("CheckBox", false, 3)]
         public bool IsDamage { get; set; }
 
         /// <summary>

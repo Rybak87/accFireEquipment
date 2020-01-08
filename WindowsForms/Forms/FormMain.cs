@@ -177,7 +177,6 @@ namespace WindowsForms
             {
                 ec.EntityRemove += myTreeView.NodeRemove;
                 ec.RemoveEntity(removeSign);
-                ec.SaveChanges();
             }
         }
 
@@ -201,7 +200,7 @@ namespace WindowsForms
         private void AddDialog(Type typeEntity, EntitySign parentSign)
         {
             var AddEssForm = new FormAddHierarchy(typeEntity, parentSign);
-            AddEssForm.EntityAdd += myTreeView.NodeAdd;
+            AddEssForm.EntityAdd += ent => myTreeView.NodeAdd(ent as Hierarchy);
             DialogResult result = AddEssForm.ShowDialog(this);
             if (result == DialogResult.Cancel)
                 return;

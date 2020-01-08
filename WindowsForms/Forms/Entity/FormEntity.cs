@@ -279,7 +279,7 @@ namespace WindowsForms
                 };
                 Controls.Add(lbl);
 
-                switch (attr.Control)
+                switch (attr.control)
                 {
                     case "TextBox":
                         {
@@ -320,7 +320,7 @@ namespace WindowsForms
                         }
                 }
 
-                if (attr.IsRequired)
+                if (attr.isRequired)
                 {
                     lbl = new Label
                     {

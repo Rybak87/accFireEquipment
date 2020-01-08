@@ -123,7 +123,6 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 ec.RemoveEntity(sign);
-                ec.SaveChanges();
             }
             LoadKinds(saveType);
         }

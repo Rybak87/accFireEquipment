@@ -49,28 +49,28 @@ namespace BL
         /// Вид рукава.
         /// </summary>
         [Column("Тип рукава")]
-        [Control("ComboBox", true/*, "KindHoses"*/)]
+        [Control("ComboBox", true, 1/*, "KindHoses"*/)]
         public virtual KindHose KindHose { get; set; }
 
         /// <summary>
         /// Дата производства
         /// </summary>
         [Column("Дата производства")]
-        [Control("DateTimePicker", false)]
+        [Control("DateTimePicker", false, 3)]
         public DateTime DateProduction { get; set; }
 
         /// <summary>
         /// Дата перекатки
         /// </summary>
         [Column("Дата перекатки")]
-        [Control("DateTimePicker", false)]
+        [Control("DateTimePicker", false, 4)]
         public DateTime DateRolling { get; set; }
 
         /// <summary>
         /// Повреждения
         /// </summary>
         [Column("Повреждения")]
-        [Control("CheckBox", false)]
+        [Control("CheckBox", false, 5)]
         public bool IsRagged { get; set; }
 
         /// <summary>

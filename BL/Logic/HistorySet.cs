@@ -103,22 +103,22 @@ namespace BL
             NewValues = GetValues(equipment);
         }
 
-        /// <summary>
-        /// Сохраняет множество изменений пожарного инвентаря. 
-        /// </summary>
-        public void Save()
-        {
-            using (var ec = new EntityController())
-            {
-                Save(ec);
-            }
-        }
+        ///// <summary>
+        ///// Сохраняет множество изменений пожарного инвентаря. 
+        ///// </summary>
+        //public void Save()
+        //{
+        //    using (var ec = new EntityController())
+        //    {
+        //        Save(ec);
+        //    }
+        //}
 
         /// <summary>
         /// Сохраняет множество изменений пожарного инвентаря. 
         /// </summary>
         /// <param name="ec">Контекст.</param>
-        public void Save(EntityController ec)
+        public void AddToDatabase(EntityController ec)
         {
             var datetime = DateTime.Now;
             for (int i = 0; i < OldValues.Count(); i++)
@@ -133,7 +133,7 @@ namespace BL
                     ec.AddEntity(hy);
                 }
             }
-            ec.SaveChanges();
+            //ec.SaveChanges();
         }
     }
 }

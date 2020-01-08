@@ -14,16 +14,14 @@ namespace BL
     public class EntityController : BLContext
     {
         /// <summary>
-        /// Событие по добавлению иерархической сущности в БД.
+        /// Событие по добавлению сущности в БД.
         /// </summary>
-        public event Action<Hierarchy> EntityAdd;
+        public event Action<EntityBase> EntityAdd;
 
         /// <summary>
-        /// Событие по удалению иерархической сущности в БД.
+        /// Событие по удалению сущности в БД.
         /// </summary>
         public event Action<EntityBase> EntityRemove;
-
-        //public event Action<EntityBase> entityEdit;
 
         /// <summary>
         /// Добавляет сущность в БД.
@@ -32,15 +30,33 @@ namespace BL
         public void AddEntity(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
+            
             if (entity is Equipment)
             {
                 var historySet = new HistorySet(entity as Equipment);
                 historySet.SetNewValues();
                 historySet.SetOldValuesEmpty();
-                historySet.Save(this);
+                historySet.AddToDatabase(this);
             }
-            if (entity is Hierarchy)
-                EntityAdd?.Invoke((Hierarchy)entity);
+            SaveChanges();
+            EntityAdd?.Invoke(entity);
+        }
+
+        /// <summary>
+        /// Добавляет сущности в БД.
+        /// </summary>
+        public void AddRangeEntityold(Hierarchy entity, int count)
+        {
+            AddEntity(entity);
+            var sign = entity.GetSign();
+            int currNumber = entity.Number;
+            for (int i = 1; i < count; i++)
+            {
+                currNumber++;
+                var copyEntity = CopyEntity(sign) as Hierarchy;
+                copyEntity.Number = currNumber;
+                AddEntity(copyEntity);
+            }
         }
 
         /// <summary>
@@ -49,13 +65,19 @@ namespace BL
         public void AddRangeEntity(Hierarchy entity, int count)
         {
             AddEntity(entity);
+            var sign = entity.GetSign();
             int currNumber = entity.Number;
+            Hierarchy temp = (Hierarchy)Entry(entity).CurrentValues.ToObject();
             for (int i = 1; i < count; i++)
             {
                 currNumber++;
-                var copyEntity = CopyEntity(entity.GetSign());
-                ((Hierarchy)copyEntity).Number = currNumber;
-                AddEntity(copyEntity);
+                var newEntity = (Hierarchy)Set(sign.Type).Create();
+                Set(sign.Type).Attach(newEntity);
+                
+                temp.Id = newEntity.Id;
+                Entry(newEntity).CurrentValues.SetValues(temp);
+                newEntity.Number = currNumber;
+                AddEntity(newEntity);
             }
         }
 
@@ -74,8 +96,8 @@ namespace BL
                     return;
                 }
             }
-
             Set(sign.Type).Remove(entity);
+            SaveChanges();
         }
 
         /// <summary>
@@ -118,15 +140,10 @@ namespace BL
         /// </summary>
         public EntityBase GetEntity(EntitySign sign, bool noTracking = false)
         {
-            //var table = Set(sign.Type);
-            //if (noTracking)
-            //    table = (DbSet)table.AsNoTracking();
-            //return (EntityBase)table.Find(sign.Id);
             var result = (EntityBase)Set(sign.Type).Find(sign.Id);
             if (noTracking)
                 Entry(result).State = EntityState.Detached;
             return result;
-
         }
 
         /// <summary>
@@ -181,6 +198,7 @@ namespace BL
                 var nameAttr = GetColumnAttribute(prop)?.Name;
                 result.Add((prop, controlAttr, nameAttr));
             }
+            result = result.OrderBy(i => i.Item2.orderNumber).ToList();
             return result;
 
             ControlAttribute GetControlAttribute(PropertyInfo pi)

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Excel = Microsoft.Office.Interop.Excel;
 using Sett = BL.Properties.Settings;
@@ -12,13 +13,14 @@ namespace WindowsForms
 
     public partial class FormStickers : Form
     {
-        private FilterSet filterName = new FilterSet(ent => ent.ToString());
-        private FilterSet filterParent = new FilterSet(ent => ent.GetLocation.ToString());
-        private FilterSet filterParentParent = new FilterSet(ent => ent.GetLocation.ToString());
-        private FilterSet filterFireCabinetSticker;
-        private FilterSet filterExtinguisherSticker;
-        private Type lastType;
+        private Filter fName = HelperListView.filterName;
+        private Filter fParent = HelperListView.filterParent;
+        private Filter fLocation = HelperListView.filterLocation;
+        private Filter filterFireCabinetSticker;
+        private Filter filterExtinguisherSticker;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
+        private Type lastType;
+        private Task loadListView;
 
         /// <summary>
         /// Конструктор.
@@ -32,8 +34,8 @@ namespace WindowsForms
             ExtinguishersMenu.Click += (s, e) => ExtinguishersReport();
             txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
             txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
-            filterFireCabinetSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerFireCabinet));
-            filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
+            filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
+            filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
         }
 
         /// <summary>
@@ -46,9 +48,9 @@ namespace WindowsForms
         /// </summary>
         private void FireCabinetsReport()
         {
-            InitColumns("Тип", "Наклейка");
+            listView.InitColumns("Тип", "Наклейка");
             lastType = typeof(FireCabinet);
-            listView.EntityReport(typeof(FireCabinet), filterParent, filterName, filterFireCabinetSticker);
+            listView.EntityReport(typeof(FireCabinet), fLocation, fName, filterFireCabinetSticker);
         }
 
         /// <summary>
@@ -56,33 +58,9 @@ namespace WindowsForms
         /// </summary>
         private void ExtinguishersReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Наклейка");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Наклейка");
             lastType = typeof(Extinguisher);
-            listView.EntityReport(typeof(Extinguisher), filterParentParent, filterName, filterParent, filterExtinguisherSticker);
-        }
-
-        /// <summary>
-        /// Инициализация колонок ListView.
-        /// </summary>
-        /// <param name="columnsNames"></param>
-        private void InitColumns(params string[] columnsNames)
-        {
-            listView.Clear();
-            var countColumns = columnsNames.Count();
-            var columnWidth = listView.Width / countColumns - 10;
-            var columnHeaders = new ColumnHeader[countColumns];
-            int count = 0;
-            foreach (var name in columnsNames)
-            {
-                var columnHeader = new ColumnHeader()
-                {
-                    Text = name,
-                    Width = columnWidth
-                };
-                columnHeaders[count] = columnHeader;
-                count++;
-            }
-            listView.Columns.AddRange(columnHeaders);
+            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, filterExtinguisherSticker);
         }
 
         /// <summary>
@@ -192,13 +170,13 @@ namespace WindowsForms
         {
             if (chkWithoutStickers.Checked)
             {
-                filterFireCabinetSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerFireCabinet));
-                filterExtinguisherSticker = new FilterSet(true, new Filter(NeedSticker, CreateStickerExtinguisher));
+                filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
+                filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
             }
             else
             {
-                filterFireCabinetSticker = new FilterSet(true, new Filter(CreateStickerFireCabinet));
-                filterExtinguisherSticker = new FilterSet(true, new Filter(CreateStickerExtinguisher));
+                filterFireCabinetSticker = new Filter(true, new Instruction(CreateStickerFireCabinet));
+                filterExtinguisherSticker = new Filter(true, new Instruction(CreateStickerExtinguisher));
             }
 
             if (lastType == typeof(FireCabinet))

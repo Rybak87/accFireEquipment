@@ -28,7 +28,7 @@ namespace WindowsForms
         {
             base.BtnOK_Click(sender, e);
             ec.AddEntity(currEntity);
-            ec.SaveChanges();
+            //ec.SaveChanges();
         }
 
         /// <summary>

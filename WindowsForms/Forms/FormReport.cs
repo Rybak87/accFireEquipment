@@ -7,14 +7,14 @@ namespace WindowsForms
 {
     public partial class FormReport : Form
     {
-        private FilterSet fName = HelperListView.filterName;
-        private FilterSet fParent = HelperListView.filterParent;
-        private FilterSet fLocation = HelperListView.filterLocation;
-        private FilterSet fFireCabinetFault = HelperListView.filterFireCabinetFault;
-        private FilterSet fExtinguisherFault = HelperListView.filterExtinguisherFault;
-        private FilterSet fHoseFault = HelperListView.filterHoseFault;
-        private FilterSet fHydrantFault = HelperListView.filterHydrantFault;
-        private FilterSet fExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
+        private Filter fName = HelperListView.filterName;
+        private Filter fParent = HelperListView.filterParent;
+        private Filter fLocation = HelperListView.filterLocation;
+        private Filter fFireCabinetFault = HelperListView.filterFireCabinetFault;
+        private Filter fExtinguisherFault = HelperListView.filterExtinguisherFault;
+        private Filter fHoseFault = HelperListView.filterHoseFault;
+        private Filter fHydrantFault = HelperListView.filterHydrantFault;
+        private Filter fExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
 
         /// <summary>
         /// Конструктор.
@@ -63,7 +63,7 @@ namespace WindowsForms
         /// </summary>
         private void FullReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(FireCabinet), fLocation, fName, fName, fFireCabinetFault);
             listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
             listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
@@ -75,7 +75,7 @@ namespace WindowsForms
         /// </summary>
         private void FireCabinetsReport()
         {
-            InitColumns("Тип", "Недостатки");
+            listView.InitColumns("Тип", "Недостатки");
             listView.EntityReport(typeof(FireCabinet), fLocation, fName, fFireCabinetFault);
         }
 
@@ -84,7 +84,7 @@ namespace WindowsForms
         /// </summary>
         private void ExtinguishersReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
         }
 
@@ -93,7 +93,7 @@ namespace WindowsForms
         /// </summary>
         private void HosesReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
         }
 
@@ -102,7 +102,7 @@ namespace WindowsForms
         /// </summary>
         private void HydrantsReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Недостатки");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
             listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
         }
 
@@ -111,33 +111,8 @@ namespace WindowsForms
         /// </summary>
         private void RechargeExtinguishersReport()
         {
-            InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
+            listView.InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
             listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherRecharge);
-        }
-
-        /// <summary>
-        /// Инициализация колонок в ListView.
-        /// </summary>
-        /// <param name="columnsNames"></param>
-        private void InitColumns(params string[] columnsNames)
-        {
-            listView.Clear();
-            listView.Groups.Clear();
-            var countColumns = columnsNames.Count();
-            var columnWidth = Width / countColumns - 10;
-            var columnHeaders = new ColumnHeader[countColumns];
-            int count = 0;
-            foreach (var name in columnsNames)
-            {
-                var columnHeader = new ColumnHeader()
-                {
-                    Text = name,
-                    Width = columnWidth
-                };
-                columnHeaders[count] = columnHeader;
-                count++;
-            }
-            listView.Columns.AddRange(columnHeaders);
         }
 
         /// <summary>

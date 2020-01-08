@@ -11,7 +11,7 @@ namespace BL
         /// Порядковый номер.
         /// </summary>
         [Column("Номер")]
-        [Control("NumericUpDown", true)]
+        [Control("NumericUpDown", true, 2)]
         public int Number { get; set; }
 
         /// <summary>

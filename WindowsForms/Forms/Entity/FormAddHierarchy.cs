@@ -48,13 +48,16 @@ namespace WindowsForms
 
             if (entityType == typeof(Location))
             {
-                ((Hierarchy)currEntity).Number = ec.GetNumber(currEntity as Hierarchy);
-                currPlan = ((Location)currEntity).Plan;
+                var loc = currEntity as Location;
+                loc.Number = ec.GetNumber(loc);
+                currPlan = loc.Plan;
             }
             else
             {
-                ((Equipment)currEntity).Parent = (Hierarchy)ec.GetEntity(parentSign);
-                ((Hierarchy)currEntity).Number = ec.GetNumberChild(((Equipment)currEntity).Parent, entityType);
+                var equip = currEntity as Equipment;
+                var newParent = (Hierarchy)ec.GetEntity(parentSign);
+                equip.Parent = newParent;
+                equip.Number = ec.GetNumberChild(newParent, entityType);
             }
             Text = "Добавить";
         }
@@ -62,7 +65,7 @@ namespace WindowsForms
         /// <summary>
         /// Событие по добавлению сущности в БД.
         /// </summary>
-        public event Action<Hierarchy> EntityAdd;
+        public event Action<EntityBase> EntityAdd;
 
         /// <summary>
         /// Количество сущностей.

@@ -12,21 +12,21 @@ namespace BL
         /// Марка пожарного инвентаря.
         /// </summary>
         [Column("Марка")]
-        [Control("TextBox", true)]
+        [Control("TextBox", true, 1)]
         public string Name { get; set; }
 
         /// <summary>
         /// Производитель пожарного инвентаря.
         /// </summary>
         [Column("Производитель")]
-        [Control("TextBox", true)]
+        [Control("TextBox", true, 2)]
         public string Manufacturer { get; set; }
 
         /// <summary>
         /// Вид.
         /// </summary>
         [Column("Вид")]
-        [Control("TextBox", false)]
+        [Control("TextBox", false, 3)]
         public string Kind { get; set; }
 
         /// <summary>

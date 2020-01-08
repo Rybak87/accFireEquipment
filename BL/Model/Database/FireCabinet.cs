@@ -50,21 +50,21 @@ namespace BL
         /// Вид пожарного шкафа.
         /// </summary>
         [Column("Тип пожарного шкафа")]
-        [Control("ComboBox", true/*, "KindFireCabinets"*/)]
+        [Control("ComboBox", true, 1/*, "KindFireCabinets"*/)]
         public virtual KindFireCabinet KindFireCabinet { get; set; }
 
         /// <summary>
         /// Повреждение корпуса
         /// </summary>
         [Column("Повреждение")]
-        [Control("CheckBox", false)]
+        [Control("CheckBox", false, 3)]
         public bool IsDented { get; set; }
 
         /// <summary>
         /// Наличие наклейки
         /// </summary>
         [Column("Наклейка")]
-        [Control("CheckBox", false)]
+        [Control("CheckBox", false, 4)]
         public bool IsSticker { get; set; }
 
         /// <summary>

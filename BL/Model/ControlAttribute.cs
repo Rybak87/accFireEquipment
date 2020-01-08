@@ -8,30 +8,28 @@ namespace BL
     public class ControlAttribute : Attribute
     {
         /// <summary>
-        /// Конструктор.
-        /// </summary>
-        public ControlAttribute(string control, bool isRequired)
-        {
-            Control = control;
-            IsRequired = isRequired;
-        }
-
-        /// <summary>
         /// Тип элемента.
         /// </summary>
-        public string Control { get; set; }
+        public readonly string control;
 
         /// <summary>
         /// Необходимость заполнения.
         /// </summary>
-        public bool IsRequired { get; set; }
+        public readonly bool isRequired;
 
-        //public string NameClass { get; set; }
-        //public ControlAttribute(string control, bool isRequired, string nameClass)
-        //{
-        //    Control = control;
-        //    IsRequired = isRequired;
-        //    NameClass = nameClass;
-        //}
+        /// <summary>
+        /// Номер элемента на форме по порядку.
+        /// </summary>
+        public readonly int orderNumber;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public ControlAttribute(string control, bool isRequired, int orderNumber)
+        {
+            this.control = control;
+            this.isRequired = isRequired;
+            this.orderNumber = orderNumber;
+        }
     }
 }

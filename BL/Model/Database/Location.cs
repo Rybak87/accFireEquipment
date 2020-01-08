@@ -24,14 +24,14 @@ namespace BL
         /// Название.
         /// </summary>
         [Column("Имя")]
-        [Control("TextBox", true)]
+        [Control("TextBox", true, 3)]
         public string Name { get; set; }
 
         /// <summary>
         /// План (изображение).
         /// </summary>
         [Column("Изображение")]
-        [Control("Image", false)]
+        [Control("Image", false, 4)]
         public virtual byte[] Plan { get; set; }
 
         /// <summary>

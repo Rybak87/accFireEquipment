@@ -9,7 +9,7 @@ namespace BL
     /// <summary>
     /// Иконки.
     /// </summary>
-    [Serializable]
+    //[Serializable]
     public static class ImageSettings
     {
         /// <summary>

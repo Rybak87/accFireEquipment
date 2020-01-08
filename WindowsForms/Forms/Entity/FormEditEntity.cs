@@ -55,7 +55,7 @@ namespace WindowsForms
             if (currEntity is Equipment)
             {
                 historySet.SetNewValues();
-                historySet.Save(ec);
+                historySet.AddToDatabase(ec);
             }
         }
 
