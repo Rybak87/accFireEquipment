@@ -150,7 +150,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="SettingsOfType.cs" />
+    <Compile Include="ContextMenuGetter.cs" />
     <EmbeddedResource Include="Forms\Entity\FormAddHierarchy.resx">
       <DependentUpon>FormAddHierarchy.cs</DependentUpon>
     </EmbeddedResource>

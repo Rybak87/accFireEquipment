@@ -8,12 +8,13 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Диалоги.
+    /// </summary>
     public static class Dialogs
     {
         static Dialogs()
-        {
-
-        }
+        { }
 
         /// <summary>
         /// Обновляемый TreeView
@@ -21,14 +22,14 @@ namespace WindowsForms
         public static MyTreeView TreeView { get; set; }
 
         /// <summary>
+        /// Обновляемый PictureContainer
+        /// </summary>
+        public static PictureContainer PictureContainer { get; set; }
+
+        /// <summary>
         ///  Родительская форма для диалоговых окон.
         /// </summary>
         public static Form Owner { get; set; }
-
-        /// <summary>
-        /// Обновляемый план.
-        /// </summary>
-        public static PictureContainer PictureContainer { get; set; }
 
         /// <summary>
         /// Диалог добавления сущности в БД.
@@ -39,6 +40,7 @@ namespace WindowsForms
         {
             var AddEssForm = new FormAddHierarchy(typeEntity, parentSign);
             AddEssForm.EntityAdd += ent => TreeView.NodeAdd(ent as Hierarchy);
+            AddEssForm.EntityAdd2 += PictureContainer.LoadImage;
             DialogResult result = AddEssForm.ShowDialog(Owner);
             if (result == DialogResult.Cancel)
                 return;
@@ -52,6 +54,7 @@ namespace WindowsForms
         {
             var AddEssForm = new FormEditEntity(sign);
             AddEssForm.EntityEdit += TreeView.NodeMove;
+            AddEssForm.EntityEdit2 += PictureContainer.LoadImage;
             DialogResult result = AddEssForm.ShowDialog(Owner);
             if (result == DialogResult.Cancel)
                 return;

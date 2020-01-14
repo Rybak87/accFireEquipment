@@ -34,12 +34,15 @@ namespace WindowsForms
             }
         }
 
-        //public event Action<out EntityBase> EntityEdit;
-
         /// <summary>
         /// Событие по изменению сущности в БД.
         /// </summary>
         public event Action<Hierarchy> EntityEdit;
+
+        /// <summary>
+        /// Событие по изменению сущности в БД.
+        /// </summary>
+        public event Action<byte[]> EntityEdit2;
 
         /// <summary>
         /// Обработчик события кнопки.
@@ -51,6 +54,11 @@ namespace WindowsForms
             base.BtnOK_Click(sender, e);
             ec.Entry(currEntity).State = EntityState.Modified;
             EntityEdit?.Invoke((Hierarchy)currEntity);
+            if (entityType == typeof(Location))
+            {
+                ((Location)currEntity).Plan = currPlan;
+                EntityEdit2?.Invoke(currPlan);
+            }
             ec.SaveChanges();
             if (currEntity is Equipment)
             {

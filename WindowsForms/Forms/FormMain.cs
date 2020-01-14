@@ -11,19 +11,19 @@ namespace WindowsForms
     /// </summary>
     public partial class FormMain : Form
     {
-        public MyTreeView myTreeView;
-        public PictureContainer picContainer;
+        private MyTreeView myTreeView;
+        private PictureContainer picContainer;
+
         /// <summary>
         /// Конструктор.
         /// </summary>
         public FormMain()
         {
             InitializeComponent();
-
             MyInitializeComponent();
-            SettingsOfType.Owner = this;
-            SettingsOfType.TreeView = myTreeView;
-            SettingsOfType.PictureContainer = picContainer;
+
+            ContextMenuGetter.TreeView = myTreeView;
+            ContextMenuGetter.PictureContainer = picContainer;
 
             Dialogs.Owner = this;
             Dialogs.TreeView = myTreeView;
@@ -68,7 +68,7 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Обработчик меню.
+        /// Обработчик меню "Настройки".
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

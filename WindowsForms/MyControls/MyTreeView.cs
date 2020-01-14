@@ -110,7 +110,7 @@ namespace WindowsForms
             if (e.Button == MouseButtons.Right)
             {
                 if (e.Node.Tag != null)
-                    SettingsOfType.GetMenu(((EntitySign)e.Node.Tag).Type).Tag = e.Node.Tag;
+                    ContextMenuGetter.GetMenu(((EntitySign)e.Node.Tag).Type).Tag = e.Node.Tag;
                 ((TreeView)sender).SelectedNode = e.Node;
                 return;
             }
@@ -176,33 +176,33 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 var projectNode = new TreeNode("Проект");
-                projectNode.ContextMenuStrip = SettingsOfType.GetMenu(0.GetType());
+                projectNode.ContextMenuStrip = ContextMenuGetter.GetMenu(0.GetType());
                 Nodes.Add(projectNode);
 
                 foreach (var location in ec.Locations)
                 {
                     var locationSign = location.GetSign();
-                    var nodeLocation = CreateNode(projectNode, locationSign, location.ToString(), SettingsOfType.GetMenu(typeof(Location)));
+                    var nodeLocation = CreateNode(projectNode, locationSign, location.ToString(), ContextMenuGetter.GetMenu(typeof(Location)));
 
                     foreach (var fireCabinet in location.FireCabinets)
                     {
                         var fireCabinetSign = fireCabinet.GetSign();
-                        var nodeFireCabinet = CreateNode(nodeLocation, fireCabinetSign, fireCabinet.ToString(), SettingsOfType.GetMenu(typeof(FireCabinet)));
+                        var nodeFireCabinet = CreateNode(nodeLocation, fireCabinetSign, fireCabinet.ToString(), ContextMenuGetter.GetMenu(typeof(FireCabinet)));
 
                         foreach (var extinguisher in fireCabinet.Extinguishers)
                         {
                             var extinguisherSign = extinguisher.GetSign();
-                            CreateNode(nodeFireCabinet, extinguisherSign, extinguisher.ToString(), SettingsOfType.GetMenu(typeof(Extinguisher)));
+                            CreateNode(nodeFireCabinet, extinguisherSign, extinguisher.ToString(), ContextMenuGetter.GetMenu(typeof(Extinguisher)));
                         }
                         foreach (var hose in fireCabinet.Hoses)
                         {
                             var hoseSign = hose.GetSign();
-                            CreateNode(nodeFireCabinet, hoseSign, hose.ToString(), SettingsOfType.GetMenu(typeof(Hose)));
+                            CreateNode(nodeFireCabinet, hoseSign, hose.ToString(), ContextMenuGetter.GetMenu(typeof(Hose)));
                         }
                         foreach (var hydrant in fireCabinet.Hydrants)
                         {
                             var hydrantSign = hydrant.GetSign();
-                            CreateNode(nodeFireCabinet, hydrantSign, hydrant.ToString(), SettingsOfType.GetMenu(typeof(Hydrant)));
+                            CreateNode(nodeFireCabinet, hydrantSign, hydrant.ToString(), ContextMenuGetter.GetMenu(typeof(Hydrant)));
                         }
                     }
                 }
@@ -216,7 +216,7 @@ namespace WindowsForms
                 var indImage = IconsGetter.IconsImageIndex[entitySign.Type];
                 var child = new TreeNode(text, indImage, indImage);
                 //child.ContextMenuStrip = menu;
-                child.ContextMenuStrip = SettingsOfType.GetMenu(entitySign.Type);
+                child.ContextMenuStrip = ContextMenuGetter.GetMenu(entitySign.Type);
                 parent.Nodes.Add(child);
                 child.Tag = entitySign;
                 dictNodes.Add(entitySign, child);
@@ -240,7 +240,7 @@ namespace WindowsForms
 
             var indImage = IconsGetter.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
-            newNode.ContextMenuStrip = SettingsOfType.GetMenu(entity.GetType());
+            newNode.ContextMenuStrip = ContextMenuGetter.GetMenu(entity.GetType());
             newNode.Tag = entity.GetSign();
             nodeParent.Nodes.Add(newNode);
             dictNodes.Add(entity.GetSign(), newNode);

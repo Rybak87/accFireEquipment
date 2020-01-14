@@ -68,6 +68,11 @@ namespace WindowsForms
         public event Action<EntityBase> EntityAdd;
 
         /// <summary>
+        /// Событие по добавлению сущности в БД.
+        /// </summary>
+        public event Action<byte[]> EntityAdd2;
+
+        /// <summary>
         /// Количество сущностей.
         /// </summary>
         public int CountCopy { get => (int)numCountCopy.Value; }
@@ -81,6 +86,11 @@ namespace WindowsForms
         {
             base.BtnOK_Click(sender, e);
             ec.EntityAdd += EntityAdd;
+            if (entityType == typeof(Location))
+            {
+                ((Location)currEntity).Plan = currPlan;
+                EntityAdd2?.Invoke(currPlan);
+            }
             ec.AddRangeEntity((Hierarchy)currEntity, CountCopy);
             ec.SaveChanges();
         }

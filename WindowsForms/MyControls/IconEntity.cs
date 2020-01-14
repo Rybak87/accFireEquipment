@@ -139,7 +139,7 @@ namespace BL
             using (var ec = new EntityController())
             {
                 var copyEntity = ec.GetEntity(Sign);
-                ((Equipment)copyEntity).Point = new ScalePoint(ScaleLeft, ScaleTop, false);
+                ((Equipment)copyEntity).Point = new ScalePoint(ScaleLeft, ScaleTop, true);
                 ec.Entry(copyEntity).State = EntityState.Modified;
                 ec.SaveChanges();
             }

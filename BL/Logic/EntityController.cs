@@ -224,7 +224,6 @@ namespace BL
         public IEnumerable<Equipment> GetDrawEquipment(Location location)
         {
             var result = new List<Equipment>();
-
             var fireCabinets = Entry(location).Collection(l => l.FireCabinets)?.Query().AsNoTracking();
             var drawFireCabinets = fireCabinets.Where(f => f.Point.Displayed);
             var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(e => e.Point.Displayed);

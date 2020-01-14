@@ -30,22 +30,10 @@ namespace BL
             RatioIconSize = Properties.Settings.Default.RatioIconSize;
         }
 
-        //public event Action<EntitySign> PicDrop;
-
         /// <summary>
         /// Событие изменения размеров иконок.
         /// </summary>
         private event Action<Size> IconsResize;
-
-        /// <summary>
-        /// Событие двойного клика по иконкам на плане.
-        /// </summary>
-        public event Action<EntitySign> IconsDoubleClick;
-
-        /// <summary>
-        /// Событие щелчка правой кнопки мыши по иконкам на плане.
-        /// </summary>
-        public event Action<EntitySign, Point> IconsRightClick;
 
         /// <summary>
         /// Возвращает размер иконок.
@@ -165,7 +153,7 @@ namespace BL
         }
 
         /// <summary>
-        /// Метод по событию щелка мышкой по иконке.
+        /// Обработчик события щелка мышкой по иконке.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -174,8 +162,7 @@ namespace BL
             if (e.Button == MouseButtons.Right)
             {
                 var y = ((IconEntity)sender).PointToScreen(e.Location);
-                IconsRightClick?.Invoke(((IconEntity)sender).Sign, y);
-                SettingsOfType.ShowContextMenu(((IconEntity)sender).Sign, y);
+                ContextMenuGetter.ShowContextMenu(((IconEntity)sender).Sign, y);
             }
         }
 

@@ -13,65 +13,70 @@ namespace WindowsForms
     /// <summary>
     /// Контекстное меню и т.д.
     /// </summary>
-    public static class SettingsOfType
+    public static class ContextMenuGetter
     {
-
-        private static Dictionary<Type, IconStruct> dictIcons;
+        private static Dictionary<Type, ContextMenuStrip> dictContextMenu;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        static SettingsOfType()
+        static ContextMenuGetter()
         {
+            //Контекстное меню проекта.
             var contextMenuProject = new ContextMenuStrip();
             contextMenuProject.Items.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Добавить локации", "Добавить", MenuAdd_MouseClick, typeof(Location))});
+                GetStripMenuItem("Добавить локации", MenuAdd_MouseClick, typeof(Location))});
 
+            //Контекстное меню помещения.
             var contextMenuLocation = new ContextMenuStrip();
             contextMenuLocation.Items.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Добавить пожарные шкафы", "Добавить", MenuAdd_MouseClick, typeof(FireCabinet)),
-                GetStripMenuItem("Редактировать", "Редактировать", MenuEdit_MouseClick),
-                GetStripMenuItem("Удалить", "Удалить", MenuRemove_MouseClick)});
+                GetStripMenuItem("Добавить пожарные шкафы", MenuAdd_MouseClick, typeof(FireCabinet)),
+                GetStripMenuItem("Редактировать",  MenuEdit_MouseClick),
+                GetStripMenuItem("Удалить",  MenuRemove_MouseClick)});
 
-            var contextMenuFireCabinetAdd = GetStripMenuItem("Добавить", "Добавить");
+            //Контекстное меню пожарного шкафа.
+            var contextMenuFireCabinetAdd = GetStripMenuItem("Добавить");
             contextMenuFireCabinetAdd.DropDownItems.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Огнетушитель", "Огнетушитель", MenuAdd_MouseClick, typeof(Extinguisher)),
-                GetStripMenuItem("Рукав", "Рукав", MenuAdd_MouseClick, typeof(Hose)),
-                GetStripMenuItem("Пожарный кран", "Пожарный кран",MenuAdd_MouseClick, typeof(Hydrant))});
+                GetStripMenuItem("Огнетушитель", MenuAdd_MouseClick, typeof(Extinguisher)),
+                GetStripMenuItem("Рукав", MenuAdd_MouseClick, typeof(Hose)),
+                GetStripMenuItem("Пожарный кран", MenuAdd_MouseClick, typeof(Hydrant))});
             var contextMenuFireCabinet = new ContextMenuStrip();
             contextMenuFireCabinet.Items.AddRange(new ToolStripItem[] {
             contextMenuFireCabinetAdd,
-                GetStripMenuItem("Редактировать", "Редактировать", MenuEdit_MouseClick),
-                GetStripMenuItem("Удалить", "Удалить", MenuRemove_MouseClick),
-                GetStripMenuItem("Удалить с плана", "Удалить с плана", MenuRemoveIcon_MouseClick)});
+                GetStripMenuItem("Редактировать",  MenuEdit_MouseClick),
+                GetStripMenuItem("Удалить",  MenuRemove_MouseClick),
+                GetStripMenuItem("Удалить с плана",  MenuRemoveIcon_MouseClick)});
 
+            //Контекстное меню огнетушителя.
             var contextMenuExtinguisher = new ContextMenuStrip();
             contextMenuExtinguisher.Items.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Создать паспорт", "Создать паспорт", CreatePassportContext_Click),
-                GetStripMenuItem("Редактировать", "Редактировать", MenuEdit_MouseClick),
-                GetStripMenuItem("Удалить", "Удалить", MenuRemove_MouseClick),
-                GetStripMenuItem("Удалить с плана", "Удалить с плана", MenuRemoveIcon_MouseClick)});
+                GetStripMenuItem("Создать паспорт",  CreatePassportContext_Click),
+                GetStripMenuItem("Редактировать",  MenuEdit_MouseClick),
+                GetStripMenuItem("Удалить",  MenuRemove_MouseClick),
+                GetStripMenuItem("Удалить с плана",  MenuRemoveIcon_MouseClick)});
 
+            //Контекстное меню рукава.
             var contextMenuHose = new ContextMenuStrip();
             contextMenuHose.Items.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Редактировать", "Редактировать", MenuEdit_MouseClick),
-                GetStripMenuItem("Удалить", "Удалить", MenuRemove_MouseClick),
-                GetStripMenuItem("Удалить с плана", "Удалить с плана", MenuRemoveIcon_MouseClick)});
+                GetStripMenuItem("Редактировать",  MenuEdit_MouseClick),
+                GetStripMenuItem("Удалить",  MenuRemove_MouseClick),
+                GetStripMenuItem("Удалить с плана",  MenuRemoveIcon_MouseClick)});
 
+            //Контекстное меню пожарного крана.
             var contextMenuHydrant = new ContextMenuStrip();
             contextMenuHydrant.Items.AddRange(new ToolStripItem[] {
-                GetStripMenuItem("Редактировать", "Редактировать", MenuEdit_MouseClick),
-                GetStripMenuItem("Удалить", "Удалить", MenuRemove_MouseClick),
-                GetStripMenuItem("Удалить с плана", "Удалить с плана", MenuRemoveIcon_MouseClick)});
+                GetStripMenuItem("Редактировать",  MenuEdit_MouseClick),
+                GetStripMenuItem("Удалить",  MenuRemove_MouseClick),
+                GetStripMenuItem("Удалить с плана",  MenuRemoveIcon_MouseClick)});
 
-            dictIcons = new Dictionary<Type, IconStruct>
+            dictContextMenu = new Dictionary<Type, ContextMenuStrip>
             {
-                [typeof(Int32)] = new IconStruct(contextMenuProject, Icons.Location),
-                [typeof(Location)] = new IconStruct(contextMenuLocation, Icons.Location),
-                [typeof(FireCabinet)] = new IconStruct(contextMenuFireCabinet, Icons.FireCabinet),
-                [typeof(Extinguisher)] = new IconStruct(contextMenuExtinguisher, Icons.Extinguisher),
-                [typeof(Hose)] = new IconStruct(contextMenuHose, Icons.Hose),
-                [typeof(Hydrant)] = new IconStruct(contextMenuHydrant, Icons.Hydrant)
+                [typeof(Int32)] = contextMenuProject,
+                [typeof(Location)] = contextMenuLocation,
+                [typeof(FireCabinet)] = contextMenuFireCabinet,
+                [typeof(Extinguisher)] = contextMenuExtinguisher,
+                [typeof(Hose)] = contextMenuHose,
+                [typeof(Hydrant)] = contextMenuHydrant
             };
 
         }
@@ -82,19 +87,22 @@ namespace WindowsForms
         public static MyTreeView TreeView { get; set; }
 
         /// <summary>
-        ///  Родительская форма для диалоговых окон.
-        /// </summary>
-        public static Form Owner { get; set; }
-
-        /// <summary>
         /// Обновляемый план.
         /// </summary>
         public static PictureContainer PictureContainer { get; set; }
 
-        private static ToolStripMenuItem GetStripMenuItem(string text, string name, EventHandler handler = null, Type type = null)
+        /// <summary>
+        /// Возвращает ячейку меню.
+        /// </summary>
+        /// <param name="text">Текст ячейки.</param>
+        /// <param name="handler">Событие по клику мышкой.</param>
+        /// <param name="tag">Тип записываемый в тэг.</param>
+        /// <returns></returns>
+        private static ToolStripMenuItem GetStripMenuItem(string text, EventHandler handler = null, Type tag = null)
         {
-            var result = new ToolStripMenuItem(text, null, handler, name);
-            result.Tag = type;
+            var result = new ToolStripMenuItem(text, null, handler);
+            //result.Click += (s, e) => MenuAdd_MouseClick(s,new ContextMenuEventArgs());
+            result.Tag = tag;
             return result;
         }
 
@@ -103,7 +111,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="type">Тип.</param>
         /// <returns></returns>
-        public static ContextMenuStrip GetMenu(Type type) => dictIcons[type].contextMenu;
+        public static ContextMenuStrip GetMenu(Type type) => dictContextMenu[type];
 
         /// <summary>
         /// Показать контекстное меню.
@@ -188,6 +196,11 @@ namespace WindowsForms
             }
         }
 
+        /// <summary>
+        /// Возвращает родительское контекстное меню.
+        /// </summary>
+        /// <param name="finded">Ячейка меню.</param>
+        /// <returns></returns>
         private static ContextMenuStrip FindContextMenuStrip(ToolStripItem finded)
         {
             if (finded.Owner.GetType() == typeof(ContextMenuStrip))
@@ -197,15 +210,9 @@ namespace WindowsForms
         }
     }
 
-    struct IconStruct
+    public class ContextMenuEventArgs : EventArgs
     {
-        public ContextMenuStrip contextMenu;
-        public Icon icon;
-
-        public IconStruct(ContextMenuStrip contextMenu, Icon icon)
-        {
-            this.contextMenu = contextMenu;
-            this.icon = icon;
-        }
+        
     }
+    delegate void ContextMenuHandler(object sender, ContextMenuEventArgs e);
 }

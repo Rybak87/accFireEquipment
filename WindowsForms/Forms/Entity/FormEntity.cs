@@ -345,18 +345,11 @@ namespace WindowsForms
         /// <param name="e"></param>
         protected virtual void BtnOK_Click(object sender, EventArgs e)
         {
-            //ec.entityAdd += EntityAdd;
             if (EmptyNeedControls())
             {
                 DialogResult = DialogResult.None;
                 MessageBox.Show("Необходимо заполнить все поля");
                 return;
-            }
-
-            if (entityType == typeof(Location))
-            {
-                ((Location)currEntity).Plan = currPlan;
-                ((FormMain)Owner).picContainer.LoadImage(currPlan);//TODO
             }
         }
 
