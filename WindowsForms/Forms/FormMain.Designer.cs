@@ -29,8 +29,6 @@ namespace WindowsForms
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.открытьПроектToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -38,37 +36,8 @@ namespace WindowsForms
             this.ReportMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.StickersMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuFireCabinet = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.AddContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddExtinguisherContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddHoseContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddHydrantContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.EditContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteIconContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.EditContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.contextMenuProject = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.AddLocationContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuLocation = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.AddFireCabinetContextMenu = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteContextMenu1 = new System.Windows.Forms.ToolStripMenuItem();
             this.rightPanel = new System.Windows.Forms.Panel();
-            this.contextMenuEquipment = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.EditContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteIconContextMenu2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuExtinguisher = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.CreatePassportContext = new System.Windows.Forms.ToolStripMenuItem();
-            this.EditContextMenu4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteContextMenu4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteIconContextMenu3 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
-            this.contextMenuFireCabinet.SuspendLayout();
-            this.contextMenuProject.SuspendLayout();
-            this.contextMenuLocation.SuspendLayout();
-            this.contextMenuEquipment.SuspendLayout();
-            this.contextMenuExtinguisher.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -98,13 +67,13 @@ namespace WindowsForms
             // открытьПроектToolStripMenuItem
             // 
             this.открытьПроектToolStripMenuItem.Name = "открытьПроектToolStripMenuItem";
-            this.открытьПроектToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.открытьПроектToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.открытьПроектToolStripMenuItem.Text = "Открыть проект...";
             // 
             // TypesEquipmentMenu
             // 
             this.TypesEquipmentMenu.Name = "TypesEquipmentMenu";
-            this.TypesEquipmentMenu.Size = new System.Drawing.Size(180, 22);
+            this.TypesEquipmentMenu.Size = new System.Drawing.Size(171, 22);
             this.TypesEquipmentMenu.Text = "Типы оснащения";
             // 
             // ReportMenu
@@ -125,115 +94,6 @@ namespace WindowsForms
             this.SettingsMenu.Size = new System.Drawing.Size(79, 20);
             this.SettingsMenu.Text = "Настройки";
             // 
-            // contextMenuFireCabinet
-            // 
-            this.contextMenuFireCabinet.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuFireCabinet.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddContextMenu,
-            this.EditContextMenu2,
-            this.DeleteContextMenu2,
-            this.DeleteIconContextMenu1});
-            this.contextMenuFireCabinet.Name = "contextMenuEquipment";
-            this.contextMenuFireCabinet.Size = new System.Drawing.Size(164, 92);
-            // 
-            // AddContextMenu
-            // 
-            this.AddContextMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddExtinguisherContextMenu,
-            this.AddHoseContextMenu,
-            this.AddHydrantContextMenu});
-            this.AddContextMenu.Name = "AddContextMenu";
-            this.AddContextMenu.Size = new System.Drawing.Size(163, 22);
-            this.AddContextMenu.Text = "Добавить";
-            // 
-            // AddExtinguisherContextMenu
-            // 
-            this.AddExtinguisherContextMenu.Name = "AddExtinguisherContextMenu";
-            this.AddExtinguisherContextMenu.Size = new System.Drawing.Size(164, 22);
-            this.AddExtinguisherContextMenu.Text = "Огнетушитель";
-            // 
-            // AddHoseContextMenu
-            // 
-            this.AddHoseContextMenu.Name = "AddHoseContextMenu";
-            this.AddHoseContextMenu.Size = new System.Drawing.Size(164, 22);
-            this.AddHoseContextMenu.Text = "Рукав";
-            // 
-            // AddHydrantContextMenu
-            // 
-            this.AddHydrantContextMenu.Name = "AddHydrantContextMenu";
-            this.AddHydrantContextMenu.Size = new System.Drawing.Size(164, 22);
-            this.AddHydrantContextMenu.Text = "Пожарный кран";
-            // 
-            // EditContextMenu2
-            // 
-            this.EditContextMenu2.Name = "EditContextMenu2";
-            this.EditContextMenu2.Size = new System.Drawing.Size(163, 22);
-            this.EditContextMenu2.Text = "Редактировать";
-            // 
-            // DeleteContextMenu2
-            // 
-            this.DeleteContextMenu2.Name = "DeleteContextMenu2";
-            this.DeleteContextMenu2.Size = new System.Drawing.Size(163, 22);
-            this.DeleteContextMenu2.Text = "Удалить";
-            // 
-            // DeleteIconContextMenu1
-            // 
-            this.DeleteIconContextMenu1.Name = "DeleteIconContextMenu1";
-            this.DeleteIconContextMenu1.Size = new System.Drawing.Size(163, 22);
-            this.DeleteIconContextMenu1.Text = "Удалить с плана";
-            // 
-            // EditContextMenu1
-            // 
-            this.EditContextMenu1.Name = "EditContextMenu1";
-            this.EditContextMenu1.Size = new System.Drawing.Size(231, 22);
-            this.EditContextMenu1.Text = "Редактировать";
-            // 
-            // imageList
-            // 
-            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "Location.ico");
-            this.imageList.Images.SetKeyName(1, "FireCabinet.ico");
-            this.imageList.Images.SetKeyName(2, "Extinguisher.ico");
-            this.imageList.Images.SetKeyName(3, "Hose.ico");
-            this.imageList.Images.SetKeyName(4, "Hydrant.ico");
-            // 
-            // contextMenuProject
-            // 
-            this.contextMenuProject.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuProject.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddLocationContextMenu});
-            this.contextMenuProject.Name = "contextMenuLocations";
-            this.contextMenuProject.Size = new System.Drawing.Size(177, 26);
-            // 
-            // AddLocationContextMenu
-            // 
-            this.AddLocationContextMenu.Name = "AddLocationContextMenu";
-            this.AddLocationContextMenu.Size = new System.Drawing.Size(176, 22);
-            this.AddLocationContextMenu.Text = "Добавить локации";
-            // 
-            // contextMenuLocation
-            // 
-            this.contextMenuLocation.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuLocation.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.AddFireCabinetContextMenu,
-            this.EditContextMenu1,
-            this.DeleteContextMenu1});
-            this.contextMenuLocation.Name = "contextMenuFireCabinets";
-            this.contextMenuLocation.Size = new System.Drawing.Size(232, 70);
-            // 
-            // AddFireCabinetContextMenu
-            // 
-            this.AddFireCabinetContextMenu.Name = "AddFireCabinetContextMenu";
-            this.AddFireCabinetContextMenu.Size = new System.Drawing.Size(231, 22);
-            this.AddFireCabinetContextMenu.Text = "Добавить пожарные шкафы";
-            // 
-            // DeleteContextMenu1
-            // 
-            this.DeleteContextMenu1.Name = "DeleteContextMenu1";
-            this.DeleteContextMenu1.Size = new System.Drawing.Size(231, 22);
-            this.DeleteContextMenu1.Text = "Удалить";
-            // 
             // rightPanel
             // 
             this.rightPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -242,70 +102,6 @@ namespace WindowsForms
             this.rightPanel.Name = "rightPanel";
             this.rightPanel.Size = new System.Drawing.Size(1222, 574);
             this.rightPanel.TabIndex = 4;
-            // 
-            // contextMenuEquipment
-            // 
-            this.contextMenuEquipment.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuEquipment.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.EditContextMenu3,
-            this.DeleteContextMenu3,
-            this.DeleteIconContextMenu2});
-            this.contextMenuEquipment.Name = "contextMenuEquipment";
-            this.contextMenuEquipment.Size = new System.Drawing.Size(164, 70);
-            // 
-            // EditContextMenu3
-            // 
-            this.EditContextMenu3.Name = "EditContextMenu3";
-            this.EditContextMenu3.Size = new System.Drawing.Size(163, 22);
-            this.EditContextMenu3.Text = "Редактировать";
-            // 
-            // DeleteContextMenu3
-            // 
-            this.DeleteContextMenu3.Name = "DeleteContextMenu3";
-            this.DeleteContextMenu3.Size = new System.Drawing.Size(163, 22);
-            this.DeleteContextMenu3.Text = "Удалить";
-            // 
-            // DeleteIconContextMenu2
-            // 
-            this.DeleteIconContextMenu2.Name = "DeleteIconContextMenu2";
-            this.DeleteIconContextMenu2.Size = new System.Drawing.Size(163, 22);
-            this.DeleteIconContextMenu2.Text = "Удалить с плана";
-            // 
-            // contextMenuExtinguisher
-            // 
-            this.contextMenuExtinguisher.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.contextMenuExtinguisher.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.CreatePassportContext,
-            this.EditContextMenu4,
-            this.DeleteContextMenu4,
-            this.DeleteIconContextMenu3});
-            this.contextMenuExtinguisher.Name = "contextMenuEquipment";
-            this.contextMenuExtinguisher.Size = new System.Drawing.Size(166, 92);
-            // 
-            // CreatePassportContext
-            // 
-            this.CreatePassportContext.Name = "CreatePassportContext";
-            this.CreatePassportContext.Size = new System.Drawing.Size(165, 22);
-            this.CreatePassportContext.Text = "Создать паспорт";
-            this.CreatePassportContext.Click += new System.EventHandler(this.CreatePassportContext_Click);
-            // 
-            // EditContextMenu4
-            // 
-            this.EditContextMenu4.Name = "EditContextMenu4";
-            this.EditContextMenu4.Size = new System.Drawing.Size(165, 22);
-            this.EditContextMenu4.Text = "Редактировать";
-            // 
-            // DeleteContextMenu4
-            // 
-            this.DeleteContextMenu4.Name = "DeleteContextMenu4";
-            this.DeleteContextMenu4.Size = new System.Drawing.Size(165, 22);
-            this.DeleteContextMenu4.Text = "Удалить";
-            // 
-            // DeleteIconContextMenu3
-            // 
-            this.DeleteIconContextMenu3.Name = "DeleteIconContextMenu3";
-            this.DeleteIconContextMenu3.Size = new System.Drawing.Size(165, 22);
-            this.DeleteIconContextMenu3.Text = "Удалить с плана";
             // 
             // FormMain
             // 
@@ -325,100 +121,19 @@ namespace WindowsForms
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.contextMenuFireCabinet.ResumeLayout(false);
-            this.contextMenuProject.ResumeLayout(false);
-            this.contextMenuLocation.ResumeLayout(false);
-            this.contextMenuEquipment.ResumeLayout(false);
-            this.contextMenuExtinguisher.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
-        private void MyInitializeComponent()
-        {
-            this.picContainer = new PictureContainer();
-            this.myTreeView = new MyTreeView();
-            this.Controls.Add(this.myTreeView);
-            this.rightPanel.Controls.Add(this.picContainer);
 
-            this.picContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.picContainer.Location = new System.Drawing.Point(352, 221);
-            this.picContainer.Name = "picContainer";
-            this.picContainer.Size = new System.Drawing.Size(407, 209);
-            this.picContainer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picContainer.TabIndex = 2;
-            this.picContainer.TabStop = false;
-
-            this.myTreeView.AllowDrop = true;
-            this.myTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            //this.myTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Top)));
-            this.myTreeView.Dock = System.Windows.Forms.DockStyle.Left;
-            this.myTreeView.Location = new System.Drawing.Point(0, 28);
-            this.myTreeView.Name = "treeView";
-            this.myTreeView.Size = new System.Drawing.Size(290, 720);
-            this.myTreeView.TabIndex = 0;
-
-            //AddLocationContextMenu.Tag = typeof(Location);
-            //AddFireCabinetContextMenu.Tag = typeof(FireCabinet);
-            //AddExtinguisherContextMenu.Tag = typeof(Extinguisher);
-            //AddHoseContextMenu.Tag = typeof(Hose);
-            //AddHydrantContextMenu.Tag = typeof(Hydrant);
-
-            //AddLocationContextMenu.Click += MenuAdd_MouseClick;
-            //AddFireCabinetContextMenu.Click += MenuAdd_MouseClick;
-            //AddExtinguisherContextMenu.Click += MenuAdd_MouseClick;
-            //AddHoseContextMenu.Click += MenuAdd_MouseClick;
-            //AddHydrantContextMenu.Click += MenuAdd_MouseClick;
-
-            //EditContextMenu1.Click += MenuEdit_MouseClick;
-            //EditContextMenu2.Click += MenuEdit_MouseClick;
-            //EditContextMenu3.Click += MenuEdit_MouseClick;
-            //EditContextMenu4.Click += MenuEdit_MouseClick;
-            //DeleteContextMenu1.Click += MenuRemove_MouseClick;
-            //DeleteContextMenu2.Click += MenuRemove_MouseClick;
-            //DeleteContextMenu3.Click += MenuRemove_MouseClick;
-            //DeleteContextMenu4.Click += MenuRemove_MouseClick;
-            //DeleteIconContextMenu1.Click += MenuRemoveIcon_MouseClick;
-            //DeleteIconContextMenu2.Click += MenuRemoveIcon_MouseClick;
-            //DeleteIconContextMenu3.Click += MenuRemoveIcon_MouseClick;
-        }
-
-        
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ContextMenuStrip contextMenuFireCabinet;
-        private System.Windows.Forms.ToolStripMenuItem AddContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem AddExtinguisherContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem AddHoseContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem AddHydrantContextMenu;
-        private System.Windows.Forms.ContextMenuStrip contextMenuProject;
-        private System.Windows.Forms.ContextMenuStrip contextMenuLocation;
-        private System.Windows.Forms.ToolStripMenuItem AddLocationContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem AddFireCabinetContextMenu;
-        private System.Windows.Forms.ToolStripMenuItem EditContextMenu1;
-        private System.Windows.Forms.ToolStripMenuItem DeleteContextMenu1;
         private System.Windows.Forms.Panel rightPanel;
-        private System.Windows.Forms.ImageList imageList;
-
-        public MyTreeView myTreeView;
-        public PictureContainer picContainer;
-        private System.Windows.Forms.ToolStripMenuItem EditContextMenu2;
-        private System.Windows.Forms.ToolStripMenuItem DeleteContextMenu2;
-        private System.Windows.Forms.ContextMenuStrip contextMenuEquipment;
-        private System.Windows.Forms.ToolStripMenuItem EditContextMenu3;
-        private System.Windows.Forms.ToolStripMenuItem DeleteContextMenu3;
         private System.Windows.Forms.ToolStripMenuItem открытьПроектToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ReportMenu;
         private System.Windows.Forms.ToolStripMenuItem SettingsMenu;
         private System.Windows.Forms.ToolStripMenuItem TypesEquipmentMenu;
         private System.Windows.Forms.ToolStripMenuItem StickersMenu;
-        private System.Windows.Forms.ToolStripMenuItem DeleteIconContextMenu1;
-        private System.Windows.Forms.ToolStripMenuItem DeleteIconContextMenu2;
-        private System.Windows.Forms.ContextMenuStrip contextMenuExtinguisher;
-        private System.Windows.Forms.ToolStripMenuItem EditContextMenu4;
-        private System.Windows.Forms.ToolStripMenuItem DeleteContextMenu4;
-        private System.Windows.Forms.ToolStripMenuItem DeleteIconContextMenu3;
-        private System.Windows.Forms.ToolStripMenuItem CreatePassportContext;
     }
 }

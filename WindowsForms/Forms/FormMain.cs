@@ -11,6 +11,8 @@ namespace WindowsForms
     /// </summary>
     public partial class FormMain : Form
     {
+        public MyTreeView myTreeView;
+        public PictureContainer picContainer;
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -40,27 +42,29 @@ namespace WindowsForms
             SettingsMenu.Click += SettingsMenu_Click;
         }
 
-        /// <summary>
-        /// Возвращает контекстное меню.
-        /// </summary>
-        /// <param name="finded">Элемент контекстного меню.</param>
-        private ContextMenuStrip FindContextMenuStrip(ToolStripItem finded)
+        private void MyInitializeComponent()
         {
-            if (finded.Owner.GetType() == typeof(ContextMenuStrip))
-                return (ContextMenuStrip)finded.Owner;
-            else
-                return FindContextMenuStrip(((ToolStripDropDownMenu)finded.Owner).OwnerItem);
-        }
+            this.picContainer = new PictureContainer();
+            this.myTreeView = new MyTreeView();
+            this.Controls.Add(this.myTreeView);
+            this.rightPanel.Controls.Add(this.picContainer);
 
-        /// <summary>
-        /// Показать контекстное меню.
-        /// </summary>
-        /// <param name="sign">Идентификатор сущности.</param>
-        /// <param name="e">Точка отрисовки меню.</param>
-        public void ShowContextMenu(EntitySign sign, Point e)
-        {
-            SettingsOfType.GetMenu(sign.Type).Tag = sign;
-            SettingsOfType.GetMenu(sign.Type).Show(e);
+            this.picContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.picContainer.Location = new System.Drawing.Point(352, 221);
+            this.picContainer.Name = "picContainer";
+            this.picContainer.Size = new System.Drawing.Size(407, 209);
+            this.picContainer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picContainer.TabIndex = 2;
+            this.picContainer.TabStop = false;
+
+            this.myTreeView.AllowDrop = true;
+            this.myTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            //this.myTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Top)));
+            this.myTreeView.Dock = System.Windows.Forms.DockStyle.Left;
+            this.myTreeView.Location = new System.Drawing.Point(0, 28);
+            this.myTreeView.Name = "treeView";
+            this.myTreeView.Size = new System.Drawing.Size(290, 720);
+            this.myTreeView.TabIndex = 0;
         }
 
         /// <summary>
@@ -75,25 +79,6 @@ namespace WindowsForms
             frm.ChangeSample += picContainer.DoRenameIcons;
             frm.ChangeIconSize += picContainer.DoCoerciveResize;
             frm.Show(this);
-        }
-
-        /// <summary>
-        /// Обработчик контекстного меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void CreatePassportContext_Click(object sender, EventArgs e)
-        {
-            var menuItem = (ToolStripMenuItem)sender;
-            var sign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            using (var ec = new EntityController())
-            {
-                var ex = ec.GetEntity(sign) as Extinguisher;
-
-                var path = Application.StartupPath.ToString();
-                var wrd = new WordPassportExtinguisher(path + "\\PassportExtinguisher.dotx", true);
-                wrd.CreatePassportExtinguisher(ex);
-            }
         }
 
         /// <summary>

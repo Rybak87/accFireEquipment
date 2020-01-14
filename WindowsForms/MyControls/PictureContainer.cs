@@ -281,8 +281,9 @@ namespace BL
         /// <param name="removeSign">Идентификатор.</param>
         public void RemoveOfPlan(EntitySign removeSign)
         {
-            var x = GetIcons();
-            GetIcons().First(i => i.Sign == removeSign).Dispose();
+            var icon = GetIcons().FirstOrDefault(i => i.Sign == removeSign);
+            if (icon != null)
+                icon.Dispose();
         }
 
         /// <summary>
