@@ -21,13 +21,16 @@ namespace WindowsForms
             InitializeComponent();
             dictMenu = new Dictionary<Type, ContextMenuStrip>
             {
-                [0.GetType()] = (contextMenuProject),
-                [typeof(Location)] = (contextMenuLocation),
-                [typeof(FireCabinet)] = (contextMenuFireCabinet),
-                [typeof(Extinguisher)] = (contextMenuExtinguisher),
-                [typeof(Hose)] = (contextMenuEquipment),
-                [typeof(Hydrant)] = (contextMenuEquipment)
+                //[0.GetType()] = contextMenuProject,
+                [0.GetType()] = SettingsOfType.GetMenu(typeof(Int32)),
+                //[typeof(Location)] = contextMenuLocation,
+                [typeof(Location)] = SettingsOfType.GetMenu(typeof(Location)),
+                [typeof(FireCabinet)] = contextMenuFireCabinet,
+                [typeof(Extinguisher)] = contextMenuExtinguisher,
+                [typeof(Hose)] = contextMenuEquipment,
+                [typeof(Hydrant)] = contextMenuEquipment
             };
+            dictMenu[0.GetType()].Items["Добавить"].Click += MenuAdd_MouseClick;
             MyInitializeComponent();
 
             using (var db = new BLContext())

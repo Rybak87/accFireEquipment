@@ -71,7 +71,7 @@
     <Compile Include="Model\Database\Hose.cs" />
     <Compile Include="Model\Database\Hydrant.cs" />
     <Compile Include="Model\Database\ImageLocation.cs" />
-    <Compile Include="Logic\ImageSettings.cs" />
+    <Compile Include="Logic\IconsGetter.cs" />
     <Compile Include="Logic\WordPassportExtinguisher.cs" />
     <Compile Include="Model\ScalePoint.cs" />
     <Compile Include="Model\EntitySign.cs" />

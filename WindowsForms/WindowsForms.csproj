@@ -149,6 +149,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="SettingsOfType.cs" />
     <EmbeddedResource Include="Forms\Entity\FormAddHierarchy.resx">
       <DependentUpon>FormAddHierarchy.cs</DependentUpon>
     </EmbeddedResource>

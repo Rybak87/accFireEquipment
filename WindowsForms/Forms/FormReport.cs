@@ -22,12 +22,12 @@ namespace WindowsForms
         public FormReport()
         {
             InitializeComponent();
-            FullMenu.Image = ImageSettings.IconsImage(typeof(Location));
-            FireCabinetsMenu.Image = ImageSettings.IconsImage(typeof(FireCabinet));
-            ExtinguishersMenu.Image = ImageSettings.IconsImage(typeof(Extinguisher));
-            HosesMenu.Image = ImageSettings.IconsImage(typeof(Hose));
-            HydrantsMenu.Image = ImageSettings.IconsImage(typeof(Hydrant));
-            RechargeExtinguishersMenu.Image = ImageSettings.IconsImage(typeof(Extinguisher));
+            FullMenu.Image = IconsGetter.GetIcon(typeof(Location));
+            FireCabinetsMenu.Image = IconsGetter.GetIcon(typeof(FireCabinet));
+            ExtinguishersMenu.Image = IconsGetter.GetIcon(typeof(Extinguisher));
+            HosesMenu.Image = IconsGetter.GetIcon(typeof(Hose));
+            HydrantsMenu.Image = IconsGetter.GetIcon(typeof(Hydrant));
+            RechargeExtinguishersMenu.Image = IconsGetter.GetIcon(typeof(Extinguisher));
 
             FullMenu.Click += (s, e) => FullReport();
             FullMenu.Click += (s, e) => lastReport = () => FullReport();

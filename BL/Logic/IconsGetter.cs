@@ -9,8 +9,7 @@ namespace BL
     /// <summary>
     /// Иконки.
     /// </summary>
-    //[Serializable]
-    public static class ImageSettings
+    public static class IconsGetter
     {
         /// <summary>
         /// Коллекция индексов иконок по типу.
@@ -28,25 +27,16 @@ namespace BL
         /// <summary>
         /// Констуктор. Заполение коллекции иконок.
         /// </summary>
-        static ImageSettings()
+        static IconsGetter()
         {
-            if (IconsImageList == null)
-            {
                 IconsImageList = new ImageList();
                 IconsImageList.TransparentColor = Color.Transparent;
 
-                IconsImageList.Images.Add("Location.ico", Icons.Location);
-                IconsImageList.Images.Add("FireCabinet.ico", Icons.FireCabinet);
-                IconsImageList.Images.Add("Extinguisher.ico", Icons.Extinguisher);
-                IconsImageList.Images.Add("Hose.ico", Icons.Hose);
-                IconsImageList.Images.Add("Hydrant.ico", Icons.Hydrant);
-
-                IconsImageList.Images.SetKeyName(0, "Location.ico");
-                IconsImageList.Images.SetKeyName(1, "FireCabinet.ico");
-                IconsImageList.Images.SetKeyName(2, "Extinguisher.ico");
-                IconsImageList.Images.SetKeyName(3, "Hose.ico");
-                IconsImageList.Images.SetKeyName(4, "Hydrant.ico");
-            }
+                IconsImageList.Images.Add(Icons.Location);
+                IconsImageList.Images.Add(Icons.FireCabinet);
+                IconsImageList.Images.Add(Icons.Extinguisher);
+                IconsImageList.Images.Add(Icons.Hose);
+                IconsImageList.Images.Add(Icons.Hydrant);
         }
 
         /// <summary>
@@ -59,6 +49,6 @@ namespace BL
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Image IconsImage(Type type) => IconsImageList.Images[IconsImageIndex[type]];
+        public static Image GetIcon(Type type) => IconsImageList.Images[IconsImageIndex[type]];
     }
 }

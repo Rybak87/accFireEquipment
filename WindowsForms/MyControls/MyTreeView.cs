@@ -30,7 +30,7 @@ namespace WindowsForms
         public MyTreeView(Dictionary<Type, ContextMenuStrip> dictMenu)
         {
             dictNodes = new Dictionary<EntitySign, TreeNode>();
-            ImageList = ImageSettings.IconsImageList;
+            ImageList = IconsGetter.IconsImageList;
             this.dictMenu = dictMenu;
             ItemDrag += treeView_ItemDrag;
             DragEnter += treeView_DragEnter;
@@ -117,7 +117,8 @@ namespace WindowsForms
             if (e.Button == MouseButtons.Right)
             {
                 if (e.Node.Tag != null)
-                    dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
+                    //dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
+                    SettingsOfType.GetMenu(((EntitySign)e.Node.Tag).Type).Tag = e.Node.Tag;
                 ((TreeView)sender).SelectedNode = e.Node;
                 return;
             }
@@ -183,7 +184,8 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 var projectNode = new TreeNode("Проект");
-                projectNode.ContextMenuStrip = dictMenu[0.GetType()];
+                //projectNode.ContextMenuStrip = dictMenu[0.GetType()];
+                projectNode.ContextMenuStrip = SettingsOfType.GetMenu(0.GetType());
                 Nodes.Add(projectNode);
 
                 foreach (var location in ec.Locations)
@@ -220,9 +222,10 @@ namespace WindowsForms
 
             TreeNode CreateNode(TreeNode parent, EntitySign entitySign, string text, ContextMenuStrip menu = null)
             {
-                var indImage = ImageSettings.IconsImageIndex[entitySign.Type];
+                var indImage = IconsGetter.IconsImageIndex[entitySign.Type];
                 var child = new TreeNode(text, indImage, indImage);
-                child.ContextMenuStrip = menu;
+                //child.ContextMenuStrip = menu;
+                child.ContextMenuStrip = SettingsOfType.GetMenu(entitySign.Type);
                 parent.Nodes.Add(child);
                 child.Tag = entitySign;
                 dictNodes.Add(entitySign, child);
@@ -244,9 +247,10 @@ namespace WindowsForms
             else
                 return;
 
-            var indImage = ImageSettings.IconsImageIndex[entity.GetType()];
+            var indImage = IconsGetter.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
-            newNode.ContextMenuStrip = dictMenu[entity.GetType()];
+            //newNode.ContextMenuStrip = dictMenu[entity.GetType()];
+            newNode.ContextMenuStrip = SettingsOfType.GetMenu(entity.GetType());
             newNode.Tag = entity.GetSign();
             nodeParent.Nodes.Add(newNode);
             dictNodes.Add(entity.GetSign(), newNode);

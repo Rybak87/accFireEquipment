@@ -71,7 +71,7 @@ namespace BL
                 textIcon = entity.ToString();
             }
             this.SuspendDrawing();
-            icon = CreateIcon(sign, new ScalePoint(new Point(e.X, e.Y), this), ImageSettings.IconsImage(sign.Type), textIcon);
+            icon = CreateIcon(sign, new ScalePoint(new Point(e.X, e.Y), this), IconsGetter.GetIcon(sign.Type), textIcon);
             this.ResumeDrawing();
             return icon;
         }
@@ -253,7 +253,7 @@ namespace BL
                 ResizeRelativePosition();
                 var drawEquipment = ec.GetDrawEquipment(parentLocation);
                 foreach (var eq in drawEquipment)
-                    CreateIcon(eq.GetSign(), eq.Point, ImageSettings.IconsImage(eq.GetType()), eq.ToString());
+                    CreateIcon(eq.GetSign(), eq.Point, IconsGetter.GetIcon(eq.GetType()), eq.ToString());
             }
             this.ResumeDrawing();
         }
