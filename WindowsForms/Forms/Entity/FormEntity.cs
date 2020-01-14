@@ -356,7 +356,7 @@ namespace WindowsForms
             if (entityType == typeof(Location))
             {
                 ((Location)currEntity).Plan = currPlan;
-                ((FormMain)Owner).picContainer.LoadImage(currPlan);
+                ((FormMain)Owner).picContainer.LoadImage(currPlan);//TODO
             }
         }
 

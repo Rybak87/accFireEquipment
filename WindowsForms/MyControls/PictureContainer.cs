@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using WindowsForms;
 
 namespace BL
 {
@@ -174,6 +175,7 @@ namespace BL
             {
                 var y = ((IconEntity)sender).PointToScreen(e.Location);
                 IconsRightClick?.Invoke(((IconEntity)sender).Sign, y);
+                SettingsOfType.ShowContextMenu(((IconEntity)sender).Sign, y);
             }
         }
 
@@ -188,7 +190,7 @@ namespace BL
         public IconEntity CreateIcon(EntitySign sign, ScalePoint scalePoint, Image img, string textLabel)
         {
             var icon = new IconEntity(this, img, sign, scalePoint, textLabel);
-            icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => IconsDoubleClick(sign));
+            icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => Dialogs.EditDialog(sign));
             IconsResize += icon.Parent_Resize;
             icon.MouseClick += Icon_MouseClick;
             return icon;

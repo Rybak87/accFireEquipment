@@ -54,11 +54,6 @@ namespace WindowsForms
         private Action lastReport;
 
         /// <summary>
-        /// Событие по двойному клику мышью.
-        /// </summary>
-        public event Action<EntitySign> ListViewDoubleClick;
-
-        /// <summary>
         /// Вывод полного отчета.
         /// </summary>
         private void FullReport()
@@ -126,7 +121,7 @@ namespace WindowsForms
                 return;
             var item = listView.SelectedItems[0];
             var sign = (EntitySign)item.Tag;
-            ListViewDoubleClick?.Invoke(sign);
+            Dialogs.EditDialog(sign);
             lastReport?.Invoke();
         }
     }

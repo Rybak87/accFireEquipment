@@ -14,11 +14,6 @@ namespace WindowsForms
     public class MyTreeView : TreeView
     {
         /// <summary>
-        /// Коллекция выпадающих меню по типу.
-        /// </summary>
-        private Dictionary<Type, ContextMenuStrip> dictMenu;
-
-        /// <summary>
         /// Коллекция узлов по идентификатору.
         /// </summary>
         private Dictionary<EntitySign, TreeNode> dictNodes;
@@ -26,12 +21,10 @@ namespace WindowsForms
         /// <summary>
         /// Конструктор.
         /// </summary>
-        /// <param name="dictMenu"></param>
-        public MyTreeView(Dictionary<Type, ContextMenuStrip> dictMenu)
+        public MyTreeView()
         {
             dictNodes = new Dictionary<EntitySign, TreeNode>();
             ImageList = IconsGetter.IconsImageList;
-            this.dictMenu = dictMenu;
             ItemDrag += treeView_ItemDrag;
             DragEnter += treeView_DragEnter;
             DragOver += treeView_DragOver;
@@ -117,7 +110,6 @@ namespace WindowsForms
             if (e.Button == MouseButtons.Right)
             {
                 if (e.Node.Tag != null)
-                    //dictMenu[((EntitySign)e.Node.Tag).Type].Tag = e.Node.Tag;
                     SettingsOfType.GetMenu(((EntitySign)e.Node.Tag).Type).Tag = e.Node.Tag;
                 ((TreeView)sender).SelectedNode = e.Node;
                 return;
@@ -167,7 +159,7 @@ namespace WindowsForms
                 if (localNode != null)
                 {
                     SelectedNode = localNode;
-                    LeftMouseDoubleClick?.Invoke((EntitySign)localNode.Tag);
+                    Dialogs.EditDialog((EntitySign)localNode.Tag);
                 }
 
                 m.Result = IntPtr.Zero;
@@ -184,34 +176,33 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 var projectNode = new TreeNode("Проект");
-                //projectNode.ContextMenuStrip = dictMenu[0.GetType()];
                 projectNode.ContextMenuStrip = SettingsOfType.GetMenu(0.GetType());
                 Nodes.Add(projectNode);
 
                 foreach (var location in ec.Locations)
                 {
                     var locationSign = location.GetSign();
-                    var nodeLocation = CreateNode(projectNode, locationSign, location.ToString(), dictMenu[typeof(Location)]);
+                    var nodeLocation = CreateNode(projectNode, locationSign, location.ToString(), SettingsOfType.GetMenu(typeof(Location)));
 
                     foreach (var fireCabinet in location.FireCabinets)
                     {
                         var fireCabinetSign = fireCabinet.GetSign();
-                        var nodeFireCabinet = CreateNode(nodeLocation, fireCabinetSign, fireCabinet.ToString(), dictMenu[typeof(FireCabinet)]);
+                        var nodeFireCabinet = CreateNode(nodeLocation, fireCabinetSign, fireCabinet.ToString(), SettingsOfType.GetMenu(typeof(FireCabinet)));
 
                         foreach (var extinguisher in fireCabinet.Extinguishers)
                         {
                             var extinguisherSign = extinguisher.GetSign();
-                            CreateNode(nodeFireCabinet, extinguisherSign, extinguisher.ToString(), dictMenu[typeof(Extinguisher)]);
+                            CreateNode(nodeFireCabinet, extinguisherSign, extinguisher.ToString(), SettingsOfType.GetMenu(typeof(Extinguisher)));
                         }
                         foreach (var hose in fireCabinet.Hoses)
                         {
                             var hoseSign = hose.GetSign();
-                            CreateNode(nodeFireCabinet, hoseSign, hose.ToString(), dictMenu[typeof(Hose)]);
+                            CreateNode(nodeFireCabinet, hoseSign, hose.ToString(), SettingsOfType.GetMenu(typeof(Hose)));
                         }
                         foreach (var hydrant in fireCabinet.Hydrants)
                         {
                             var hydrantSign = hydrant.GetSign();
-                            CreateNode(nodeFireCabinet, hydrantSign, hydrant.ToString(), dictMenu[typeof(Hydrant)]);
+                            CreateNode(nodeFireCabinet, hydrantSign, hydrant.ToString(), SettingsOfType.GetMenu(typeof(Hydrant)));
                         }
                     }
                 }
@@ -249,7 +240,6 @@ namespace WindowsForms
 
             var indImage = IconsGetter.IconsImageIndex[entity.GetType()];
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
-            //newNode.ContextMenuStrip = dictMenu[entity.GetType()];
             newNode.ContextMenuStrip = SettingsOfType.GetMenu(entity.GetType());
             newNode.Tag = entity.GetSign();
             nodeParent.Nodes.Add(newNode);

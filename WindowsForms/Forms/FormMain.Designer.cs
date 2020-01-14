@@ -337,7 +337,7 @@ namespace WindowsForms
         private void MyInitializeComponent()
         {
             this.picContainer = new PictureContainer();
-            this.myTreeView = new MyTreeView(dictMenu);
+            this.myTreeView = new MyTreeView();
             this.Controls.Add(this.myTreeView);
             this.rightPanel.Controls.Add(this.picContainer);
 
@@ -358,29 +358,29 @@ namespace WindowsForms
             this.myTreeView.Size = new System.Drawing.Size(290, 720);
             this.myTreeView.TabIndex = 0;
 
-            AddLocationContextMenu.Tag = typeof(Location);
-            AddFireCabinetContextMenu.Tag = typeof(FireCabinet);
-            AddExtinguisherContextMenu.Tag = typeof(Extinguisher);
-            AddHoseContextMenu.Tag = typeof(Hose);
-            AddHydrantContextMenu.Tag = typeof(Hydrant);
+            //AddLocationContextMenu.Tag = typeof(Location);
+            //AddFireCabinetContextMenu.Tag = typeof(FireCabinet);
+            //AddExtinguisherContextMenu.Tag = typeof(Extinguisher);
+            //AddHoseContextMenu.Tag = typeof(Hose);
+            //AddHydrantContextMenu.Tag = typeof(Hydrant);
 
-            AddLocationContextMenu.Click += MenuAdd_MouseClick;
-            AddFireCabinetContextMenu.Click += MenuAdd_MouseClick;
-            AddExtinguisherContextMenu.Click += MenuAdd_MouseClick;
-            AddHoseContextMenu.Click += MenuAdd_MouseClick;
-            AddHydrantContextMenu.Click += MenuAdd_MouseClick;
+            //AddLocationContextMenu.Click += MenuAdd_MouseClick;
+            //AddFireCabinetContextMenu.Click += MenuAdd_MouseClick;
+            //AddExtinguisherContextMenu.Click += MenuAdd_MouseClick;
+            //AddHoseContextMenu.Click += MenuAdd_MouseClick;
+            //AddHydrantContextMenu.Click += MenuAdd_MouseClick;
 
-            EditContextMenu1.Click += MenuEdit_MouseClick;
-            EditContextMenu2.Click += MenuEdit_MouseClick;
-            EditContextMenu3.Click += MenuEdit_MouseClick;
-            EditContextMenu4.Click += MenuEdit_MouseClick;
-            DeleteContextMenu1.Click += MenuRemove_MouseClick;
-            DeleteContextMenu2.Click += MenuRemove_MouseClick;
-            DeleteContextMenu3.Click += MenuRemove_MouseClick;
-            DeleteContextMenu4.Click += MenuRemove_MouseClick;
-            DeleteIconContextMenu1.Click += MenuRemoveIcon_MouseClick;
-            DeleteIconContextMenu2.Click += MenuRemoveIcon_MouseClick;
-            DeleteIconContextMenu3.Click += MenuRemoveIcon_MouseClick;
+            //EditContextMenu1.Click += MenuEdit_MouseClick;
+            //EditContextMenu2.Click += MenuEdit_MouseClick;
+            //EditContextMenu3.Click += MenuEdit_MouseClick;
+            //EditContextMenu4.Click += MenuEdit_MouseClick;
+            //DeleteContextMenu1.Click += MenuRemove_MouseClick;
+            //DeleteContextMenu2.Click += MenuRemove_MouseClick;
+            //DeleteContextMenu3.Click += MenuRemove_MouseClick;
+            //DeleteContextMenu4.Click += MenuRemove_MouseClick;
+            //DeleteIconContextMenu1.Click += MenuRemoveIcon_MouseClick;
+            //DeleteIconContextMenu2.Click += MenuRemoveIcon_MouseClick;
+            //DeleteIconContextMenu3.Click += MenuRemoveIcon_MouseClick;
         }
 
         

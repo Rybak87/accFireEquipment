@@ -20,7 +20,7 @@ namespace WindowsForms
         private Filter filterExtinguisherSticker;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
         private Type lastType;
-        private Task loadListView;
+        //private Task loadListView;
 
         /// <summary>
         /// Конструктор.
@@ -37,11 +37,6 @@ namespace WindowsForms
             filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
             filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
         }
-
-        /// <summary>
-        /// Событие по двойному клику по ListView.
-        /// </summary>
-        public event Action<EntitySign> ListViewDoubleClick;
 
         /// <summary>
         /// Вывод пожарных шкафов в ListView.
@@ -158,7 +153,7 @@ namespace WindowsForms
                 return;
             var item = listView.SelectedItems[0];
             var sign = (EntitySign)item.Tag;
-            ListViewDoubleClick?.Invoke(sign);
+            Dialogs.EditDialog(sign);
         }
 
         /// <summary>

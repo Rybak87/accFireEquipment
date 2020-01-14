@@ -11,27 +11,21 @@ namespace WindowsForms
     /// </summary>
     public partial class FormMain : Form
     {
-        private readonly Dictionary<Type, ContextMenuStrip> dictMenu;
-
         /// <summary>
         /// Конструктор.
         /// </summary>
         public FormMain()
         {
             InitializeComponent();
-            dictMenu = new Dictionary<Type, ContextMenuStrip>
-            {
-                //[0.GetType()] = contextMenuProject,
-                [0.GetType()] = SettingsOfType.GetMenu(typeof(Int32)),
-                //[typeof(Location)] = contextMenuLocation,
-                [typeof(Location)] = SettingsOfType.GetMenu(typeof(Location)),
-                [typeof(FireCabinet)] = contextMenuFireCabinet,
-                [typeof(Extinguisher)] = contextMenuExtinguisher,
-                [typeof(Hose)] = contextMenuEquipment,
-                [typeof(Hydrant)] = contextMenuEquipment
-            };
-            dictMenu[0.GetType()].Items["Добавить"].Click += MenuAdd_MouseClick;
+
             MyInitializeComponent();
+            SettingsOfType.Owner = this;
+            SettingsOfType.TreeView = myTreeView;
+            SettingsOfType.PictureContainer = picContainer;
+
+            Dialogs.Owner = this;
+            Dialogs.TreeView = myTreeView;
+            Dialogs.PictureContainer = picContainer;
 
             using (var db = new BLContext())
             {
@@ -40,14 +34,10 @@ namespace WindowsForms
 
             myTreeView.LoadFromContext();
             myTreeView.LeftMouseClick += picContainer.LoadImage;
-            myTreeView.LeftMouseDoubleClick += EditDialog;
-            picContainer.IconsDoubleClick += EditDialog;
-            picContainer.IconsRightClick += ShowContextMenu;
-            ReportMenu.Click += ReportMenu_Click;
+            ReportMenu.Click += (s, e) => new FormReport().Show(this);
             TypesEquipmentMenu.Click += (s, e) => new FormKinds().ShowDialog(this);
-            StickersMenu.Click += StickersMenu_Click;
+            StickersMenu.Click += (s, e) => new FormStickers().Show(this);
             SettingsMenu.Click += SettingsMenu_Click;
-
         }
 
         /// <summary>
@@ -69,32 +59,8 @@ namespace WindowsForms
         /// <param name="e">Точка отрисовки меню.</param>
         public void ShowContextMenu(EntitySign sign, Point e)
         {
-            dictMenu[sign.Type].Tag = sign;
-            dictMenu[sign.Type].Show(e);
-        }
-
-        /// <summary>
-        /// Обработчик меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StickersMenu_Click(object sender, EventArgs e)
-        {
-            var frm = new FormStickers();
-            frm.ListViewDoubleClick += EditDialog;
-            frm.Show(this);
-        }
-
-        /// <summary>
-        /// Обработчик меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReportMenu_Click(object sender, EventArgs e)
-        {
-            var frm = new FormReport();
-            frm.ListViewDoubleClick += EditDialog;
-            frm.Show(this);
+            SettingsOfType.GetMenu(sign.Type).Tag = sign;
+            SettingsOfType.GetMenu(sign.Type).Show(e);
         }
 
         /// <summary>
@@ -112,7 +78,7 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Обработчик меню.
+        /// Обработчик контекстного меню.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -140,86 +106,6 @@ namespace WindowsForms
             if (picContainer?.Image == null)
                 return;
             picContainer.ResizeRelativePosition();
-        }
-
-        /// <summary>
-        /// Обработчик контекстного меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuAdd_MouseClick(object sender, EventArgs e)
-        {
-            var menuItem = (ToolStripMenuItem)sender;
-            var parentSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            var typeNewEntity = (Type)menuItem.Tag;
-            AddDialog(typeNewEntity, parentSign);
-        }
-
-        /// <summary>
-        /// Обработчик контекстного меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuEdit_MouseClick(object sender, EventArgs e)
-        {
-            var menuItem = (ToolStripMenuItem)sender;
-            var editSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            EditDialog(editSign);
-        }
-
-        /// <summary>
-        /// Обработчик контекстного меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuRemove_MouseClick(object sender, EventArgs e)
-        {
-            var menuItem = (ToolStripMenuItem)sender;
-            var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            using (var ec = new EntityController())
-            {
-                ec.EntityRemove += myTreeView.NodeRemove;
-                ec.RemoveEntity(removeSign);
-            }
-        }
-
-        /// <summary>
-        /// Обработчик контекстного меню.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void MenuRemoveIcon_MouseClick(object sender, EventArgs e)
-        {
-            var menuItem = (ToolStripMenuItem)sender;
-            var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            picContainer.RemoveOfPlan(removeSign);
-        }
-
-        /// <summary>
-        /// Диалог добавления сущности в БД.
-        /// </summary>
-        /// <param name="typeEntity">Тип сущности.</param>
-        /// <param name="parentSign">Идентификатор родителя сущности.</param>
-        private void AddDialog(Type typeEntity, EntitySign parentSign)
-        {
-            var AddEssForm = new FormAddHierarchy(typeEntity, parentSign);
-            AddEssForm.EntityAdd += ent => myTreeView.NodeAdd(ent as Hierarchy);
-            DialogResult result = AddEssForm.ShowDialog(this);
-            if (result == DialogResult.Cancel)
-                return;
-        }
-
-        /// <summary>
-        /// Диалог изменения сущности в БД.
-        /// </summary>
-        /// <param name="sign">Идентификатор сущности.</param>
-        public void EditDialog(EntitySign sign)
-        {
-            var AddEssForm = new FormEditEntity(sign);
-            AddEssForm.EntityEdit += myTreeView.NodeMove;
-            DialogResult result = AddEssForm.ShowDialog(this);
-            if (result == DialogResult.Cancel)
-                return;
         }
     }
 }
