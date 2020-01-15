@@ -67,13 +67,13 @@ namespace WindowsForms
             // OpenProjectToolStripMenuItem
             // 
             this.OpenProjectToolStripMenuItem.Name = "OpenProjectToolStripMenuItem";
-            this.OpenProjectToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.OpenProjectToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
             this.OpenProjectToolStripMenuItem.Text = "Открыть проект...";
             // 
             // TypesEquipmentMenu
             // 
             this.TypesEquipmentMenu.Name = "TypesEquipmentMenu";
-            this.TypesEquipmentMenu.Size = new System.Drawing.Size(180, 22);
+            this.TypesEquipmentMenu.Size = new System.Drawing.Size(171, 22);
             this.TypesEquipmentMenu.Text = "Типы оснащения";
             // 
             // ReportMenu
@@ -124,6 +124,7 @@ namespace WindowsForms
             this.ResumeLayout(false);
             this.PerformLayout();
 
+            //this.rightPanel.Controls.Add(this.picContainer);
         }
 
         private System.Windows.Forms.MenuStrip menuStrip1;

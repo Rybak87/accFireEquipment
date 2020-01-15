@@ -5,6 +5,9 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Форма отчета.
+    /// </summary>
     public partial class FormReport : Form
     {
         private Filter fName = HelperListView.filterName;
@@ -49,7 +52,7 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Пос
+        /// Последний отчет.
         /// </summary>
         private Action lastReport;
 

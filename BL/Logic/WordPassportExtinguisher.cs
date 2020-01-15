@@ -19,19 +19,6 @@ namespace BL
         /// </summary>
         public WordPassportExtinguisher()
         {
-            workBook = word.Documents.Add(Type.Missing);
-            word.Visible = true;
-            bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
-        }
-
-        /// <summary>
-        /// Конструктор.
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="readOnly"></param>
-        public WordPassportExtinguisher(string file, bool readOnly = false)
-        {
-            //workBook = word.Documents.Open(file, false, readOnly);
             var template = AppDomain.CurrentDomain.BaseDirectory + "Resources\\PassportExtinguisher.dotx";
             workBook = word.Documents.Add(template);
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();

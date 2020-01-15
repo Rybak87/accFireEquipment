@@ -44,27 +44,26 @@ namespace WindowsForms
 
         private void MyInitializeComponent()
         {
-            this.picContainer = new PictureContainer();
             this.myTreeView = new MyTreeView();
+            this.picContainer = new PictureContainer();
             this.Controls.Add(this.myTreeView);
             this.rightPanel.Controls.Add(this.picContainer);
 
-            this.picContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.myTreeView.AllowDrop = true;
+            this.myTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.myTreeView.Dock = System.Windows.Forms.DockStyle.Left;
+            this.myTreeView.Location = new System.Drawing.Point(0, 24);
+            this.myTreeView.Name = "treeView";
+            this.myTreeView.Size = new System.Drawing.Size(290, 720);
+            this.myTreeView.TabIndex = 0;
+
+            //this.picContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.picContainer.Location = new System.Drawing.Point(352, 221);
             this.picContainer.Name = "picContainer";
             this.picContainer.Size = new System.Drawing.Size(407, 209);
             this.picContainer.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picContainer.TabIndex = 2;
             this.picContainer.TabStop = false;
-
-            this.myTreeView.AllowDrop = true;
-            this.myTreeView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            //this.myTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Top)));
-            this.myTreeView.Dock = System.Windows.Forms.DockStyle.Left;
-            this.myTreeView.Location = new System.Drawing.Point(0, 28);
-            this.myTreeView.Name = "treeView";
-            this.myTreeView.Size = new System.Drawing.Size(290, 720);
-            this.myTreeView.TabIndex = 0;
         }
 
         /// <summary>

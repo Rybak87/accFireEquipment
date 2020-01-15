@@ -10,7 +10,9 @@ using Sett = BL.Properties.Settings;
 
 namespace WindowsForms
 {
-
+    /// <summary>
+    /// Форма наклеек.
+    /// </summary>
     public partial class FormStickers : Form
     {
         private Filter fName = HelperListView.filterName;

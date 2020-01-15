@@ -58,30 +58,40 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Создание кнопок для загрузки и удаления изображений.
+        /// Создание TextBox
         /// </summary>
-        /// <param name="halfSize"></param>
-        /// <param name="centerLocation"></param>
-        /// <param name="centerHalfLocation"></param>
+        /// <param name="fullSize">Размер.</param>
+        /// <param name="prop">Свойство привязки.</param>
+        /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateButtonsForImage(Size halfSize, Point centerLocation, Point centerHalfLocation)
+        private Control CreateTextBox(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new Button
+            Control cntrl = new TextBox
             {
-                Location = centerLocation,
-                Size = halfSize,
-                Text = "..."
+                Location = location,
+                Size = fullSize
             };
-            var cntrl2 = new Button
-            {
-                Location = centerHalfLocation,
-                Size = halfSize,
-                Text = "Удалить"
-            };
-            cntrl.Click += new EventHandler((s, e) => ImageDialog());
-            cntrl2.Click += new EventHandler((s, e) => ImageClear());
             Controls.Add(cntrl);
-            Controls.Add(cntrl2);
+            cntrl.DataBindings.Add("Text", currEntity, prop.Name);
+            return cntrl;
+        }
+
+        /// <summary>
+        /// Создание CheckBox
+        /// </summary>
+        /// <param name="fullSize">Размер.</param>
+        /// <param name="prop">Свойство привязки.</param>
+        /// <param name="location">Расположение.</param>
+        /// <returns></returns>
+        private Control CreateCheckBox(Size fullSize, PropertyInfo prop, Point location)
+        {
+            Control cntrl = new CheckBox
+            {
+                Location = location,
+                Size = fullSize
+            };
+            Controls.Add(cntrl);
+            cntrl.DataBindings.Add("Checked", currEntity, prop.Name);
             return cntrl;
         }
 
@@ -116,6 +126,26 @@ namespace WindowsForms
         }
 
         /// <summary>
+        /// Создание NumericUpDown
+        /// </summary>
+        /// <param name="fullSize">Размер.</param>
+        /// <param name="prop">Свойство привязки.</param>
+        /// <param name="location">Расположение.</param>
+        /// <returns></returns>
+        private Control CreateNumericUpDown(Size fullSize, PropertyInfo prop, Point location)
+        {
+            Control cntrl = new NumericUpDown
+            {
+                Location = location,
+                Size = fullSize,
+                Maximum = Int32.MaxValue
+            };
+            Controls.Add(cntrl);
+            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
+            return cntrl;
+        }
+
+        /// <summary>
         /// Создание NumericUpDownDecimal
         /// </summary>
         /// <param name="fullSize">Размер.</param>
@@ -143,26 +173,6 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Создание NumericUpDown
-        /// </summary>
-        /// <param name="fullSize">Размер.</param>
-        /// <param name="prop">Свойство привязки.</param>
-        /// <param name="location">Расположение.</param>
-        /// <returns></returns>
-        private Control CreateNumericUpDown(Size fullSize, PropertyInfo prop, Point location)
-        {
-            Control cntrl = new NumericUpDown
-            {
-                Location = location,
-                Size = fullSize,
-                Maximum = Int32.MaxValue
-            };
-            Controls.Add(cntrl);
-            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
-            return cntrl;
-        }
-
-        /// <summary>
         /// Создание DateTimePicker
         /// </summary>
         /// <param name="fullSize">Размер.</param>
@@ -182,40 +192,30 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Создание CheckBox
+        /// Создание кнопок для загрузки и удаления изображений.
         /// </summary>
-        /// <param name="fullSize">Размер.</param>
-        /// <param name="prop">Свойство привязки.</param>
-        /// <param name="location">Расположение.</param>
+        /// <param name="halfSize"></param>
+        /// <param name="centerLocation"></param>
+        /// <param name="centerHalfLocation"></param>
         /// <returns></returns>
-        private Control CreateCheckBox(Size fullSize, PropertyInfo prop, Point location)
+        private Control CreateButtonsForImage(Size halfSize, Point centerLocation, Point centerHalfLocation)
         {
-            Control cntrl = new CheckBox
+            Control cntrl = new Button
             {
-                Location = location,
-                Size = fullSize
+                Location = centerLocation,
+                Size = halfSize,
+                Text = "..."
             };
-            Controls.Add(cntrl);
-            cntrl.DataBindings.Add("Checked", currEntity, prop.Name);
-            return cntrl;
-        }
-
-        /// <summary>
-        /// Создание TextBox
-        /// </summary>
-        /// <param name="fullSize">Размер.</param>
-        /// <param name="prop">Свойство привязки.</param>
-        /// <param name="location">Расположение.</param>
-        /// <returns></returns>
-        private Control CreateTextBox(Size fullSize, PropertyInfo prop, Point location)
-        {
-            Control cntrl = new TextBox
+            var cntrl2 = new Button
             {
-                Location = location,
-                Size = fullSize
+                Location = centerHalfLocation,
+                Size = halfSize,
+                Text = "Удалить"
             };
+            cntrl.Click += new EventHandler((s, e) => ImageDialog());
+            cntrl2.Click += new EventHandler((s, e) => ImageClear());
             Controls.Add(cntrl);
-            cntrl.DataBindings.Add("Text", currEntity, prop.Name);
+            Controls.Add(cntrl2);
             return cntrl;
         }
 

@@ -101,27 +101,8 @@ namespace WindowsForms
         private static ToolStripMenuItem GetStripMenuItem(string text, EventHandler handler = null, Type tag = null)
         {
             var result = new ToolStripMenuItem(text, null, handler);
-            //result.Click += (s, e) => MenuAdd_MouseClick(s,new ContextMenuEventArgs());
             result.Tag = tag;
             return result;
-        }
-
-        /// <summary>
-        /// Возвращает меню по типу.
-        /// </summary>
-        /// <param name="type">Тип.</param>
-        /// <returns></returns>
-        public static ContextMenuStrip GetMenu(Type type) => dictContextMenu[type];
-
-        /// <summary>
-        /// Показать контекстное меню.
-        /// </summary>
-        /// <param name="sign">Идентификатор сущности.</param>
-        /// <param name="e">Точка отрисовки меню.</param>
-        public static void ShowContextMenu(EntitySign sign, Point e)
-        {
-            GetMenu(sign.Type).Tag = sign;
-            GetMenu(sign.Type).Show(e);
         }
 
         /// <summary>
@@ -191,7 +172,7 @@ namespace WindowsForms
                 var ex = ec.GetEntity(sign) as Extinguisher;
 
                 var path = Application.StartupPath.ToString();
-                var wrd = new WordPassportExtinguisher(path + "\\PassportExtinguisher.dotx", true);
+                var wrd = new WordPassportExtinguisher();
                 wrd.CreatePassportExtinguisher(ex);
             }
         }
@@ -208,11 +189,23 @@ namespace WindowsForms
             else
                 return FindContextMenuStrip(((ToolStripDropDownMenu)finded.Owner).OwnerItem);
         }
-    }
 
-    public class ContextMenuEventArgs : EventArgs
-    {
-        
+        /// <summary>
+        /// Возвращает меню по типу.
+        /// </summary>
+        /// <param name="type">Тип.</param>
+        /// <returns></returns>
+        public static ContextMenuStrip GetMenu(Type type) => dictContextMenu[type];
+
+        /// <summary>
+        /// Показать контекстное меню.
+        /// </summary>
+        /// <param name="sign">Идентификатор сущности.</param>
+        /// <param name="e">Точка отрисовки меню.</param>
+        public static void ShowContextMenu(EntitySign sign, Point e)
+        {
+            GetMenu(sign.Type).Tag = sign;
+            GetMenu(sign.Type).Show(e);
+        }
     }
-    delegate void ContextMenuHandler(object sender, ContextMenuEventArgs e);
 }
