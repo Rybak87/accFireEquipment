@@ -211,6 +211,7 @@
             this.txbFireCabinets.Name = "txbFireCabinets";
             this.txbFireCabinets.Size = new System.Drawing.Size(174, 20);
             this.txbFireCabinets.TabIndex = 1;
+            this.txbFireCabinets.Tag = "";
             // 
             // label3
             // 

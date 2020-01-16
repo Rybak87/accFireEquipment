@@ -30,8 +30,8 @@ namespace BL
         public void AddEntity(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
-            
-            if (entity is Equipment)
+
+            if (entity is Equipment)//Добавляем первоначальные записи истории этой сущности.
             {
                 var historySet = new HistorySet(entity as Equipment);
                 historySet.SetNewValues();
@@ -45,37 +45,22 @@ namespace BL
         /// <summary>
         /// Добавляет сущности в БД.
         /// </summary>
-        public void AddRangeEntityold(Hierarchy entity, int count)
-        {
-            AddEntity(entity);
-            var sign = entity.GetSign();
-            int currNumber = entity.Number;
-            for (int i = 1; i < count; i++)
-            {
-                currNumber++;
-                var copyEntity = CopyEntity(sign) as Hierarchy;
-                copyEntity.Number = currNumber;
-                AddEntity(copyEntity);
-            }
-        }
-
-        /// <summary>
-        /// Добавляет сущности в БД.
-        /// </summary>
+        /// <param name="entity">Иерархическая сущность.</param>
+        /// <param name="count">Количество копий.</param>
         public void AddRangeEntity(Hierarchy entity, int count)
         {
             AddEntity(entity);
             var sign = entity.GetSign();
+            var table = Set(sign.Type);
             int currNumber = entity.Number;
-            Hierarchy temp = (Hierarchy)Entry(entity).CurrentValues.ToObject();
+            var temp = (Hierarchy)Entry(entity).CurrentValues.ToObject();//Сохранят значения уже добавленной 1-ой сущности
+            temp.Id = 0;
             for (int i = 1; i < count; i++)
             {
                 currNumber++;
-                var newEntity = (Hierarchy)Set(sign.Type).Create();
-                Set(sign.Type).Attach(newEntity);
-                
-                temp.Id = newEntity.Id;
-                Entry(newEntity).CurrentValues.SetValues(temp);
+                var newEntity = (Hierarchy)table.Create();
+                table.Attach(newEntity);
+                Entry(newEntity).CurrentValues.SetValues(temp);//Устанавливает значения уже добавленной 1-ой сущности в новую копию
                 newEntity.Number = currNumber;
                 AddEntity(newEntity);
             }
@@ -90,7 +75,7 @@ namespace BL
             EntityRemove?.Invoke(entity);
             if (sign.Type.IsSubclassOf(typeof(KindBase)))
             {
-                if (((KindBase)entity).Childs.Count != 0)
+                if (((KindBase)entity).Childs.Count != 0)//Не используем каскадное удаление
                 {
                     MessageBox.Show("Существует инвентарь с этим типом");
                     return;
@@ -103,12 +88,17 @@ namespace BL
         /// <summary>
         /// Возвращает следующий по порядку номер подсущности.
         /// </summary>
+        /// <param name="entity">Иерархическая сущность.</param>
+        /// <param name="childType">Тип подсущности.</param>
+        /// <returns></returns>
         public int GetNumberChild(Hierarchy entity, Type childType)
         {
-            var propertiesEntity = entity.GetType().GetProperties();
-            var desiredType = typeof(ICollection<>).MakeGenericType(childType);
-            var findedProperty = propertiesEntity.Single(p => p.PropertyType == desiredType);
-            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<Hierarchy>;
+            var properties = entity.GetType().GetProperties();
+            var desiredType = typeof(ICollection<>).MakeGenericType(childType);//Сгенерированный тип коллекции
+            var findedProperty = properties.SingleOrDefault(p => p.PropertyType == desiredType);//Св-во со сгенерирванным типом.
+            if (findedProperty == null)
+                return 1;
+            var findedCollection = findedProperty.GetValue(entity) as IEnumerable<Hierarchy>;//Коллекция подсущностей.
             if (findedCollection.Count() != 0)
                 return findedCollection.Max(ch => ch.Number) + 1;
             else
@@ -120,8 +110,7 @@ namespace BL
         /// </summary>
         public int GetNumber(Hierarchy entity)
         {
-            var EntityBaseCollection = GetTableList(entity.GetType());
-            var findedCollection = EntityBaseCollection.Cast<Hierarchy>();
+            var findedCollection = GetIQueryable(entity.GetType()).Cast<Hierarchy>();
             if (findedCollection.Count() != 0)
                 return findedCollection.Max(e => e.Number) + 1;
             else
@@ -135,84 +124,67 @@ namespace BL
         /// <returns></returns>
         public EntityBase CreateEntity(Type typeEntity) => (EntityBase)Set(typeEntity).Create();
 
+        /// <summary>
+        /// Создает сущность по типу.
+        /// </summary>
+        /// <typeparam name="T">Тип сущности.</typeparam>
+        /// <returns></returns>
+        public T CreateEntity<T>() where T : EntityBase => Set<T>().Create();
+
         /// <summary>Возвращает сущность по его метке.
         /// Второй параметр NoTracking.
         /// </summary>
-        public EntityBase GetEntity(EntitySign sign, bool noTracking = false)
-        {
-            var result = (EntityBase)Set(sign.Type).Find(sign.Id);
-            if (noTracking)
-                Entry(result).State = EntityState.Detached;
-            return result;
-        }
+        public EntityBase GetEntity(EntitySign sign) => (EntityBase)Set(sign.Type).Find(sign.Id);
 
         /// <summary>
-        /// Копирует и возврщает сущность.
-        /// </summary>
-        public EntityBase CopyEntity(EntitySign sign)
-        {
-            var entitySourse = GetEntity(sign);
-            var newEntity = CreateEntity(sign.Type);
-            Set(sign.Type).Attach(newEntity);
-            EntityBase temp = (EntityBase)Entry(entitySourse).CurrentValues.ToObject();
-            temp.Id = newEntity.Id;
-            Entry(newEntity).CurrentValues.SetValues(temp);
-            return newEntity;
-        }
-
-        /// <summary>
-        /// Возвращает родительский Location.
+        /// Возвращает родительское помещение.
         /// </summary>
         public Location GetParentLocation(EntitySign sign)
         {
-            var entity = GetEntity(sign, false);
-            if (!(entity is Hierarchy))
+            var entity = GetEntity(sign) as Hierarchy;
+            if (entity == null)
                 return null;
-            return ((Hierarchy)entity).GetLocation;
+            return (entity).GetLocation;
         }
 
         /// <summary>
-        /// Возвращает таблицу из БД в виде List.
+        /// Возвращает таблицу из БД в виде IQueryable.
         /// </summary>
-        public List<EntityBase> GetTableList(Type typeEntity) => ((IQueryable<EntityBase>)Set(typeEntity)).ToList();
+        public IQueryable<EntityBase> GetIQueryable(Type typeEntity) => Set(typeEntity) as IQueryable<EntityBase>;
 
         /// <summary>
-        /// Возвращает таблицу из БД в виде List.
+        /// Возвращает таблицу из БД в виде IQueryable.
         /// </summary>
-        public List<EntityBase> GetTableList(DbSet table) => ((IQueryable<EntityBase>)table).ToList();
+        public IQueryable<EntityBase> GetIQueryable(DbSet table) => table as IQueryable<EntityBase>;
 
         /// <summary>
         /// Возвращает коллекцию кортежей (свойство, атрибут элементов управления, название свойства)
         /// </summary>
         /// <param name="entity">Сущность.</param>
         /// <returns></returns>
-        public List<(PropertyInfo, ControlAttribute, string)> GetEditProperties(EntityBase entity)
+        public IEnumerable<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)> GetEditProperties(EntityBase entity)
         {
-            var result = new List<(PropertyInfo, ControlAttribute, string)>();
+            var result = new List<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)>();
             foreach (PropertyInfo prop in entity?.GetType().GetProperties())
             {
-                var controlAttr = GetControlAttribute(prop);
+                var controlAttr = GetAttribute<ControlAttribute>(prop);
                 if (controlAttr == null)
                     continue;
 
-                var nameAttr = GetColumnAttribute(prop)?.Name;
-                result.Add((prop, controlAttr, nameAttr));
+                var columnAttr = GetAttribute<ColumnAttribute>(prop)?.Name;
+                result.Add((prop, controlAttr, columnAttr));
             }
-            result = result.OrderBy(i => i.Item2.orderNumber).ToList();
+            result = result.OrderBy(i => i.cntrlAttr.orderNumber).ToList();
             return result;
 
-            ControlAttribute GetControlAttribute(PropertyInfo pi)
+            /// <summary>
+            /// Поиск аттрибута конкретного типа.
+            /// </summary>
+            TAttr GetAttribute<TAttr>(PropertyInfo pi) where TAttr : Attribute
             {
                 foreach (var item in pi.GetCustomAttributes())
-                    if (item.GetType() == typeof(ControlAttribute))
-                        return (ControlAttribute)item;
-                return null;
-            }
-            ColumnAttribute GetColumnAttribute(PropertyInfo pi)
-            {
-                foreach (var item in pi.GetCustomAttributes())
-                    if (item.GetType() == typeof(ColumnAttribute))
-                        return (ColumnAttribute)item;
+                    if (item.GetType() == typeof(TAttr))
+                        return (TAttr)item;
                 return null;
             }
         }
@@ -223,17 +195,15 @@ namespace BL
         /// <param name="location">Помещение.</param>
         public IEnumerable<Equipment> GetDrawEquipment(Location location)
         {
-            var result = new List<Equipment>();
             var fireCabinets = Entry(location).Collection(l => l.FireCabinets)?.Query().AsNoTracking();
-            var drawFireCabinets = fireCabinets.Where(f => f.Point.Displayed);
-            var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(e => e.Point.Displayed);
-            var drawHoses = fireCabinets.SelectMany(f => f.Hoses).Where(h => h.Point.Displayed);
-            var drawHydrants = fireCabinets.SelectMany(f => f.Hydrants).Where(hy => hy.Point.Displayed);
-            result.AddRange(drawFireCabinets);
-            result.AddRange(drawExtinguishers);
-            result.AddRange(drawHoses);
-            result.AddRange(drawHydrants);
-            return result;
+            Func<Equipment, bool> displayed = eq => eq.Point.Displayed;
+
+            var drawFireCabinets = fireCabinets.Where(displayed);
+            var drawExtinguishers = fireCabinets.SelectMany(f => f.Extinguishers).Where(displayed);
+            var drawHoses = fireCabinets.SelectMany(f => f.Hoses).Where(displayed);
+            var drawHydrants = fireCabinets.SelectMany(f => f.Hydrants).Where(displayed);
+
+            return drawFireCabinets.Concat(drawExtinguishers).Concat(drawHoses).Concat(drawHydrants);
         }
     }
 }

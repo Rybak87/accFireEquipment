@@ -218,7 +218,7 @@ namespace WindowsForms
                             else if (properties[i].PropertyType == typeof(double))
                                 properties[i].SetValue(curr, Double.Parse(values[i]));
                         }
-                        if (!ec.GetTableList(table).Any(ent => ((KindBase)ent).EqualsValues(curr)))
+                        if (!ec.GetIQueryable(table).Any(ent => ((KindBase)ent).EqualsValues(curr)))
                             table.Add(curr);
                     }
                     ec.SaveChanges();

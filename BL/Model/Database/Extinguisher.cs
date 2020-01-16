@@ -52,7 +52,7 @@ namespace BL
         /// Вид огнетушителя.
         /// </summary>
         [Column("Тип огнетушителя")]
-        [Control("ComboBox", true, 1/*, "KindExtinguishers"*/)]
+        [Control("ComboBox", true, 1)]
         public virtual KindExtinguisher KindExtinguisher { get; set; }
 
         /// <summary>

@@ -125,7 +125,7 @@ namespace BL
             {
                 if (OldValues[i] != NewValues[i])
                 {
-                    var hy = (History)ec.CreateEntity(typeof(History));
+                    var hy = ec.CreateEntity<History>();
                     hy.EquipmentBase = equipment;
                     hy.Property = Properties[i].Name;
                     hy.DateChange = datetime;
@@ -133,7 +133,7 @@ namespace BL
                     ec.AddEntity(hy);
                 }
             }
-            //ec.SaveChanges();
+            ec.SaveChanges();
         }
     }
 }

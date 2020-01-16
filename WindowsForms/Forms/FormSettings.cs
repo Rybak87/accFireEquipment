@@ -1,5 +1,6 @@
 ﻿using BL;
 using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Sett = BL.Properties.Settings;
 
@@ -10,6 +11,7 @@ namespace WindowsForms
     /// </summary>
     public partial class FormSettings : Form
     {
+
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -23,6 +25,11 @@ namespace WindowsForms
             prevAbsoluteIconsSize = InverseIconSize(Sett.Default.RatioIconSize);
             scrIconSize.Value = prevAbsoluteIconsSize;
             lblIconSize.Text = prevAbsoluteIconsSize.ToString();
+
+            txbFireCabinets.Tag = typeof(FireCabinet);
+            txbExtinguishers.Tag = typeof(Extinguisher);
+            txbHoses.Tag = typeof(Hose);
+            txbHydrants.Tag = typeof(Hydrant);
         }
 
         /// <summary>
@@ -44,53 +51,29 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
-            if (txbFireCabinets.Text.CorrectSample('L', 'F'))
-            {
-                Sett.Default.SampleNameFireCabinets = txbFireCabinets.Text.Trim() == "" ? Sett.Default.DefaultSampleNameFireCabinets : txbFireCabinets.Text;
-                ChangeSample?.Invoke(typeof(FireCabinet));
-            }
-            else
-            {
-                MessageBox.Show("Неккоректный шаблон: Пожарные шкафы");
+            if (Helper.CorrectSample(new TextBox[] { txbFireCabinets, txbExtinguishers, txbHoses, txbHydrants }) == 0)
                 return;
-            }
+            SetSampleName(txbFireCabinets);
+            SetSampleName(txbExtinguishers);
+            SetSampleName(txbHoses);
+            SetSampleName(txbHydrants);
 
-            if (txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
-            {
-                Sett.Default.SampleNameExtinguishers = txbExtinguishers.Text.Trim() == "" ? Sett.Default.DefaultSampleNameExtinguishers : txbExtinguishers.Text;
-                ChangeSample?.Invoke(typeof(Extinguisher));
-            }
-            else
-            {
-                MessageBox.Show("Неккоректный шаблон: Огнетушители");
-                return;
-            }
-
-            if (txbHoses.Text.CorrectSample('L', 'F', 'H'))
-            {
-                Sett.Default.SampleNameHoses = txbHoses.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHoses : txbHoses.Text;
-                ChangeSample?.Invoke(typeof(Hose));
-            }
-            else
-            {
-                MessageBox.Show("Неккоректный шаблон: Рукава");
-                return;
-            }
-
-            if (txbHydrants.Text.CorrectSample('L', 'F', 'D'))
-            {
-                Sett.Default.SampleNameHydrants = txbHydrants.Text.Trim() == "" ? Sett.Default.DefaultSampleNameHydrants : txbHydrants.Text;
-                ChangeSample?.Invoke(typeof(Hydrant));
-            }
-            else
-            {
-                MessageBox.Show("Неккоректный шаблон: Пожарный кран");
-                return;
-            }
             prevAbsoluteIconsSize = scrIconSize.Value;
             Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
             Sett.Default.Save();
             Close();
+        }
+
+        private void SetSampleName(TextBox textBox)
+        {
+            var type = textBox.Tag as Type;
+            var value = textBox.Text.Trim();
+            if (value != GetterOfType.GetSample(type))
+            {
+                var sample = value == string.Empty ? GetterOfType.GetDefaultSampleName(type) : textBox.Text;
+                GetterOfType.SetSample(type, sample);
+                ChangeSample?.Invoke(type);
+            }
         }
 
         /// <summary>

@@ -77,16 +77,16 @@ namespace BL
         public bool Required { get; }
 
         /// <summary>
-        /// Возвращает строку в соответствии с множеством фильтров.
+        /// Возвращает строку в соответствии с множеством инструкций.
         /// </summary>
         /// <param name="entity">Пожарный инвентарь.</param>
         /// <returns></returns>
         public string CreateResultString(Equipment entity)
         {
             string result = string.Empty;
-            foreach (Instruction filter in Instructions)
-                if (filter.Condition(entity))
-                    result += filter.Execution(entity);
+            foreach (Instruction instr in Instructions)
+                if (instr.Condition(entity))
+                    result += instr.Execution(entity);
             return result;
         }
     }

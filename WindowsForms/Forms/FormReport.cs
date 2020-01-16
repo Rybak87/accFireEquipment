@@ -10,14 +10,13 @@ namespace WindowsForms
     /// </summary>
     public partial class FormReport : Form
     {
-        private Filter fName = HelperListView.filterName;
-        private Filter fParent = HelperListView.filterParent;
-        private Filter fLocation = HelperListView.filterLocation;
-        private Filter fFireCabinetFault = HelperListView.filterFireCabinetFault;
-        private Filter fExtinguisherFault = HelperListView.filterExtinguisherFault;
-        private Filter fHoseFault = HelperListView.filterHoseFault;
-        private Filter fHydrantFault = HelperListView.filterHydrantFault;
-        private Filter fExtinguisherRecharge = HelperListView.filterExtinguisherRecharge;
+        private Filter fName = Filters.filterName;
+        private Filter fParent = Filters.filterParent;
+        private Filter fFireCabinetFault = Filters.filterFireCabinetFault;
+        private Filter fExtinguisherFault = Filters.filterExtinguisherFault;
+        private Filter fHoseFault = Filters.filterHoseFault;
+        private Filter fHydrantFault = Filters.filterHydrantFault;
+        private Filter fExtinguisherRecharge = Filters.filterExtinguisherRecharge;
 
         /// <summary>
         /// Конструктор.
@@ -62,10 +61,10 @@ namespace WindowsForms
         private void FullReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), fLocation, fName, fName, fFireCabinetFault);
-            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
-            listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
-            listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
+            listView.EntityReport(typeof(FireCabinet), fName, fName, fFireCabinetFault);
+            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
+            listView.EntityReport(typeof(Hose), fName, fParent, fHoseFault);
+            listView.EntityReport(typeof(Hydrant), fName, fParent, fHydrantFault);
         }
 
         /// <summary>
@@ -74,7 +73,7 @@ namespace WindowsForms
         private void FireCabinetsReport()
         {
             listView.InitColumns("Тип", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), fLocation, fName, fFireCabinetFault);
+            listView.EntityReport(typeof(FireCabinet), fName, fFireCabinetFault);
         }
 
         /// <summary>
@@ -83,7 +82,7 @@ namespace WindowsForms
         private void ExtinguishersReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherFault);
+            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
         }
 
         /// <summary>
@@ -92,7 +91,7 @@ namespace WindowsForms
         private void HosesReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hose), fLocation, fName, fParent, fHoseFault);
+            listView.EntityReport(typeof(Hose), fName, fParent, fHoseFault);
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace WindowsForms
         private void HydrantsReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hydrant), fLocation, fName, fParent, fHydrantFault);
+            listView.EntityReport(typeof(Hydrant), fName, fParent, fHydrantFault);
         }
 
         /// <summary>
@@ -110,7 +109,7 @@ namespace WindowsForms
         private void RechargeExtinguishersReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
-            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, fExtinguisherRecharge);
+            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherRecharge);
         }
 
         /// <summary>

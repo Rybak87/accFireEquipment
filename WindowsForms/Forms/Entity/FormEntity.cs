@@ -253,7 +253,7 @@ namespace WindowsForms
         /// <param name="yPosControl"></param>
         protected virtual void CreateControls(int yPosControl)
         {
-            List<(PropertyInfo prop, ControlAttribute attr, string name)> properties = ec.GetEditProperties(currEntity);
+            var properties = ec.GetEditProperties(currEntity);
             Control cntrl = null;
             ComboBox cbxTypeExtinguisher = null;
             var incSize = new Size(175, 25);
@@ -262,7 +262,7 @@ namespace WindowsForms
             foreach (var item in properties)
             {
                 var prop = item.prop;
-                var attr = item.attr;
+                var attr = item.cntrlAttr;
                 var name = item.name;
                 var leftLocation = new Point(25, yPosControl);
                 var centerLocation = new Point(200, yPosControl);

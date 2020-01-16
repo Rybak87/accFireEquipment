@@ -15,9 +15,8 @@ namespace WindowsForms
     /// </summary>
     public partial class FormStickers : Form
     {
-        private Filter fName = HelperListView.filterName;
-        private Filter fParent = HelperListView.filterParent;
-        private Filter fLocation = HelperListView.filterLocation;
+        private Filter fName = Filters.filterName;
+        private Filter fParent = Filters.filterParent;
         private Filter filterFireCabinetSticker;
         private Filter filterExtinguisherSticker;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
@@ -38,6 +37,9 @@ namespace WindowsForms
             txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
             filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
             filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
+
+            txbFireCabinets.Tag = typeof(FireCabinet);
+            txbExtinguishers.Tag = typeof(Extinguisher);
         }
 
         /// <summary>
@@ -47,7 +49,7 @@ namespace WindowsForms
         {
             listView.InitColumns("Тип", "Наклейка");
             lastType = typeof(FireCabinet);
-            listView.EntityReport(typeof(FireCabinet), fLocation, fName, filterFireCabinetSticker);
+            listView.EntityReport(typeof(FireCabinet), fName, filterFireCabinetSticker);
         }
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace WindowsForms
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Наклейка");
             lastType = typeof(Extinguisher);
-            listView.EntityReport(typeof(Extinguisher), fLocation, fName, fParent, filterExtinguisherSticker);
+            listView.EntityReport(typeof(Extinguisher), fName, fParent, filterExtinguisherSticker);
         }
 
         /// <summary>
@@ -67,16 +69,8 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void btnApply_Click(object sender, EventArgs e)
         {
-            if (!txbFireCabinets.Text.CorrectSample('L', 'F'))
-            {
-                MessageBox.Show("Неккоректный шаблон: Пожарные шкафы");
+            if (Helper.CorrectSample(new TextBox[] { txbFireCabinets, txbExtinguishers }) == 0)
                 return;
-            }
-            if (!txbExtinguishers.Text.CorrectSample('L', 'F', 'E'))
-            {
-                MessageBox.Show("Неккоректный шаблон: Огнетушители");
-                return;
-            }
 
             if (lastType == typeof(FireCabinet))
                 FireCabinetsReport();
