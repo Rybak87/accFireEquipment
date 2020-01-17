@@ -253,7 +253,7 @@ namespace WindowsForms
         /// <param name="yPosControl"></param>
         protected virtual void CreateControls(int yPosControl)
         {
-            var properties = ec.GetEditProperties(currEntity);
+            var properties = Reflection.GetEditProperties(currEntity);
             Control cntrl = null;
             ComboBox cbxTypeExtinguisher = null;
             var incSize = new Size(175, 25);

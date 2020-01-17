@@ -89,7 +89,7 @@ namespace WindowsForms
         /// <summary>
         /// Обновляемый план.
         /// </summary>
-        public static PictureContainer PictureContainer { get; set; }
+        public static Plan PictureContainer { get; set; }
 
         /// <summary>
         /// Возвращает ячейку меню.

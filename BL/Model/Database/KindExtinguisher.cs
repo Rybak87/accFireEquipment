@@ -7,7 +7,7 @@ namespace BL
     /// <summary>
     /// Вид огнетушителя.
     /// </summary>
-    [Table("SpeciesExtinguishers")]
+    [Table("Виды огнетушителей")]
     public class KindExtinguisher : KindBase
     {
         /// <summary>

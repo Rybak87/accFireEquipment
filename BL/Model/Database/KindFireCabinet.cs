@@ -7,7 +7,7 @@ namespace BL
     /// <summary>
     /// Вид пожарного шкафа.
     /// </summary>
-    [Table("SpeciesFireCabinets")]
+    [Table("Виды пожарных шкафов")]
     public class KindFireCabinet : KindBase
     {
         /// <summary>

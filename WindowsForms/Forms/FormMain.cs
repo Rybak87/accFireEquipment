@@ -12,7 +12,7 @@ namespace WindowsForms
     public partial class FormMain : Form
     {
         private MyTreeView myTreeView;
-        private PictureContainer picContainer;
+        private Plan picContainer;
 
         /// <summary>
         /// Конструктор.
@@ -45,7 +45,7 @@ namespace WindowsForms
         private void MyInitializeComponent()
         {
             this.myTreeView = new MyTreeView();
-            this.picContainer = new PictureContainer();
+            this.picContainer = new Plan();
             this.Controls.Add(this.myTreeView);
             this.rightPanel.Controls.Add(this.picContainer);
 

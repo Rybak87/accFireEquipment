@@ -37,11 +37,6 @@ namespace WindowsForms
         /// </summary>
         public event Action<EntitySign> LeftMouseClick;
 
-        /// <summary>
-        /// Событие по двойному левому клику мышью.
-        /// </summary>
-        public event Action<EntitySign> LeftMouseDoubleClick;
-
         #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -131,20 +126,10 @@ namespace WindowsForms
             var nodes = dictNodes.Where(i => i.Key.Type == type);
             using (var ec = new EntityController())
             {
-                ec.Set(type).Load();
                 foreach (var node in nodes)
                     node.Value.Text = ec.GetEntity(node.Key).ToString();
             }
         }
-
-        //private bool ContainsNode(TreeNode node1, TreeNode node2)
-        //{
-        //    if (node2 == null)
-        //        return false;
-        //    if (node2.Parent == null) return false;
-        //    if (node2.Parent.Equals(node1)) return true;
-        //    return ContainsNode(node1, node2.Parent);
-        //}
 
         /// <summary>
         /// Обрабатывает сообщения Windows.
@@ -213,7 +198,7 @@ namespace WindowsForms
 
             TreeNode CreateNode(TreeNode parent, EntitySign entitySign, string text, ContextMenuStrip menu = null)
             {
-                var indImage = IconsGetter.IconsImageIndex[entitySign.Type];
+                var indImage = IconsGetter.GetIndexIcon(entitySign.Type);
                 var child = new TreeNode(text, indImage, indImage);
                 //child.ContextMenuStrip = menu;
                 child.ContextMenuStrip = ContextMenuGetter.GetMenu(entitySign.Type);
@@ -238,7 +223,7 @@ namespace WindowsForms
             else
                 return;
 
-            var indImage = IconsGetter.IconsImageIndex[entity.GetType()];
+            var indImage = IconsGetter.GetIndexIcon(entity.GetType());
             var newNode = new TreeNode(entity.ToString(), indImage, indImage);
             newNode.ContextMenuStrip = ContextMenuGetter.GetMenu(entity.GetType());
             newNode.Tag = entity.GetSign();

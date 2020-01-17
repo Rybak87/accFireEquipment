@@ -12,7 +12,7 @@ namespace WindowsForms
         /// <summary>
         /// Множество изменений пожарного инвентаря.
         /// </summary>
-        protected HistorySet historySet;
+        protected HistorySetWork historySet;
 
         /// <summary>
         /// Конструктор.
@@ -30,7 +30,7 @@ namespace WindowsForms
                 currPlan = ((Location)currEntity).Plan;
             if (currEntity is Equipment)
             {
-                historySet = new HistorySet(currEntity as Equipment);
+                historySet = new HistorySetWork(currEntity as Equipment);
             }
         }
 

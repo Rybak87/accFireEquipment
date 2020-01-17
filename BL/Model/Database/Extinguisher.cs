@@ -6,7 +6,7 @@ namespace BL
     /// <summary>
     /// Огнетушитель.
     /// </summary>
-    [Table("Extinguishers")]
+    [Table("Огнетушители")]
     public class Extinguisher : Equipment, ISticker
     {
         /// <summary>

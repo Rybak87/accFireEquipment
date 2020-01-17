@@ -6,7 +6,7 @@ namespace BL
     /// <summary>
     /// Помещение.
     /// </summary>
-    [Table("Locations")]
+    [Table("Помещения")]
     public class Location : Hierarchy
     {
         /// <summary>

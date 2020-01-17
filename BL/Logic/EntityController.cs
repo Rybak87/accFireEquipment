@@ -33,7 +33,7 @@ namespace BL
 
             if (entity is Equipment)//Добавляем первоначальные записи истории этой сущности.
             {
-                var historySet = new HistorySet(entity as Equipment);
+                var historySet = new HistorySetWork(entity as Equipment);
                 historySet.SetNewValues();
                 historySet.SetOldValuesEmpty();
                 historySet.AddToDatabase(this);
@@ -156,38 +156,6 @@ namespace BL
         /// Возвращает таблицу из БД в виде IQueryable.
         /// </summary>
         public IQueryable<EntityBase> GetIQueryable(DbSet table) => table as IQueryable<EntityBase>;
-
-        /// <summary>
-        /// Возвращает коллекцию кортежей (свойство, атрибут элементов управления, название свойства)
-        /// </summary>
-        /// <param name="entity">Сущность.</param>
-        /// <returns></returns>
-        public IEnumerable<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)> GetEditProperties(EntityBase entity)
-        {
-            var result = new List<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)>();
-            foreach (PropertyInfo prop in entity?.GetType().GetProperties())
-            {
-                var controlAttr = GetAttribute<ControlAttribute>(prop);
-                if (controlAttr == null)
-                    continue;
-
-                var columnAttr = GetAttribute<ColumnAttribute>(prop)?.Name;
-                result.Add((prop, controlAttr, columnAttr));
-            }
-            result = result.OrderBy(i => i.cntrlAttr.orderNumber).ToList();
-            return result;
-
-            /// <summary>
-            /// Поиск аттрибута конкретного типа.
-            /// </summary>
-            TAttr GetAttribute<TAttr>(PropertyInfo pi) where TAttr : Attribute
-            {
-                foreach (var item in pi.GetCustomAttributes())
-                    if (item.GetType() == typeof(TAttr))
-                        return (TAttr)item;
-                return null;
-            }
-        }
 
         /// <summary>
         /// Возвращает коллекцию отрисовываемого инвентаря в помещении.

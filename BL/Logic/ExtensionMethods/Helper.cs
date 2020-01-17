@@ -43,29 +43,10 @@ namespace BL
         /// </summary>
         public static int SubtractMonths(this DateTime dt1, DateTime dt2) => dt1.Year * 12 + dt1.Month - dt2.Year * 12 - dt2.Month;
 
-        ///// <summary>
-        ///// Проверяет корректность шаблона именования.
-        ///// </summary>
-        //public static bool CorrectSample(this string sourse, string chars)
-        //{
-        //    for (int i = 0; i < sourse.Length; i++)
-        //    {
-        //        var ch = sourse[i];
-        //        if (ch == '#')
-        //        {
-        //            if (i + 1 == sourse.Length)
-        //                return false;
-        //            if (!chars.Contains(sourse[i + 1]))
-        //                return false;
-        //        }
-        //    }
-        //    return true;
-        //}
-
         /// <summary>
         /// Проверяет корректность шаблона именования.
         /// </summary>
-        public static bool CorrectSample(this TextBox textBox)
+        private static bool CorrectSample(this TextBox textBox)
         {
             var sourse = textBox.Text;
             var chars = GetterOfType.GetSampleChars(textBox.Tag as Type);
@@ -83,6 +64,9 @@ namespace BL
             return true;
         }
 
+        /// <summary>
+        /// Проверяет корректность шаблонов именования.
+        /// </summary>
         public static int CorrectSample(this IEnumerable<TextBox> textBoxes)
         {
             foreach (var textBox in textBoxes)

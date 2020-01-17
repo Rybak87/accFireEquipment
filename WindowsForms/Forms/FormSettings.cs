@@ -61,6 +61,7 @@ namespace WindowsForms
             prevAbsoluteIconsSize = scrIconSize.Value;
             Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
             Sett.Default.Save();
+            ChangeIconSize?.Invoke();
             Close();
         }
 
@@ -68,10 +69,10 @@ namespace WindowsForms
         {
             var type = textBox.Tag as Type;
             var value = textBox.Text.Trim();
-            if (value != GetterOfType.GetSample(type))
+            if (value != GetterOfType.GetSampleNaming(type))
             {
-                var sample = value == string.Empty ? GetterOfType.GetDefaultSampleName(type) : textBox.Text;
-                GetterOfType.SetSample(type, sample);
+                var sample = value == string.Empty ? GetterOfType.GetDefaultSampleNaming(type) : textBox.Text;
+                GetterOfType.SetSampleNaming(type, sample);
                 ChangeSample?.Invoke(type);
             }
         }
@@ -95,8 +96,8 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
-            ChangeIconSize?.Invoke();
+            //Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
+            //ChangeIconSize?.Invoke();
         }
 
         /// <summary>

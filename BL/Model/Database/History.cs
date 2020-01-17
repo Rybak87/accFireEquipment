@@ -6,7 +6,7 @@ namespace BL
     /// <summary>
     /// Изменения свойств пожарного инвентаря.
     /// </summary>
-    [Table("History")]
+    [Table("История")]
     public class History : EntityBase
     {
         /// <summary>

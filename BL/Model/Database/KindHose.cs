@@ -7,7 +7,7 @@ namespace BL
     /// <summary>
     /// Вид рукава.
     /// </summary>
-    [Table("SpeciesHoses")]
+    [Table("Виды рукавов")]
     public class KindHose : KindBase
     {
         /// <summary>

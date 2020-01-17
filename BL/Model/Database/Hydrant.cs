@@ -6,7 +6,7 @@ namespace BL
     /// <summary>
     /// Гидрант.
     /// </summary>
-    [Table("Hydrants")]
+    [Table("Пожарные краны")]
     public class Hydrant : Equipment
     {
         /// <summary>

@@ -8,7 +8,7 @@ namespace BL
     /// <summary>
     /// Иконка на плане.
     /// </summary>
-    public class IconEntity : PictureBox, IDisposable
+    public class IconOnPlan : PictureBox, IDisposable
     {
         private Point MouseDownPosition;
         private ScalePoint scalePoint;
@@ -20,18 +20,17 @@ namespace BL
         /// <param name="parent">План.</param>
         /// <param name="image">Изображение.</param>
         /// <param name="sign">Идентификатор.</param>
+        /// <param name="size">Размер.</param>
         /// <param name="scalePoint">Относительная точка.</param>
         /// <param name="textLabel">Текст под иконкой.</param>
-        public IconEntity(PictureBox parent, Image image, EntitySign sign, ScalePoint scalePoint, string textLabel)
+        public IconOnPlan(Plan parent, Image image, EntitySign sign, Size size, ScalePoint scalePoint, string textLabel)
         {
             Sign = sign;
             Parent = parent;
             this.scalePoint = scalePoint;
-            BorderStyle = BorderStyle.FixedSingle;
             Image = image;
-            var ratioIconSize = Properties.Settings.Default.RatioIconSize;
-            int minSize = Math.Min(Parent.Width, Parent.Height);
-            Size = new Size(minSize / ratioIconSize, minSize / ratioIconSize);
+            Size = size;
+            BorderStyle = BorderStyle.FixedSingle;
             SizeMode = PictureBoxSizeMode.Zoom;
 
             Left = (int)(scalePoint.PercentLeft * parent.Width);
@@ -42,7 +41,11 @@ namespace BL
             MouseMove += PictureEntity_MouseMove;
             Resize += (s, e) => LabelRedraw();
             Move += (s, e) => LabelRedraw();
+            LabelInit(textLabel);
+        }
 
+        private void LabelInit(string textLabel)
+        {
             label = new Label
             {
                 BackColor = Color.Transparent,
@@ -98,14 +101,11 @@ namespace BL
                 DoDragDrop(sender, DragDropEffects.Move);
         }
 
-        ///
-        /// ///
-        /// 
         /// <summary>
         /// Изменение размера иконки.
         /// </summary>
         /// <param name="size">Размер иконки.</param>
-        public void Parent_Resize(Size size)
+        public void CalcSizePosition(Size size)
         {
             if (Parent == null)
                 return;

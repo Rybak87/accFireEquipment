@@ -14,7 +14,7 @@ namespace BL
         /// <summary>
         /// Коллекция индексов иконок по типу.
         /// </summary>
-        public static Dictionary<Type, int> IconsImageIndex { get; } = new Dictionary<Type, int>()
+        private static Dictionary<Type, int> IconsImageIndex { get; } = new Dictionary<Type, int>()
         {
             [0.GetType()] = 0,
             [typeof(Location)] = 0,
@@ -43,6 +43,13 @@ namespace BL
         /// Коллекция иконок.
         /// </summary>
         public static ImageList IconsImageList { get; }
+
+        /// <summary>
+        /// Возвращает индекс иконки по типу.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static int GetIndexIcon(Type type) => IconsImageIndex[type];
 
         /// <summary>
         /// Возвращает иконку по типу.

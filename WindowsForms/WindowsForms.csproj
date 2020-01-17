@@ -131,10 +131,10 @@
     <Compile Include="MyControls\MyTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MyControls\PictureContainer.cs">
+    <Compile Include="MyControls\Plan.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="MyControls\IconEntity.cs">
+    <Compile Include="MyControls\IconOnPlan.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
@@ -153,6 +153,7 @@
     <Compile Include="ContextMenuGetter.cs" />
     <EmbeddedResource Include="Forms\Entity\FormAddHierarchy.resx">
       <DependentUpon>FormAddHierarchy.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Entity\FormAddKind.resx">
       <DependentUpon>FormAddKind.cs</DependentUpon>

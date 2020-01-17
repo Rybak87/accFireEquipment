@@ -12,7 +12,7 @@ namespace BL
     /// <summary>
     /// План.
     /// </summary>
-    public class PictureContainer : PictureBox
+    public class Plan : PictureBox
     {
         /// <summary>
         /// Относительный размер иконок на плане.
@@ -22,7 +22,7 @@ namespace BL
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public PictureContainer()
+        public Plan()
         {
             AllowDrop = true;
             DragEnter += new DragEventHandler(picBoxMain_DragEnter);
@@ -31,17 +31,18 @@ namespace BL
         }
 
         /// <summary>
-        /// Событие изменения размеров иконок.
+        /// Событие изменения размера текущего экземляра.
         /// </summary>
-        private event Action<Size> IconsResize;
+        private event Action<Size> PlanResize;
 
         /// <summary>
         /// Возвращает размер иконок.
         /// </summary>
-        private Size GetSizeIcons()
+        public Size GetSizeIcons()
         {
-            var side = (Width / RatioIconSize);
-            return new Size(side, side);
+            var ratioIconSize = Properties.Settings.Default.RatioIconSize;
+            int minSize = Math.Min(Width, Height);
+            return new Size(minSize / ratioIconSize, minSize / ratioIconSize);
         }
 
         /// <summary>
@@ -50,9 +51,9 @@ namespace BL
         /// <param name="e"></param>
         /// <param name="sign">Идентификатор сущности.</param>
         /// <returns></returns>
-        private IconEntity AddNewIcon(DragEventArgs e, EntitySign sign)
+        private IconOnPlan AddNewIcon(DragEventArgs e, EntitySign sign)
         {
-            IconEntity icon;
+            IconOnPlan icon;
             string textIcon;
             using (var ec = new EntityController())
             {
@@ -60,7 +61,7 @@ namespace BL
                 textIcon = entity.ToString();
             }
             this.SuspendDrawing();
-            icon = CreateIcon(sign, new ScalePoint(new Point(e.X, e.Y), this), IconsGetter.GetIcon(sign.Type), textIcon);
+            icon = CreateIcon(sign, GetSizeIcons(), new ScalePoint(new Point(e.X, e.Y), this), IconsGetter.GetIcon(sign.Type), textIcon);
             this.ResumeDrawing();
             return icon;
         }
@@ -70,9 +71,9 @@ namespace BL
         /// </summary>
         /// <param name="sign">Идентификатор сущности.</param>
         /// <returns></returns>
-        private IconEntity FindIcon(EntitySign sign)
+        private IconOnPlan FindIcon(EntitySign sign)
         {
-            foreach (IconEntity icon in GetIcons())
+            foreach (IconOnPlan icon in GetIcons())
                 if (icon.Sign == sign)
                     return icon;
             return null;
@@ -82,13 +83,13 @@ namespace BL
         /// Возвращает все иконки на плане.
         /// </summary>
         /// <returns></returns>
-        private IEnumerable<IconEntity> GetIcons()
+        private IEnumerable<IconOnPlan> GetIcons()
         {
             foreach (Control control in Controls)
             {
-                if (!(control is IconEntity))
+                if (!(control is IconOnPlan))
                     continue;
-                yield return control as IconEntity;
+                yield return control as IconOnPlan;
             }
         }
 
@@ -99,8 +100,6 @@ namespace BL
         /// <param name="e"></param>
         private void picBoxMain_DragEnter(object sender, DragEventArgs e)
         {
-
-
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
                 var dataNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
@@ -112,7 +111,7 @@ namespace BL
                         e.Effect = DragDropEffects.Move;
                 }
             }
-            else if (e.Data.GetDataPresent(typeof(IconEntity)))
+            else if (e.Data.GetDataPresent(typeof(IconOnPlan)))
             {
                 e.Effect = DragDropEffects.Move;
             }
@@ -125,7 +124,7 @@ namespace BL
         /// <param name="e"></param>
         private void picBoxMain_DragDrop(object sender, DragEventArgs e)
         {
-            IconEntity icon = null;
+            IconOnPlan icon = null;
             if (e.Data.GetDataPresent(typeof(TreeNode)))
             {
                 var dataNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
@@ -143,9 +142,9 @@ namespace BL
                 }
                 //PicDrop?.Invoke(sign);
             }
-            else if (e.Data.GetDataPresent(typeof(IconEntity)))
+            else if (e.Data.GetDataPresent(typeof(IconOnPlan)))
             {
-                icon = (IconEntity)e.Data.GetData(typeof(IconEntity));
+                icon = (IconOnPlan)e.Data.GetData(typeof(IconOnPlan));
                 icon.NewLocation(PointToClient(new Point(e.X, e.Y)));
                 icon.BringToFront();
             }
@@ -161,8 +160,8 @@ namespace BL
         {
             if (e.Button == MouseButtons.Right)
             {
-                var y = ((IconEntity)sender).PointToScreen(e.Location);
-                ContextMenuGetter.ShowContextMenu(((IconEntity)sender).Sign, y);
+                var y = ((IconOnPlan)sender).PointToScreen(e.Location);
+                ContextMenuGetter.ShowContextMenu(((IconOnPlan)sender).Sign, y);
             }
         }
 
@@ -170,15 +169,16 @@ namespace BL
         /// Создать новую иконку.
         /// </summary>
         /// <param name="sign"></param>
+        /// <param name="size"></param>
         /// <param name="scalePoint"></param>
         /// <param name="img"></param>
         /// <param name="textLabel"></param>
         /// <returns></returns>
-        public IconEntity CreateIcon(EntitySign sign, ScalePoint scalePoint, Image img, string textLabel)
+        public IconOnPlan CreateIcon(EntitySign sign, Size size, ScalePoint scalePoint, Image img, string textLabel)
         {
-            var icon = new IconEntity(this, img, sign, scalePoint, textLabel);
+            var icon = new IconOnPlan(this, img, sign, size, scalePoint, textLabel);
             icon.MouseDoubleClick += new MouseEventHandler((s2, e2) => Dialogs.EditDialog(sign));
-            IconsResize += icon.Parent_Resize;
+            PlanResize += icon.CalcSizePosition;
             icon.MouseClick += Icon_MouseClick;
             return icon;
         }
@@ -190,7 +190,7 @@ namespace BL
         {
             RatioIconSize = Properties.Settings.Default.RatioIconSize;
             this.SuspendDrawing();
-            IconsResize?.Invoke(GetSizeIcons());
+            PlanResize?.Invoke(GetSizeIcons());
             this.ResumeDrawing();
         }
 
@@ -202,16 +202,12 @@ namespace BL
         {
             using (var ec = new EntityController())
             {
-                ec.Set(type).Load();
-                foreach (IconEntity icon in GetIcons())
+                var icons = GetIcons().Where(i => i.Sign.Type == type);
+                foreach (var icon in icons)
                 {
-
-                    if (icon.Sign.Type == type)
-                    {
-                        var entity = ec.GetEntity(icon.Sign);
-                        icon.TextIcon = entity.ToString();
-                        icon.LabelRedraw();
-                    }
+                    var entity = ec.GetEntity(icon.Sign);
+                    icon.TextIcon = entity.ToString();
+                    icon.LabelRedraw();
                 }
             }
         }
@@ -241,8 +237,9 @@ namespace BL
                 Image = Image.FromStream(new MemoryStream(byteImage));
                 ResizeRelativePosition();
                 var drawEquipment = ec.GetDrawEquipment(parentLocation);
+                var sizeIcons = GetSizeIcons();
                 foreach (var eq in drawEquipment)
-                    CreateIcon(eq.GetSign(), eq.Point, IconsGetter.GetIcon(eq.GetType()), eq.ToString());
+                    CreateIcon(eq.GetSign(), sizeIcons, eq.Point, IconsGetter.GetIcon(eq.GetType()), eq.ToString());
             }
             this.ResumeDrawing();
         }
@@ -296,7 +293,7 @@ namespace BL
                 Left = (Parent.Width - Width) / 2;
                 Top = 0;
             }
-            IconsResize?.Invoke(GetSizeIcons());
+            PlanResize?.Invoke(GetSizeIcons());
         }
     }
 }

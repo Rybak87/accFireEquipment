@@ -22,9 +22,7 @@ namespace BL
         /// </summary>
         static BLContext()
         {
-            //Database.SetInitializer(new MyContextInitializer());
-            Database.SetInitializer(new MyContextInitializer2());
-            //Database.SetInitializer(new MyContextInitializer3());
+            Database.SetInitializer(new MyContextInitializer());
         }
 
         /// <summary>
@@ -82,23 +80,7 @@ namespace BL
         }
     }
 
-    internal class MyContextInitializer : DropCreateDatabaseAlways<BLContext>
-    {
-        protected override void Seed(BLContext db)
-        {
-            InitDatabaseHelper.Seed(db);
-        }
-    }
-
-    internal class MyContextInitializer2 : DropCreateDatabaseIfModelChanges<BLContext>
-    {
-        protected override void Seed(BLContext db)
-        {
-            InitDatabaseHelper.Seed(db);
-        }
-    }
-
-    internal class MyContextInitializer3 : CreateDatabaseIfNotExists<BLContext>
+    internal class MyContextInitializer : DropCreateDatabaseIfModelChanges<BLContext>
     {
         protected override void Seed(BLContext db)
         {
@@ -128,26 +110,19 @@ namespace BL
             Location l2 = new Location { Name = "Блок 2", Number = 2 };
             Location l3 = new Location { Name = "Блок 3", Number = 3 };
             Location l4 = new Location { Name = "Блок 4", Number = 4 };
-            db.Locations.Add(l1);
-            db.Locations.Add(l2);
-            db.Locations.Add(l3);
-            db.Locations.Add(l4);
+            db.Locations.AddRange(new Location[] { l1, l2, l3, l4 });
 
             FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, KindFireCabinet = tf[0] };
             FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, KindFireCabinet = tf[0] };
             FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, KindFireCabinet = tf[0] };
-            db.FireCabinets.Add(f1);
-            db.FireCabinets.Add(f2);
-            db.FireCabinets.Add(f3);
+            db.FireCabinets.AddRange(new FireCabinet[] { f1, f2, f3 });
 
             Extinguisher e1 = new Extinguisher { FireCabinet = f1, Number = 1, KindExtinguisher = te[0] };
             Extinguisher e2 = new Extinguisher { FireCabinet = f2, Number = 1, KindExtinguisher = te[1] };
-            db.Extinguishers.Add(e1);
-            db.Extinguishers.Add(e2);
+            db.Extinguishers.AddRange(new Extinguisher[] { e1, e2 });
 
             Hose h1 = new Hose { FireCabinet = f1, Number = 1, KindHose = th[0] };
             db.Hoses.Add(h1);
-
             db.SaveChanges();
         }
 
@@ -156,7 +131,7 @@ namespace BL
         /// </summary>
         /// <typeparam name="T">Вид пожарного инвентаря.</typeparam>
         /// <param name="fileBinary">Файл для чтения.</param>
-        private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T : class, new()
+        private static List<T> InitDefaultTypes<T>(byte[] fileBinary) where T : KindBase, new()
         {
             Stream stream = new MemoryStream(fileBinary);
             var result = new List<T>();

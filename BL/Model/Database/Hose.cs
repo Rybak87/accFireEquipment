@@ -6,7 +6,7 @@ namespace BL
     /// <summary>
     /// Рукав.
     /// </summary>
-    [Table("Hoses")]
+    [Table("Рукава")]
     public class Hose : Equipment
     {
         /// <summary>

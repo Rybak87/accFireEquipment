@@ -48,8 +48,8 @@ namespace BL
         /// <param name="ex">Огнетушитель.</param>
         private void FillTable(Extinguisher ex)
         {
-            var useTime = Properties.Settings.Default.UseTime;
-            var settTable = new Dictionary<string, int>()
+            var modeTime = Properties.Settings.Default.UseTime;
+            var numberOrder = new Dictionary<string, int>()
             {
                 ["Date"] = 1,
                 ["Status"] = 2,
@@ -60,7 +60,7 @@ namespace BL
             var table = workBook.Tables[1];
             int row = 3;
             IEnumerable<DateTime> dates;
-            if (useTime)
+            if (modeTime)
                 dates = ex.Histories.Select(h => h.DateChange).Distinct();
             else
                 dates = ex.Histories.Select(h => h.DateChange.Date).Distinct();
@@ -70,7 +70,7 @@ namespace BL
             {
                 table.Rows.Add();
                 IEnumerable<History> hysOnDate;
-                if (useTime)
+                if (modeTime)
                     hysOnDate = GetLastHistoriesOnDate(ex, date);
                 else
                     hysOnDate = GetLastHistoriesOnDate(ex, date.AddDays(1));
@@ -83,9 +83,9 @@ namespace BL
                 foreach (var hys in hysOnDate)
                 {
                     if (hys.Property == "Weight")
-                        table.Cell(row, settTable["Weight"]).Range.Text = hys.NewValue + "кг.";
+                        table.Cell(row, numberOrder["Weight"]).Range.Text = hys.NewValue + "кг.";
                     else if (hys.Property == "Pressure")
-                        table.Cell(row, settTable["Pressure"]).Range.Text = hys.NewValue + "кгс/см2";
+                        table.Cell(row, numberOrder["Pressure"]).Range.Text = hys.NewValue + "кгс/см2";
                     else if (hys.Property == "IsDented" && hys.NewValue == "True")
                         tempStatus += "Поврежден корпус\n";
                     else if (hys.Property == "IsPaintDamage" && hys.NewValue == "True")
@@ -99,11 +99,11 @@ namespace BL
                     else if (hys.Property == "IsLabelDamage" && hys.NewValue == "True")
                         tempStatus += "Повреждена этикетка\n";
                 }
-                table.Cell(row, settTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
+                table.Cell(row, numberOrder["Date"]).Range.Text = date.ToShortDateString() + "г.";
                 if (tempStatus == "")
-                    table.Cell(row, settTable["Status"]).Range.Text = "Норма";
+                    table.Cell(row, numberOrder["Status"]).Range.Text = "Норма";
                 else
-                    table.Cell(row, settTable["Status"]).Range.Text = tempStatus.Trim();
+                    table.Cell(row, numberOrder["Status"]).Range.Text = tempStatus.Trim();
                 row++;
             }
         }

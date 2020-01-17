@@ -24,7 +24,7 @@ namespace WindowsForms
         /// <summary>
         /// Обновляемый PictureContainer
         /// </summary>
-        public static PictureContainer PictureContainer { get; set; }
+        public static Plan PictureContainer { get; set; }
 
         /// <summary>
         ///  Родительская форма для диалоговых окон.

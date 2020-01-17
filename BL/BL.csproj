@@ -54,7 +54,8 @@
     <Compile Include="Logic\ExtensionMethods\HelperListView.cs" />
     <Compile Include="Logic\Filter\Filter.cs" />
     <Compile Include="Logic\Filter\Filters.cs" />
-    <Compile Include="Logic\GetterOfType.cs" />
+    <Compile Include="Logic\Static\GetterOfType.cs" />
+    <Compile Include="Logic\Static\Reflection.cs" />
     <Compile Include="Model\Abstract\Equipment.cs" />
     <Compile Include="Model\Abstract\Hierarchy.cs" />
     <Compile Include="Model\Abstract\KindBase.cs" />
@@ -64,7 +65,7 @@
     <Compile Include="Logic\Filter\Instruction.cs" />
     <Compile Include="Logic\ExtensionMethods\Helper.cs" />
     <Compile Include="Logic\EntityController.cs" />
-    <Compile Include="Logic\HistorySet.cs" />
+    <Compile Include="Logic\HistorySetWork.cs" />
     <Compile Include="Logic\Interfaces.cs" />
     <Compile Include="Model\ControlAttribute.cs" />
     <Compile Include="Logic\Repository.cs" />
@@ -74,7 +75,7 @@
     <Compile Include="Model\Database\Hose.cs" />
     <Compile Include="Model\Database\Hydrant.cs" />
     <Compile Include="Model\Database\ImageLocation.cs" />
-    <Compile Include="Logic\IconsGetter.cs" />
+    <Compile Include="Logic\Static\IconsGetter.cs" />
     <Compile Include="Logic\WordPassportExtinguisher.cs" />
     <Compile Include="Model\ScalePoint.cs" />
     <Compile Include="Model\EntitySign.cs" />
