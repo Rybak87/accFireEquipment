@@ -30,13 +30,11 @@ namespace BL
         public void AddEntity(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
-
-            if (entity is Equipment)//Добавляем первоначальные записи истории этой сущности.
+            var eq = entity as Equipment;
+            if (eq!=null)
             {
-                var historySet = new HistorySetWork(entity as Equipment);
-                historySet.SetNewValues();
-                historySet.SetOldValuesEmpty();
-                historySet.AddToDatabase(this);
+                var histories = eq.GetNewHistories();
+                Set<History>().AddRange(histories);
             }
             SaveChanges();
             EntityAdd?.Invoke(entity);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection;
 
 namespace BL
 {
@@ -18,17 +19,31 @@ namespace BL
         }
 
         /// <summary>
+        /// Конструктор.
+        /// </summary>
+        public History(Equipment equipment, PropertyInfo property, History oldHistory, string newValue)
+        {
+            Equipment = equipment;
+            Property = property.Name;
+            PrevHistory = oldHistory;
+            Value = newValue;
+            DateChange = DateTime.Now;
+        }
+
+        /// <summary>
         /// Первичный ключ пожарного инвентаря.
         /// </summary>
-        public int EquipmentBaseId { get; set; }
+        public int EquipmentId { get; set; }
 
         /// <summary>
         /// Пожарный инвентарь.
         /// </summary>
-        public virtual Equipment EquipmentBase { get; set; }
+        public virtual Equipment Equipment { get; set; }
 
-        //public virtual Inspection Inspection { get; set; }
-        //public int InspectionId { get; set; }
+        /// <summary>
+        /// Предыдущее изменение свойств пожарного инвентаря.
+        /// </summary>
+        public virtual History PrevHistory { get; set; }
 
         /// <summary>
         /// Свойство пожарного инвентаря.
@@ -38,12 +53,11 @@ namespace BL
         /// <summary>
         /// Новое значение свойства пожарного инветаря.
         /// </summary>
-        public string NewValue { get; set; }
+        public string Value { get; set; }
 
         /// <summary>
         /// Дата и время внесения изменений.
         /// </summary>
         public DateTime DateChange { get; set; }
-
     }
 }

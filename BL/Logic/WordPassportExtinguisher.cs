@@ -83,20 +83,20 @@ namespace BL
                 foreach (var hys in hysOnDate)
                 {
                     if (hys.Property == "Weight")
-                        table.Cell(row, numberOrder["Weight"]).Range.Text = hys.NewValue + "кг.";
+                        table.Cell(row, numberOrder["Weight"]).Range.Text = hys.Value + "кг.";
                     else if (hys.Property == "Pressure")
-                        table.Cell(row, numberOrder["Pressure"]).Range.Text = hys.NewValue + "кгс/см2";
-                    else if (hys.Property == "IsDented" && hys.NewValue == "True")
+                        table.Cell(row, numberOrder["Pressure"]).Range.Text = hys.Value + "кгс/см2";
+                    else if (hys.Property == "IsDented" && hys.Value == "True")
                         tempStatus += "Поврежден корпус\n";
-                    else if (hys.Property == "IsPaintDamage" && hys.NewValue == "True")
+                    else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
                         tempStatus += "Повреждена краска\n";
-                    else if (hys.Property == "IsHandleDamage" && hys.NewValue == "True")
+                    else if (hys.Property == "IsHandleDamage" && hys.Value == "True")
                         tempStatus += "Повреждено ЗПУ\n";
-                    else if (hys.Property == "IsHose" && hys.NewValue == "False")
+                    else if (hys.Property == "IsHose" && hys.Value == "False")
                         tempStatus += "Отсутствует шланг\n";
-                    else if (hys.Property == "IsPressureGaugeFault" && hys.NewValue == "True")
+                    else if (hys.Property == "IsPressureGaugeFault" && hys.Value == "True")
                         tempStatus += "Поврежден манометр\n";
-                    else if (hys.Property == "IsLabelDamage" && hys.NewValue == "True")
+                    else if (hys.Property == "IsLabelDamage" && hys.Value == "True")
                         tempStatus += "Повреждена этикетка\n";
                 }
                 table.Cell(row, numberOrder["Date"]).Range.Text = date.ToShortDateString() + "г.";

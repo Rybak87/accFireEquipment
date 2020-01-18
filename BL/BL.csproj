@@ -60,12 +60,10 @@
     <Compile Include="Model\Abstract\Hierarchy.cs" />
     <Compile Include="Model\Abstract\KindBase.cs" />
     <Compile Include="Model\Database\History.cs" />
-    <Compile Include="Model\Database\Inspection.cs" />
     <Compile Include="Logic\BLContext.cs" />
     <Compile Include="Logic\Filter\Instruction.cs" />
     <Compile Include="Logic\ExtensionMethods\Helper.cs" />
     <Compile Include="Logic\EntityController.cs" />
-    <Compile Include="Logic\HistorySetWork.cs" />
     <Compile Include="Logic\Interfaces.cs" />
     <Compile Include="Model\ControlAttribute.cs" />
     <Compile Include="Logic\Repository.cs" />

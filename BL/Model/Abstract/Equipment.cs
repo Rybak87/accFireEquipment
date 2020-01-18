@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Reflection;
 
 namespace BL
 {
@@ -23,5 +26,19 @@ namespace BL
         /// Коллекция изменений сущности.
         /// </summary>
         public virtual ICollection<History> Histories { get; set; }
+
+        private History GetLastHistory(PropertyInfo property) => Histories?.Last(h => h.Property == property.Name);
+        private string GetCurrentValue(PropertyInfo property) => property.GetValue(this).ToString();
+
+        /// <summary>
+        /// Возвращает изменения свойств.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<History> GetNewHistories()
+        {
+            var properties = Reflection.GetPropertiesWithControlAttribute(this);
+            var newHistories = properties.Select(p => new History(this, p, GetLastHistory(p), GetCurrentValue(p)));
+            return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
+        }
     }
 }

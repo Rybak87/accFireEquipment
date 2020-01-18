@@ -10,11 +10,6 @@ namespace WindowsForms
     public partial class FormEditEntity : FormEntity
     {
         /// <summary>
-        /// Множество изменений пожарного инвентаря.
-        /// </summary>
-        protected HistorySetWork historySet;
-
-        /// <summary>
         /// Конструктор.
         /// </summary>
         /// <param name="sign"></param>
@@ -28,10 +23,6 @@ namespace WindowsForms
             Text = "Редактирование: " + currEntity.ToString();
             if (currEntity.GetType() == typeof(Location))
                 currPlan = ((Location)currEntity).Plan;
-            if (currEntity is Equipment)
-            {
-                historySet = new HistorySetWork(currEntity as Equipment);
-            }
         }
 
         /// <summary>
@@ -59,12 +50,14 @@ namespace WindowsForms
                 ((Location)currEntity).Plan = currPlan;
                 EntityEdit2?.Invoke(currPlan);
             }
-            ec.SaveChanges();
-            if (currEntity is Equipment)
+
+            var eq = currEntity as Equipment;
+            if (eq != null)
             {
-                historySet.SetNewValues();
-                historySet.AddToDatabase(ec);
+                var histories = eq.GetNewHistories();
+                ec.Set<History>().AddRange(histories);
             }
+            ec.SaveChanges();
         }
 
         /// <summary>
