@@ -168,7 +168,7 @@ namespace WindowsForms
                     pressure = (NumericUpDown)cntrl;
             }
             Controls.Add(cntrl);
-            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
+            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.Never);
             return cntrl;
         }
 
@@ -364,6 +364,8 @@ namespace WindowsForms
             cntrl.DataBindings[0].WriteValue();
             this.weight.Value = (decimal)weight;
             this.pressure.Value = (decimal)pressure;
+            this.weight.DataBindings[0].WriteValue();
+            this.pressure.DataBindings[0].WriteValue();
         }
 
         /// <summary>

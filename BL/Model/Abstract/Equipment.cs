@@ -27,7 +27,7 @@ namespace BL
         /// </summary>
         public virtual ICollection<History> Histories { get; set; }
 
-        private History GetLastHistory(PropertyInfo property) => Histories?.Last(h => h.Property == property.Name);
+        private History GetLastHistory(string propertyName) => Histories?.LastOrDefault(h => h.Property == propertyName);
         private string GetCurrentValue(PropertyInfo property) => property.GetValue(this).ToString();
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace BL
         public IEnumerable<History> GetNewHistories()
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(this);
-            var newHistories = properties.Select(p => new History(this, p, GetLastHistory(p), GetCurrentValue(p)));
+            var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p)));
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
         }
     }

@@ -13,6 +13,14 @@ namespace BL
         private Word.Application word = new Word.Application();
         private Word.Document workBook;
         private IEnumerable<Word.Bookmark> bookmarks;
+        private const int ROW_FILL_START = 3;
+        private readonly Dictionary<string, int> numberOrderTable = new Dictionary<string, int>()
+        {
+            ["Date"] = 1,
+            ["Status"] = 2,
+            ["Weight"] = 3,
+            ["Pressure"] = 4
+        };
 
         /// <summary>
         /// Конструктор.
@@ -48,44 +56,31 @@ namespace BL
         /// <param name="ex">Огнетушитель.</param>
         private void FillTable(Extinguisher ex)
         {
-            var modeTime = Properties.Settings.Default.UseTime;
-            var numberOrder = new Dictionary<string, int>()
-            {
-                ["Date"] = 1,
-                ["Status"] = 2,
-                ["Weight"] = 3,
-                ["Pressure"] = 4
-            };
-
             var table = workBook.Tables[1];
-            int row = 3;
-            IEnumerable<DateTime> dates;
-            if (modeTime)
-                dates = ex.Histories.Select(h => h.DateChange).Distinct();
-            else
-                dates = ex.Histories.Select(h => h.DateChange.Date).Distinct();
-            IEnumerable<History> oldHysOnDate = Enumerable.Empty<History>();
+            int row = ROW_FILL_START;
 
-            foreach (var date in dates)
+            //Учитывать ли время.
+            var modeTime = Properties.Settings.Default.UseTime;
+            Func<History, DateTime> datePicker;
+            if (modeTime)
+                datePicker = h => h.DateChange;
+            else
+                datePicker = h => h.DateChange.Date;
+            //var dates = ex.Histories.Select(datePicker).Distinct();
+            var datesHistories = ex.Histories.GroupBy(datePicker);
+
+            foreach (var dateHistories in datesHistories)
             {
                 table.Rows.Add();
-                IEnumerable<History> hysOnDate;
-                if (modeTime)
-                    hysOnDate = GetLastHistoriesOnDate(ex, date);
-                else
-                    hysOnDate = GetLastHistoriesOnDate(ex, date.AddDays(1));
-
-                if (hysOnDate.SequenceEqual(oldHysOnDate))
-                    continue;
-                oldHysOnDate = hysOnDate;
                 var tempStatus = "";
+                var date = dateHistories.Key;
 
-                foreach (var hys in hysOnDate)
+                foreach (var hys in dateHistories)
                 {
                     if (hys.Property == "Weight")
-                        table.Cell(row, numberOrder["Weight"]).Range.Text = hys.Value + "кг.";
+                        table.Cell(row, numberOrderTable["Weight"]).Range.Text = hys.Value + "кг.";
                     else if (hys.Property == "Pressure")
-                        table.Cell(row, numberOrder["Pressure"]).Range.Text = hys.Value + "кгс/см2";
+                        table.Cell(row, numberOrderTable["Pressure"]).Range.Text = hys.Value + "кгс/см2";
                     else if (hys.Property == "IsDented" && hys.Value == "True")
                         tempStatus += "Поврежден корпус\n";
                     else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
@@ -99,15 +94,58 @@ namespace BL
                     else if (hys.Property == "IsLabelDamage" && hys.Value == "True")
                         tempStatus += "Повреждена этикетка\n";
                 }
-                table.Cell(row, numberOrder["Date"]).Range.Text = date.ToShortDateString() + "г.";
+
+                table.Cell(row, numberOrderTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
                 if (tempStatus == "")
-                    table.Cell(row, numberOrder["Status"]).Range.Text = "Норма";
+                    table.Cell(row, numberOrderTable["Status"]).Range.Text = "Норма";
                 else
-                    table.Cell(row, numberOrder["Status"]).Range.Text = tempStatus.Trim();
+                    table.Cell(row, numberOrderTable["Status"]).Range.Text = tempStatus.Trim();
                 row++;
+
+                //IEnumerable<History> oldHysOnDate = Enumerable.Empty<History>();
+
+                //foreach (var date in dates)
+                //{
+                //    table.Rows.Add();
+                //    IEnumerable<History> hysOnDate;
+                //    if (modeTime)
+                //        hysOnDate = GetLastHistoriesOnDate(ex, date);
+                //    else
+                //        hysOnDate = GetLastHistoriesOnDate(ex, date.AddDays(1));
+
+                //    if (hysOnDate.SequenceEqual(oldHysOnDate))
+                //        continue;
+                //    oldHysOnDate = hysOnDate;
+                //    var tempStatus = "";
+
+                //    foreach (var hys in hysOnDate)
+                //    {
+                //        if (hys.Property == "Weight")
+                //            table.Cell(row, numberOrderTable["Weight"]).Range.Text = hys.Value + "кг.";
+                //        else if (hys.Property == "Pressure")
+                //            table.Cell(row, numberOrderTable["Pressure"]).Range.Text = hys.Value + "кгс/см2";
+                //        else if (hys.Property == "IsDented" && hys.Value == "True")
+                //            tempStatus += "Поврежден корпус\n";
+                //        else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
+                //            tempStatus += "Повреждена краска\n";
+                //        else if (hys.Property == "IsHandleDamage" && hys.Value == "True")
+                //            tempStatus += "Повреждено ЗПУ\n";
+                //        else if (hys.Property == "IsHose" && hys.Value == "False")
+                //            tempStatus += "Отсутствует шланг\n";
+                //        else if (hys.Property == "IsPressureGaugeFault" && hys.Value == "True")
+                //            tempStatus += "Поврежден манометр\n";
+                //        else if (hys.Property == "IsLabelDamage" && hys.Value == "True")
+                //            tempStatus += "Повреждена этикетка\n";
+                //    }
+                //    table.Cell(row, numberOrderTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
+                //    if (tempStatus == "")
+                //        table.Cell(row, numberOrderTable["Status"]).Range.Text = "Норма";
+                //    else
+                //        table.Cell(row, numberOrderTable["Status"]).Range.Text = tempStatus.Trim();
+                //    row++;
+                //}
             }
         }
-
         /// <summary>
         /// Возвращает закладку в документе Word.
         /// </summary>

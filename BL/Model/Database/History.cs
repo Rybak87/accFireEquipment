@@ -21,10 +21,10 @@ namespace BL
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public History(Equipment equipment, PropertyInfo property, History oldHistory, string newValue)
+        public History(Equipment equipment, string propertyName, History oldHistory, string newValue)
         {
             Equipment = equipment;
-            Property = property.Name;
+            Property = propertyName;
             PrevHistory = oldHistory;
             Value = newValue;
             DateChange = DateTime.Now;

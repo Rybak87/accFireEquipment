@@ -69,18 +69,14 @@ namespace BL
         /// Изменения пожарного инвентаря.
         /// </summary>
         public DbSet<History> Histories { get; set; }
-        
+
         /// <summary>
         /// Инициализатор связей, настроек БД.
         /// </summary>
         /// <param name="modelBuilder"></param>
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<History>()
-            //.HasKey(h => h.PrevHistoryId);
-            modelBuilder.Entity<History>().HasKey(h => h.Id);
-            modelBuilder.Entity<History>().HasOptional(h => h.PrevHistory).WithOptionalDependent().Map(m=>m.MapKey("PrevHistoryId"));
-            //modelBuilder.Entity<History>().Map(m => m.Requires(p => p.PrevHistory),47);
+            modelBuilder.Entity<History>().HasOptional(h => h.PrevHistory).WithOptionalDependent().Map(m => m.MapKey("PrevHistoryId"));
         }
     }
 
