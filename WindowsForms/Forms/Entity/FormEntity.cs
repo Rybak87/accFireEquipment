@@ -22,12 +22,17 @@ namespace WindowsForms
         /// <summary>
         /// Вес.
         /// </summary>
-        private NumericUpDown weight;
+        private NumericUpDown numWeight;
 
         /// <summary>
         /// Давление.
         /// </summary>
-        private NumericUpDown pressure;
+        private NumericUpDown numPressure;
+
+        /// <summary>
+        /// ComboBox "Вид".
+        /// </summary>
+        protected ComboBox cbxKindEquipment;
 
         /// <summary>
         /// Текущий контекст.
@@ -163,12 +168,12 @@ namespace WindowsForms
             if (entityType == typeof(Extinguisher))
             {
                 if (prop.Name == "Weight")
-                    weight = (NumericUpDown)cntrl;
+                    numWeight = (NumericUpDown)cntrl;
                 else if (prop.Name == "Pressure")
-                    pressure = (NumericUpDown)cntrl;
+                    numPressure = (NumericUpDown)cntrl;
             }
             Controls.Add(cntrl);
-            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.Never);
+            cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             return cntrl;
         }
 
@@ -289,8 +294,7 @@ namespace WindowsForms
                     case "ComboBox":
                         {
                             cntrl = CreateComboBox(fullSize, prop, centerLocation);
-                            if (prop.Name == "TypeExtinguisher")
-                                cbxTypeExtinguisher = (ComboBox)cntrl;
+                            cbxKindEquipment = (ComboBox)cntrl;
                             break;
                         }
                     case "CheckBox":
@@ -335,7 +339,7 @@ namespace WindowsForms
             }
             Height = yPosControl + 100;
             //if (cbxTypeExtinguisher != null)
-            //    GetWeightPressure(cbxTypeExtinguisher);
+            //    GetWeightPressure(cbxTypeExtinguisher); // Если добавление то это нужно
         }
 
         /// <summary>
@@ -357,15 +361,15 @@ namespace WindowsForms
         /// Загрузка веса и давления по типу огнетушителя.
         /// </summary>
         /// <param name="cntrl"></param>
-        private void GetWeightPressure(ComboBox cntrl)
+        protected void GetWeightPressure(ComboBox cntrl)
         {
             double weight = ((KindExtinguisher)cntrl.SelectedItem).NominalWeight;
             double pressure = ((KindExtinguisher)cntrl.SelectedItem).NominalPressure;
             cntrl.DataBindings[0].WriteValue();
-            this.weight.Value = (decimal)weight;
-            this.pressure.Value = (decimal)pressure;
-            this.weight.DataBindings[0].WriteValue();
-            this.pressure.DataBindings[0].WriteValue();
+            this.numWeight.Value = (decimal)weight;
+            this.numPressure.Value = (decimal)pressure;
+            //this.weight.DataBindings[0].WriteValue();
+            //this.pressure.DataBindings[0].WriteValue();
         }
 
         /// <summary>

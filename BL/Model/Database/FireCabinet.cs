@@ -20,7 +20,6 @@ namespace BL
             Point = new ScalePoint();
         }
 
-        #region Свойства
         /// <summary>
         /// Родитель.
         /// </summary>
@@ -92,7 +91,6 @@ namespace BL
         /// Установленные пожарные шкафы.
         /// </summary>
         public virtual ICollection<Hydrant> Hydrants { get; set; }
-        #endregion
 
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.

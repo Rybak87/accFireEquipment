@@ -38,12 +38,11 @@ namespace WindowsForms
         /// <param name="parentSign">Идентификатор родителя новой сущности.</param>
         public static void AddDialog(Type typeEntity, EntitySign parentSign)
         {
-            var AddEssForm = new FormAddHierarchy(typeEntity, parentSign);
-            AddEssForm.EntityAdd += ent => TreeView.NodeAdd(ent as Hierarchy);
-            AddEssForm.EntityAdd2 += PictureContainer.LoadImage;
-            DialogResult result = AddEssForm.ShowDialog(Owner);
-            if (result == DialogResult.Cancel)
-                return;
+            var frmAdd = new FormAddHierarchy(typeEntity, parentSign);
+            frmAdd.EntityAdd += ent => TreeView.NodeAdd(ent as Hierarchy);
+            frmAdd.EntityAdd2 += PictureContainer.LoadImage;
+            DialogResult result = frmAdd.ShowDialog(Owner);
+            frmAdd.Dispose();
         }
 
         /// <summary>
@@ -52,12 +51,11 @@ namespace WindowsForms
         /// <param name="sign">Идентификатор сущности.</param>
         public static void EditDialog(EntitySign sign)
         {
-            var AddEssForm = new FormEditEntity(sign);
-            AddEssForm.EntityEdit += TreeView.NodeMove;
-            AddEssForm.EntityEdit2 += PictureContainer.LoadImage;
-            DialogResult result = AddEssForm.ShowDialog(Owner);
-            if (result == DialogResult.Cancel)
-                return;
+            var frmEdit = new FormEditEntity(sign);
+            frmEdit.EntityEdit += TreeView.NodeMove;
+            frmEdit.EntityEdit2 += PictureContainer.LoadImage;
+            DialogResult result = frmEdit.ShowDialog(Owner);
+            frmEdit.Dispose();
         }
     }
 }

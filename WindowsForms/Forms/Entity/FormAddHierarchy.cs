@@ -95,14 +95,18 @@ namespace WindowsForms
             ec.SaveChanges();
         }
 
+        protected override void CreateControls(int yPosControl)
+        {
+            base.CreateControls(yPosControl);
+            if (entityType == typeof(Extinguisher))
+                GetWeightPressure(cbxKindEquipment);
+        }
+
         /// <summary>
         /// Обработчик события загрузки формы.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FormAddEntity_Load(object sender, EventArgs e)
-        {
-            CreateControls(50);
-        }
+        private void FormAddEntity_Load(object sender, EventArgs e) => CreateControls(50);
     }
 }

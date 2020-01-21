@@ -28,8 +28,6 @@ namespace BL
             {
                 if (value is FireCabinet)
                     FireCabinet = (FireCabinet)value;
-                //else if (value is SpeciesHose)
-                //    TypeHose = (SpeciesHose)value;
                 else
                     throw new Exception("Нельзя преобразовать object");
             }
@@ -49,7 +47,7 @@ namespace BL
         /// Вид рукава.
         /// </summary>
         [Column("Тип рукава")]
-        [Control("ComboBox", true, 1/*, "KindHoses"*/)]
+        [Control("ComboBox", true, 1)]
         public virtual KindHose KindHose { get; set; }
 
         /// <summary>
