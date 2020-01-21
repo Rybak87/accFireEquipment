@@ -21,13 +21,13 @@ namespace BL
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public History(Equipment equipment, string propertyName, History oldHistory, string newValue)
+        public History(Equipment equipment, string propertyName, History oldHistory, string newValue, DateTime dataChange)
         {
             Equipment = equipment;
             Property = propertyName;
             PrevHistory = oldHistory;
             Value = newValue;
-            DateChange = DateTime.Now;
+            DateChange = dataChange;
         }
 
         /// <summary>

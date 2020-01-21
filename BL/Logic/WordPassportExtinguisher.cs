@@ -14,7 +14,7 @@ namespace BL
         private Word.Document workBook;
         private IEnumerable<Word.Bookmark> bookmarks;
         private const int ROW_FILL_START = 3;
-        private readonly Dictionary<string, int> numberOrderTable = new Dictionary<string, int>()
+        private readonly Dictionary<string, int> column = new Dictionary<string, int>()
         {
             ["Date"] = 1,
             ["Status"] = 2,
@@ -78,9 +78,9 @@ namespace BL
                 foreach (var hys in dateHistories)
                 {
                     if (hys.Property == "Weight")
-                        table.Cell(row, numberOrderTable["Weight"]).Range.Text = hys.Value + "кг.";
+                        table.Cell(row, column["Weight"]).Range.Text = hys.Value + "кг.";
                     else if (hys.Property == "Pressure")
-                        table.Cell(row, numberOrderTable["Pressure"]).Range.Text = hys.Value + "кгс/см2";
+                        table.Cell(row, column["Pressure"]).Range.Text = hys.Value + "кгс/см2";
                     else if (hys.Property == "IsDented" && hys.Value == "True")
                         tempStatus += "Поврежден корпус\n";
                     else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
@@ -95,11 +95,11 @@ namespace BL
                         tempStatus += "Повреждена этикетка\n";
                 }
 
-                table.Cell(row, numberOrderTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
+                table.Cell(row, column["Date"]).Range.Text = date.ToShortDateString() + "г.";
                 if (tempStatus == "")
-                    table.Cell(row, numberOrderTable["Status"]).Range.Text = "Норма";
+                    table.Cell(row, column["Status"]).Range.Text = "Норма";
                 else
-                    table.Cell(row, numberOrderTable["Status"]).Range.Text = tempStatus.Trim();
+                    table.Cell(row, column["Status"]).Range.Text = tempStatus.Trim();
                 row++;
 
                 //IEnumerable<History> oldHysOnDate = Enumerable.Empty<History>();

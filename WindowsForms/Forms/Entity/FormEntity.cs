@@ -258,13 +258,13 @@ namespace WindowsForms
         /// <param name="yPosControl"></param>
         protected virtual void CreateControls(int yPosControl)
         {
-            var properties = Reflection.GetEditProperties(currEntity);
+            var editProperties = Reflection.GetEditProperties(currEntity);
             Control cntrl = null;
             ComboBox cbxTypeExtinguisher = null;
             var incSize = new Size(175, 25);
             var fullSize = new Size(150, 25);
             var halfSize = new Size(75, 25);
-            foreach (var item in properties)
+            foreach (var item in editProperties)
             {
                 var prop = item.prop;
                 var attr = item.cntrlAttr;
@@ -338,8 +338,6 @@ namespace WindowsForms
                 yPosControl += 25;
             }
             Height = yPosControl + 100;
-            //if (cbxTypeExtinguisher != null)
-            //    GetWeightPressure(cbxTypeExtinguisher); // Если добавление то это нужно
         }
 
         /// <summary>

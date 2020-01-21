@@ -37,7 +37,8 @@ namespace BL
         public IEnumerable<History> GetNewHistories()
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(this);
-            var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p)));
+            var dataChange = DateTime.Now;
+            var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p), dataChange));
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
         }
     }
