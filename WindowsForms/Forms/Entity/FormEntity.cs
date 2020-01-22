@@ -289,11 +289,6 @@ namespace WindowsForms
                             cntrl = CreateDateTimePicker(fullSize, prop, centerLocation);
                             break;
                         }
-                    //case "Image":
-                    //    {
-                    //        cntrl = CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
-                    //        break;
-                    //    }
                 }
 
                 if (attr.isRequired)
@@ -310,7 +305,7 @@ namespace WindowsForms
                 yPosControl += 25;
             }
             Height = yPosControl + 100;
-            return yPosControl;
+            return yPosControl - 25;
         }
 
         /// <summary>
@@ -327,6 +322,8 @@ namespace WindowsForms
                 return;
             }
         }
+
+        public void EntityChangedInvoke(EntityBase entity) => EntityChanged?.Invoke(entity);
 
         public void CheckNeedControls()
         {

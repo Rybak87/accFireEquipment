@@ -13,13 +13,13 @@ namespace WindowsForms
 {
     public partial class FormWorkEquipment : FormEntity
     {
-        Strat Strat;
+        Strategy Strategy;
         Equipment currEquipment;
         public FormWorkEquipment(Type childType, EntitySign parentSign)
         {
             InitializeComponent();
             currEntity = ec.CreateEntity(childType);
-            Strat = new StratAdd(this);
+            Strategy = new StratAdd(this);
             entityType = childType;
             var parent = ec.GetEntity(parentSign) as Hierarchy;
             (currEntity as Equipment).Number = ec.GetNumberChild(parent, entityType);
@@ -30,7 +30,7 @@ namespace WindowsForms
         {
             InitializeComponent();
             currEntity = ec.GetEntity(sign);
-            Strat = new StratEdit(this);
+            Strategy = new StratEdit(this);
             entityType = sign.Type;
             PostConstruct();
         }
@@ -38,13 +38,13 @@ namespace WindowsForms
         private void PostConstruct()
         {
             currEquipment = currEntity as Equipment;
-            Text = Strat.GetFormName(currEntity);
-            Strat.CreateControls(this);
+            Text = Strategy.GetFormName(currEntity);
+            Strategy.CreateControls(this);
         }
 
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            Strat.btnOK(sender, e);
+            Strategy.btnOK(sender, e);
         }
     }
 }

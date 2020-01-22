@@ -19,7 +19,7 @@ namespace WindowsForms
         /// </summary>
         public byte[] currPlan;
 
-        Strat Strat;
+        Strategy Strat;
         Location currLocation;
         public FormWorkLocation()
         {
@@ -44,7 +44,7 @@ namespace WindowsForms
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
             Text = Strat.GetFormName(currEntity);
-            var yPos = Strat.CreateControls(this)-25;
+            var yPos = Strat.CreateControls(this);
             var halfSize = new Size(75, 25);
             var centerLocation = new Point(200, yPos);
             var centerHalfLocation = new Point(275, yPos);

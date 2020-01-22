@@ -63,18 +63,18 @@ namespace WindowsForms
         {
             if (sign.Type == typeof(Location))
             {
-                var frmAdd = new FormWorkLocation(sign);
-                frmAdd.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
-                frmAdd.EntityChanged2 += PictureContainer.LoadImage;
-                frmAdd.ShowDialog(Owner);
-                frmAdd.Dispose();
+                var frmEdit = new FormWorkLocation(sign);
+                //frmEdit.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+                frmEdit.EntityChanged2 += PictureContainer.LoadImage;
+                frmEdit.ShowDialog(Owner);
+                frmEdit.Dispose();
             }
             else if (sign.Type.IsSubclassOf(typeof(Equipment)))
             {
-                var frmAdd = new FormWorkEquipment(sign);
-                frmAdd.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
-                frmAdd.ShowDialog(Owner);
-                frmAdd.Dispose();
+                var frmEdit = new FormWorkEquipment(sign);
+                //frmEdit.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+                frmEdit.ShowDialog(Owner);
+                frmEdit.Dispose();
             }
         }
         //}        /// <summary>

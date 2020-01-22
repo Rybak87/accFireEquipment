@@ -108,7 +108,7 @@ namespace BL
         /// </summary>
         public int GetNumber(Hierarchy entity)
         {
-            var findedCollection = GetIQueryable(entity.GetType()).Cast<Hierarchy>();
+            var findedCollection = GetIQueryable(entity.GetType()).ToList().Cast<Hierarchy>();
             if (findedCollection.Count() != 0)
                 return findedCollection.Max(e => e.Number) + 1;
             else
