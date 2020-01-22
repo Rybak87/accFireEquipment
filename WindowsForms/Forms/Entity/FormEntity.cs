@@ -120,9 +120,10 @@ namespace WindowsForms
             ((ComboBox)cntrl).DataSource = parents.Local;
 
             Controls.Add(cntrl);
+            cntrl.CreateControl();
             var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             cntrl.DataBindings.Add(bind);
-            cntrl.DataBindings[0].WriteValue();
+            prop.SetValue(currEntity, ((ComboBox)cntrl).SelectedItem);
             //if (prop.Name == "KindExtinguisher")
             //{
             //    ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
