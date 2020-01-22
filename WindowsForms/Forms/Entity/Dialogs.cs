@@ -38,11 +38,21 @@ namespace WindowsForms
         /// <param name="parentSign">Идентификатор родителя новой сущности.</param>
         public static void AddDialog(Type typeEntity, EntitySign parentSign)
         {
-            var frmAdd = new FormAddHierarchy(typeEntity, parentSign);
-            frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-            frmAdd.EntityChanged2 += PictureContainer.LoadImage;
-            DialogResult result = frmAdd.ShowDialog(Owner);
-            frmAdd.Dispose();
+            if (typeEntity == typeof(Location))
+            {
+                var frmAdd = new FormWorkLocation();
+                frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+                frmAdd.EntityChanged2 += PictureContainer.LoadImage;
+                DialogResult result = frmAdd.ShowDialog(Owner);
+                frmAdd.Dispose();
+            }
+            else if (typeEntity.IsSubclassOf(typeof(Equipment)))
+            {
+                var frmAdd = new FormWorkEquipment(typeEntity, parentSign);
+                frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+                DialogResult result = frmAdd.ShowDialog(Owner);
+                frmAdd.Dispose();
+            }
         }
 
         /// <summary>
@@ -51,11 +61,47 @@ namespace WindowsForms
         /// <param name="sign">Идентификатор сущности.</param>
         public static void EditDialog(EntitySign sign)
         {
-            var frmEdit = new FormEditEntity(sign);
-            frmEdit.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
-            frmEdit.EntityChanged2 += PictureContainer.LoadImage;
-            DialogResult result = frmEdit.ShowDialog(Owner);
-            frmEdit.Dispose();
+            if (sign.Type == typeof(Location))
+            {
+                var frmAdd = new FormWorkLocation(sign);
+                frmAdd.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+                frmAdd.EntityChanged2 += PictureContainer.LoadImage;
+                frmAdd.ShowDialog(Owner);
+                frmAdd.Dispose();
+            }
+            else if (sign.Type.IsSubclassOf(typeof(Equipment)))
+            {
+                var frmAdd = new FormWorkEquipment(sign);
+                frmAdd.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+                frmAdd.ShowDialog(Owner);
+                frmAdd.Dispose();
+            }
         }
+        //}        /// <summary>
+        ///// Диалог добавления сущности в БД.
+        ///// </summary>
+        ///// <param name="typeEntity">Тип сущности.</param>
+        ///// <param name="parentSign">Идентификатор родителя новой сущности.</param>
+        //public static void AddDialog(Type typeEntity, EntitySign parentSign)
+        //{
+        //    var frmAdd = new FormHierarchy(typeEntity, parentSign);
+        //    frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+        //    frmAdd.EntityChanged2 += PictureContainer.LoadImage;
+        //    DialogResult result = frmAdd.ShowDialog(Owner);
+        //    frmAdd.Dispose();
+        //}
+
+        ///// <summary>
+        ///// Диалог изменения сущности в БД.
+        ///// </summary>
+        ///// <param name="sign">Идентификатор сущности.</param>
+        //public static void EditDialog(EntitySign sign)
+        //{
+        //    var frmEdit = new FormEditEntity(sign);
+        //    frmEdit.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+        //    frmEdit.EntityChanged2 += PictureContainer.LoadImage;
+        //    DialogResult result = frmEdit.ShowDialog(Owner);
+        //    frmEdit.Dispose();
+        //}
     }
 }

@@ -24,7 +24,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected override void BtnOK_Click(object sender, EventArgs e)
+        public override void BtnOK_Click(object sender, EventArgs e)
         {
             base.BtnOK_Click(sender, e);
             ec.AddEntity(currEntity);

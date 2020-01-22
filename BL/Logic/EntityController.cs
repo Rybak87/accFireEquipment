@@ -31,7 +31,7 @@ namespace BL
         {
             Set(entity.GetType()).Add(entity);
             var eq = entity as Equipment;
-            if (eq!=null)
+            if (eq != null)
             {
                 var histories = eq.GetNewHistories();
                 Set<History>().AddRange(histories);

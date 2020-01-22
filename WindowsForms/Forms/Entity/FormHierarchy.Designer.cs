@@ -1,6 +1,6 @@
-﻿//namespace WindowsForms//.Forms.Entity
+﻿//namespace WindowsForms/*.Forms.Entity*/
 //{
-//    partial class FormEditEntity
+//    partial class FormHierarchy
 //    {
 //        /// <summary>
 //        /// Обязательная переменная конструктора.
@@ -30,12 +30,12 @@
 //        {
 //            this.SuspendLayout();
 //            // 
-//            // FormEditEntity
+//            // FormAddEntity
 //            // 
 //            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
 //            this.ClientSize = new System.Drawing.Size(800, 450);
-//            this.Name = "FormEditEntity";
-//            this.Load += new System.EventHandler(this.FormEditEntity_Load);
+//            this.Name = "FormAddEntity";
+//            this.Load += new System.EventHandler(this.FormAddEntity_Load);
 //            this.ResumeLayout(false);
 
 //        }

@@ -1,4 +1,6 @@
-﻿namespace BL
+﻿using System;
+
+namespace BL
 {
     /// <summary>
     /// Наклейка.

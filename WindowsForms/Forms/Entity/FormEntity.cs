@@ -17,7 +17,7 @@ namespace WindowsForms
         /// <summary>
         /// Коллекция обязательных элементов управления.
         /// </summary>
-        private readonly List<Control> requiredControls = new List<Control>();
+        public readonly List<Control> requiredControls = new List<Control>();
 
         ///// <summary>
         ///// Вес.
@@ -29,30 +29,25 @@ namespace WindowsForms
         ///// </summary>
         //private NumericUpDown numPressure;
 
-        /// <summary>
-        /// ComboBox "Вид".
-        /// </summary>
-        protected ComboBox cbxKindEquipment;
+        ///// <summary>
+        ///// ComboBox "Вид".
+        ///// </summary>
+        //protected ComboBox cbxKindEquipment;
 
         /// <summary>
         /// Текущий контекст.
         /// </summary>
-        protected readonly EntityController ec = new EntityController();
+        public readonly EntityController ec = new EntityController();
 
         /// <summary>
         /// Текущий тип сущности.
         /// </summary>
-        protected Type entityType;
+        public Type entityType;
 
         /// <summary>
         /// Текущая сущность.
         /// </summary>
-        protected EntityBase currEntity;
-
-        /// <summary>
-        /// Текущее изображение плана.
-        /// </summary>
-        public byte[] currPlan;
+        public EntityBase currEntity;
 
         /// <summary>
         /// Конструктор.
@@ -66,11 +61,6 @@ namespace WindowsForms
         /// Событие по добавлению сущности в БД.
         /// </summary>
         public event Action<EntityBase> EntityChanged;
-
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<byte[]> EntityChanged2;
 
         /// <summary>
         /// Создание TextBox
@@ -133,10 +123,10 @@ namespace WindowsForms
             var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             cntrl.DataBindings.Add(bind);
             cntrl.DataBindings[0].WriteValue();
-            if (prop.Name == "KindExtinguisher")
-            {
-                ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
-            }
+            //if (prop.Name == "KindExtinguisher")
+            //{
+            //    ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
+            //}
             return cntrl;
         }
 
@@ -175,13 +165,13 @@ namespace WindowsForms
                 Location = location,
                 Size = fullSize
             };
-            if (entityType == typeof(Extinguisher))
-            {
-                if (prop.Name == "Weight")
-                    numWeight = (NumericUpDown)cntrl;
-                else if (prop.Name == "Pressure")
-                    numPressure = (NumericUpDown)cntrl;
-            }
+            //if (entityType == typeof(Extinguisher))
+            //{
+            //    if (prop.Name == "Weight")
+            //        numWeight = (NumericUpDown)cntrl;
+            //    else if (prop.Name == "Pressure")
+            //        numPressure = (NumericUpDown)cntrl;
+            //}
             Controls.Add(cntrl);
             cntrl.DataBindings.Add("Value", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             return cntrl;
@@ -203,34 +193,6 @@ namespace WindowsForms
             };
             Controls.Add(cntrl);
             cntrl.DataBindings.Add("Value", currEntity, prop.Name);
-            return cntrl;
-        }
-
-        /// <summary>
-        /// Создание кнопок для загрузки и удаления изображений.
-        /// </summary>
-        /// <param name="halfSize"></param>
-        /// <param name="centerLocation"></param>
-        /// <param name="centerHalfLocation"></param>
-        /// <returns></returns>
-        private Control CreateButtonsForImage(Size halfSize, Point centerLocation, Point centerHalfLocation)
-        {
-            Control cntrl = new Button
-            {
-                Location = centerLocation,
-                Size = halfSize,
-                Text = "..."
-            };
-            var cntrl2 = new Button
-            {
-                Location = centerHalfLocation,
-                Size = halfSize,
-                Text = "Удалить"
-            };
-            cntrl.Click += new EventHandler((s, e) => ImageDialog());
-            cntrl2.Click += new EventHandler((s, e) => ImageClear());
-            Controls.Add(cntrl);
-            Controls.Add(cntrl2);
             return cntrl;
         }
 
@@ -266,7 +228,7 @@ namespace WindowsForms
         /// Создание элементов формы.
         /// </summary>
         /// <param name="yPosControl"></param>
-        protected virtual void CreateControls(int yPosControl)
+        public virtual int CreateControls(int yPosControl)
         {
             var editProperties = Reflection.GetEditProperties(currEntity);
             Control cntrl = null;
@@ -304,7 +266,7 @@ namespace WindowsForms
                     case "ComboBox":
                         {
                             cntrl = CreateComboBox(fullSize, prop, centerLocation);
-                            cbxKindEquipment = (ComboBox)cntrl;
+                            //cbxKindEquipment = (ComboBox)cntrl;
                             break;
                         }
                     case "CheckBox":
@@ -327,11 +289,11 @@ namespace WindowsForms
                             cntrl = CreateDateTimePicker(fullSize, prop, centerLocation);
                             break;
                         }
-                    case "Image":
-                        {
-                            cntrl = CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
-                            break;
-                        }
+                    //case "Image":
+                    //    {
+                    //        cntrl = CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
+                    //        break;
+                    //    }
                 }
 
                 if (attr.isRequired)
@@ -348,6 +310,7 @@ namespace WindowsForms
                 yPosControl += 25;
             }
             Height = yPosControl + 100;
+            return yPosControl;
         }
 
         /// <summary>
@@ -355,7 +318,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected virtual void BtnOK_Click(object sender, EventArgs e)
+        public virtual void BtnOK_Click(object sender, EventArgs e)
         {
             if (EmptyNeedControls())
             {
@@ -365,37 +328,14 @@ namespace WindowsForms
             }
         }
 
-        protected virtual void stratOKAdd(object sender, EventArgs e, int countCopy)
+        public void CheckNeedControls()
         {
-            BtnOK_Click(sender, e);
-            ec.EntityAdd += EntityChanged;
-            if (entityType == typeof(Location))
+            if (EmptyNeedControls())
             {
-                ((Location)currEntity).Plan = currPlan;
-                EntityChanged2?.Invoke(currPlan);
+                DialogResult = DialogResult.None;
+                MessageBox.Show("Необходимо заполнить все поля");
+                return;
             }
-            ec.AddRangeEntity((Hierarchy)currEntity, countCopy);
-            ec.SaveChanges();
-        }
-
-        protected virtual void stratOKEdit(object sender, EventArgs e)
-        {
-            BtnOK_Click(sender, e);
-            ec.Entry(currEntity).State = EntityState.Modified;
-            EntityChanged?.Invoke((Hierarchy)currEntity);
-            if (entityType == typeof(Location))
-            {
-                ((Location)currEntity).Plan = currPlan;
-                EntityChanged2?.Invoke(currPlan);
-            }
-
-            var eq = currEntity as Equipment;
-            if (eq != null)
-            {
-                var histories = eq.GetNewHistories();
-                ec.Set<History>().AddRange(histories);
-            }
-            ec.SaveChanges();
         }
 
         protected virtual (NumericUpDown, Label) CountControls()
@@ -435,25 +375,7 @@ namespace WindowsForms
         //    //this.pressure.DataBindings[0].WriteValue();
         //}
 
-        ///// <summary>
-        ///// Диалог выбора и загрузки изображения плана.
-        ///// </summary>
-        //private void ImageDialog()
-        //{
-        //    using (OpenFileDialog dialog = new OpenFileDialog())
-        //    {
-        //        if (dialog.ShowDialog() == DialogResult.OK)
-        //        {
-        //            var data = File.ReadAllBytes(dialog.FileName);
-        //            currPlan = data;
-        //        }
-        //    }
-        //}
 
-        ///// <summary>
-        ///// Удаление изображения с плана.
-        ///// </summary>
-        //private void ImageClear() => currPlan = null;
         //}    public partial class FormEntity : Form
         //{
         //    /// <summary>

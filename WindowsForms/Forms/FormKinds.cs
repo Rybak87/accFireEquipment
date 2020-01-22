@@ -97,16 +97,16 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            if (listView.SelectedItems.Count == 0)
-                return;
-            var sign = (EntitySign)listView.SelectedItems[0].Tag;
-            using (var AddEssForm = new FormEditEntity(sign))
-            {
-                DialogResult result = AddEssForm.ShowDialog(this);
-                if (result == DialogResult.Cancel)
-                    return;
-            }
-            LoadKinds(saveType);
+            //    if (listView.SelectedItems.Count == 0)
+            //        return;
+            //    var sign = (EntitySign)listView.SelectedItems[0].Tag;
+            //    using (var AddEssForm = new FormEditEntity(sign))
+            //    {
+            //        DialogResult result = AddEssForm.ShowDialog(this);
+            //        if (result == DialogResult.Cancel)
+            //            return;
+            //    }
+            //    LoadKinds(saveType);
         }
 
         /// <summary>
