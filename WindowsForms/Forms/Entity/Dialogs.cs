@@ -39,8 +39,8 @@ namespace WindowsForms
         public static void AddDialog(Type typeEntity, EntitySign parentSign)
         {
             var frmAdd = new FormAddHierarchy(typeEntity, parentSign);
-            frmAdd.EntityAdd += ent => TreeView.NodeAdd(ent as Hierarchy);
-            frmAdd.EntityAdd2 += PictureContainer.LoadImage;
+            frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+            frmAdd.EntityChanged2 += PictureContainer.LoadImage;
             DialogResult result = frmAdd.ShowDialog(Owner);
             frmAdd.Dispose();
         }
@@ -52,8 +52,8 @@ namespace WindowsForms
         public static void EditDialog(EntitySign sign)
         {
             var frmEdit = new FormEditEntity(sign);
-            frmEdit.EntityEdit += TreeView.NodeMove;
-            frmEdit.EntityEdit2 += PictureContainer.LoadImage;
+            frmEdit.EntityChanged += ent => TreeView.NodeMove(ent as Hierarchy);
+            frmEdit.EntityChanged2 += PictureContainer.LoadImage;
             DialogResult result = frmEdit.ShowDialog(Owner);
             frmEdit.Dispose();
         }

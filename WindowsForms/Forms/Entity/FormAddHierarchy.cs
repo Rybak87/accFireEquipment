@@ -13,24 +13,11 @@ namespace WindowsForms
         /// <summary>
         /// Количество сущностей.
         /// </summary>
-        private NumericUpDown numCountCopy = new NumericUpDown
-        {
-            Location = new Point(200, 25),
-            Size = new Size(150, 25),
-            Minimum = 1,
-            Maximum = 100
-
-        };
+        private NumericUpDown numCountCopy;
 
         /// <summary>
         /// Надпись "количество" сущностей.
         /// </summary>
-        private Label lblCountCopy = new Label
-        {
-            Text = "Количество",
-            Location = new Point(25, 25),
-            Size = new Size(175, 25)
-        };
 
         /// <summary>
         /// Конструктор.
@@ -41,8 +28,10 @@ namespace WindowsForms
         {
             InitializeComponent();
 
+            var countControls = CountControls();
+            numCountCopy = countControls.Item1;
             Controls.Add(numCountCopy);
-            Controls.Add(lblCountCopy);
+            Controls.Add(countControls.Item2);
             currEntity = ec.CreateEntity(entityType);
             this.entityType = entityType;
 
@@ -62,15 +51,15 @@ namespace WindowsForms
             Text = "Добавить";
         }
 
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<EntityBase> EntityAdd;
+        ///// <summary>
+        ///// Событие по добавлению сущности в БД.
+        ///// </summary>
+        //public event Action<EntityBase> EntityChanged;
 
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<byte[]> EntityAdd2;
+        ///// <summary>
+        ///// Событие по добавлению сущности в БД.
+        ///// </summary>
+        //public event Action<byte[]> EntityChanged2;
 
         /// <summary>
         /// Количество сущностей.
@@ -84,15 +73,7 @@ namespace WindowsForms
         /// <param name="e"></param>
         protected override void BtnOK_Click(object sender, EventArgs e)
         {
-            base.BtnOK_Click(sender, e);
-            ec.EntityAdd += EntityAdd;
-            if (entityType == typeof(Location))
-            {
-                ((Location)currEntity).Plan = currPlan;
-                EntityAdd2?.Invoke(currPlan);
-            }
-            ec.AddRangeEntity((Hierarchy)currEntity, CountCopy);
-            ec.SaveChanges();
+            stratOKAdd(sender, e, CountCopy);
         }
 
         protected override void CreateControls(int yPosControl)
