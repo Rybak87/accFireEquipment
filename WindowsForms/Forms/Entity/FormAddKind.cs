@@ -7,6 +7,7 @@ namespace WindowsForms
     /// </summary>
     public partial class FormAddKind : FormEntity
     {
+        Strategy Strategy;
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -14,9 +15,11 @@ namespace WindowsForms
         public FormAddKind(Type entityType)
         {
             InitializeComponent();
+            Strategy = new AddStrategy(this);
             currEntity = ec.CreateEntity(entityType);
             this.entityType = entityType;
             Text = "Добавить новый тип";
+            Strategy.CreateControls(this);
         }
 
         /// <summary>
@@ -26,15 +29,9 @@ namespace WindowsForms
         /// <param name="e"></param>
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            base.BtnOK_Click(sender, e);
-            ec.AddEntity(currEntity);
+            Strategy.btnOK(sender, e);
+            //base.BtnOK_Click(sender, e);
+            //ec.AddEntity(currEntity);
         }
-
-        /// <summary>
-        /// Обработчик загрузки формы.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormAddKind_Load(object sender, EventArgs e) => CreateControls(25);
     }
 }

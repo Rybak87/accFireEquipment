@@ -81,12 +81,13 @@ namespace WindowsForms
         {
             if (saveType == null)
                 return;
-            using (var AddEssForm = new FormAddKind(saveType))
-            {
-                DialogResult result = AddEssForm.ShowDialog(this);
-                if (result == DialogResult.Cancel)
-                    return;
-            }
+            Dialogs.AddDialog(saveType);
+            //using (var AddEssForm = new FormAddKind(saveType))
+            //{
+            //    DialogResult result = AddEssForm.ShowDialog(this);
+            //    if (result == DialogResult.Cancel)
+            //        return;
+            //}
             LoadKinds(saveType);
         }
 

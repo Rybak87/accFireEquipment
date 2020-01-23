@@ -13,13 +13,13 @@ namespace WindowsForms
 {
     public partial class FormWorkEquipment : FormEntity
     {
-        Strategy Strategy;
+        protected Strategy Strategy;
         Equipment currEquipment;
         public FormWorkEquipment(Type childType, EntitySign parentSign)
         {
             InitializeComponent();
             currEntity = ec.CreateEntity(childType);
-            Strategy = new StratAdd(this);
+            Strategy = new AddStrategy(this);
             entityType = childType;
             var parent = ec.GetEntity(parentSign) as Hierarchy;
             (currEntity as Equipment).Number = ec.GetNumberChild(parent, entityType);
@@ -30,7 +30,7 @@ namespace WindowsForms
         {
             InitializeComponent();
             currEntity = ec.GetEntity(sign);
-            Strategy = new StratEdit(this);
+            Strategy = new EditStrategy(this);
             entityType = sign.Type;
             PostConstruct();
         }

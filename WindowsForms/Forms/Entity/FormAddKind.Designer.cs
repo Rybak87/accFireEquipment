@@ -1,4 +1,4 @@
-﻿namespace WindowsForms/*.Forms.Entity*/
+﻿namespace WindowsForms
 {
     partial class FormAddKind
     {
@@ -35,7 +35,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "FormAddSpecie";
-            this.Load += new System.EventHandler(this.FormAddKind_Load);
             this.ResumeLayout(false);
 
         }

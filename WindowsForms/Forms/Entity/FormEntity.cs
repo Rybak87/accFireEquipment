@@ -69,9 +69,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateTextBox(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual TextBox CreateTextBox(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new TextBox
+            var cntrl = new TextBox
             {
                 Location = location,
                 Size = fullSize
@@ -88,9 +88,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateCheckBox(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual CheckBox CreateCheckBox(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new CheckBox
+            var cntrl = new CheckBox
             {
                 Location = location,
                 Size = fullSize
@@ -107,9 +107,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="centerLocation">Расположение.</param>
         /// <returns></returns>
-        private Control CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
+        protected virtual ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
         {
-            Control cntrl = new ComboBox
+            var cntrl = new ComboBox
             {
                 Location = centerLocation,
                 Size = fullSize,
@@ -117,17 +117,14 @@ namespace WindowsForms
             };
             var parents = ec.Set(prop.PropertyType);
             parents.Load();
-            ((ComboBox)cntrl).DataSource = parents.Local;
+            cntrl.DataSource = parents.Local;
 
-            Controls.Add(cntrl);
-            cntrl.CreateControl();
             var bind = new Binding("SelectedItem", currEntity, prop.Name, true, DataSourceUpdateMode.OnPropertyChanged);
             cntrl.DataBindings.Add(bind);
-            prop.SetValue(currEntity, ((ComboBox)cntrl).SelectedItem);
-            //if (prop.Name == "KindExtinguisher")
-            //{
-            //    ((ComboBox)cntrl).SelectedIndexChanged += (s, e) => GetWeightPressure((ComboBox)cntrl);
-            //}
+            cntrl.CreateControl();
+            Controls.Add(cntrl);
+            cntrl.DataBindings[0].ReadValue();
+            prop.SetValue(currEntity, cntrl.SelectedItem);
             return cntrl;
         }
 
@@ -138,9 +135,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateNumericUpDown(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual NumericUpDown CreateNumericUpDown(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new NumericUpDown
+            var cntrl = new NumericUpDown
             {
                 Location = location,
                 Size = fullSize,
@@ -158,9 +155,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual NumericUpDown CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new NumericUpDown
+            var cntrl = new NumericUpDown
             {
                 DecimalPlaces = 2,
                 Location = location,
@@ -185,9 +182,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        private Control CreateDateTimePicker(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual DateTimePicker CreateDateTimePicker(Size fullSize, PropertyInfo prop, Point location)
         {
-            Control cntrl = new DateTimePicker
+            var cntrl = new DateTimePicker
             {
                 Location = location,
                 Size = fullSize,
@@ -236,7 +233,6 @@ namespace WindowsForms
             ComboBox cbxTypeExtinguisher = null;
             var incSize = new Size(175, 25);
             var fullSize = new Size(150, 25);
-            var halfSize = new Size(75, 25);
             foreach (var item in editProperties)
             {
                 var prop = item.prop;

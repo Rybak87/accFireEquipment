@@ -19,12 +19,12 @@ namespace WindowsForms
         /// </summary>
         public byte[] currPlan;
 
-        Strategy Strat;
+        Strategy Strategy;
         Location currLocation;
         public FormWorkLocation()
         {
             InitializeComponent();
-            Strat = new StratAdd(this);
+            Strategy = new AddStrategy(this);
             entityType = typeof(Location);
             currEntity = ec.CreateEntity(entityType);
             (currEntity as Location).Number = ec.GetNumber(currEntity as Location);
@@ -33,7 +33,7 @@ namespace WindowsForms
         public FormWorkLocation(EntitySign locSign)
         {
             InitializeComponent();
-            Strat = new StratEdit(this);
+            Strategy = new EditStrategy(this);
             entityType = locSign.Type;
             currEntity = ec.GetEntity(locSign);
             PostConstruct();
@@ -43,8 +43,8 @@ namespace WindowsForms
         {
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
-            Text = Strat.GetFormName(currEntity);
-            var yPos = Strat.CreateControls(this);
+            Text = Strategy.GetFormName(currEntity);
+            var yPos = Strategy.CreateControls(this);
             var halfSize = new Size(75, 25);
             var centerLocation = new Point(200, yPos);
             var centerHalfLocation = new Point(275, yPos);
@@ -87,7 +87,7 @@ namespace WindowsForms
 
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            Strat.btnOK(sender, e);
+            Strategy.btnOK(sender, e);
             ((Location)currEntity).Plan = currPlan;
             EntityChanged2?.Invoke(currPlan);
         }

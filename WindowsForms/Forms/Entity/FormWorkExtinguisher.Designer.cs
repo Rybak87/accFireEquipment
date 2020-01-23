@@ -1,4 +1,4 @@
-﻿namespace WindowsForms.Forms.Entity
+﻿namespace WindowsForms
 {
     partial class FormWorkExtinguisher
     {

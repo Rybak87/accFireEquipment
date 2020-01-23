@@ -16,18 +16,18 @@ namespace WindowsForms
         public abstract int CreateControls(FormEntity formEntity);
     }
 
-    public class StratAdd : Strategy
+    public class AddStrategy : Strategy
     {
         private int countCopy { get => (int)numCountCopy.Value; }
         NumericUpDown numCountCopy;
 
-        public StratAdd(FormEntity formEntity)
+        public AddStrategy(FormEntity formEntity)
         {
             this.formEntity = formEntity;
         }
         public override string GetFormName(EntityBase entityBase)
         {
-            return "Добавить";
+            return "Добавить " + entityBase.ToString();
         }
 
         public override void btnOK(object sender, EventArgs e)
@@ -66,23 +66,22 @@ namespace WindowsForms
         }
     }
 
-    public class StratEdit : Strategy
+    public class EditStrategy : Strategy
     {
-        public StratEdit(FormEntity formEntity)
+        public EditStrategy(FormEntity formEntity)
         {
             this.formEntity = formEntity;
         }
 
         public override string GetFormName(EntityBase entityBase)
         {
-            return "Изменить";
+            return "Изменить " + entityBase.ToString();
         }
         public override void btnOK(object sender, EventArgs e)
         {
             formEntity.CheckNeedControls();
             formEntity.ec.Entry(formEntity.currEntity).State = EntityState.Modified;
             formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
-
             formEntity.ec.SaveChanges();
         }
 
