@@ -82,12 +82,6 @@ namespace WindowsForms
             if (saveType == null)
                 return;
             Dialogs.AddDialog(saveType);
-            //using (var AddEssForm = new FormAddKind(saveType))
-            //{
-            //    DialogResult result = AddEssForm.ShowDialog(this);
-            //    if (result == DialogResult.Cancel)
-            //        return;
-            //}
             LoadKinds(saveType);
         }
 
@@ -98,16 +92,13 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void BtnEdit_Click(object sender, EventArgs e)
         {
-            //    if (listView.SelectedItems.Count == 0)
-            //        return;
-            //    var sign = (EntitySign)listView.SelectedItems[0].Tag;
-            //    using (var AddEssForm = new FormEditEntity(sign))
-            //    {
-            //        DialogResult result = AddEssForm.ShowDialog(this);
-            //        if (result == DialogResult.Cancel)
-            //            return;
-            //    }
-            //    LoadKinds(saveType);
+            if (saveType == null)
+                return;
+            if (listView.SelectedItems.Count == 0)
+                return;
+            var sign = (EntitySign)listView.SelectedItems[0].Tag;
+            Dialogs.EditDialog(sign);
+            LoadKinds(saveType);
         }
 
         /// <summary>

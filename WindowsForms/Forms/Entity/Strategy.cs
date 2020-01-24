@@ -19,7 +19,16 @@ namespace WindowsForms
     public class AddStrategy : Strategy
     {
         protected bool needCountCopy;
-        private int countCopy { get => (int)numCountCopy.Value; }
+        private int countCopy
+        {
+            get
+            {
+                if (numCountCopy != null)
+                    return (int)numCountCopy.Value;
+                else
+                    return 1;
+            }
+        }
         NumericUpDown numCountCopy;
 
         public AddStrategy(FormEntity formEntity, bool needCountCopy = true)
@@ -34,10 +43,13 @@ namespace WindowsForms
 
         public override void btnOK(object sender, EventArgs e)
         {
-            if (!formEntity.CheckNeedControls()) 
+            if (!formEntity.CheckNeedControls())
                 return;
             formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
-            formEntity.ec.AddRangeEntity(formEntity.currEntity as Hierarchy, countCopy);
+            if (formEntity.currEntity as Hierarchy != null)
+                formEntity.ec.AddRangeEntity(formEntity.currEntity as Hierarchy, countCopy);
+            else
+                formEntity.ec.AddEntity(formEntity.currEntity);
             formEntity.ec.SaveChanges();
         }
 

@@ -1,6 +1,6 @@
 ﻿namespace WindowsForms
 {
-    partial class FormAddKind
+    partial class FormWorkKind
     {
         /// <summary>
         /// Обязательная переменная конструктора.

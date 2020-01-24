@@ -157,11 +157,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Forms\Entity\Dialogs.cs" />
-    <Compile Include="Forms\Entity\FormAddKind.cs">
+    <Compile Include="Forms\Entity\FormWorkKind.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormAddKind.Designer.cs">
-      <DependentUpon>FormAddKind.cs</DependentUpon>
+    <Compile Include="Forms\Entity\FormWorkKind.Designer.cs">
+      <DependentUpon>FormWorkKind.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Entity\FormWorkEquipment.cs">
       <SubType>Form</SubType>
@@ -235,8 +235,8 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="ContextMenuGetter.cs" />
-    <EmbeddedResource Include="Forms\Entity\FormAddKind.resx">
-      <DependentUpon>FormAddKind.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Entity\FormWorkKind.resx">
+      <DependentUpon>FormWorkKind.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormKinds.resx">
       <DependentUpon>FormKinds.cs</DependentUpon>

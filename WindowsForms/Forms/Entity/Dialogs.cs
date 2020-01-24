@@ -36,7 +36,7 @@ namespace WindowsForms
         {
             if (typeEntity.IsSubclassOf(typeof(KindBase)))
             {
-                var frmAdd = new FormAddKind(typeEntity);
+                var frmAdd = new FormWorkKind(typeEntity);
                 frmAdd.ShowDialog(Owner);
                 frmAdd.Dispose();
             }
@@ -76,6 +76,12 @@ namespace WindowsForms
         {
             if (sign == null)
                 return;
+            if (sign.Type.IsSubclassOf(typeof(KindBase)))
+            {
+                var frmAdd = new FormWorkKind(sign);
+                frmAdd.ShowDialog(Owner);
+                frmAdd.Dispose();
+            }
             if (sign.Type == typeof(Location))
             {
                 var frmEdit = new FormWorkLocation(sign);

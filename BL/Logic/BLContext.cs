@@ -78,19 +78,6 @@ namespace BL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<History>().HasOptional(h => h.PrevHistory).WithOptionalDependent().Map(m => m.MapKey("PrevHistoryId"));
-            modelBuilder.Entity<FireCabinet>()
-                .HasMany(c => c.Extinguishers)
-                .WithRequired(x => x.FireCabinet).HasForeignKey(k => k.FireCabinetId)
-                .WillCascadeOnDelete(true);
-            //modelBuilder.Entity<FireCabinet>()
-            //    .HasMany(c => c.Hoses)
-            //    .WithRequired(x => x.FireCabinet).HasForeignKey(k => k.FireCabinetId)
-            //    .WillCascadeOnDelete(true);
-            //modelBuilder.Entity<FireCabinet>()
-            //    .HasMany(c => c.Hydrants)
-            //    .WithRequired(x => x.FireCabinet).HasForeignKey(k => k.FireCabinetId)
-            //    .WillCascadeOnDelete(true);
-            //modelBuilder.Entity<Extinguisher>().HasRequired(e => e.FireCabinet).WithMany(f => f.Extinguishers).HasForeignKey(k=>k.FireCabinetId).WillCascadeOnDelete(true);
         }
     }
 
