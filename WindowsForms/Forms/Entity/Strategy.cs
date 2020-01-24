@@ -34,7 +34,8 @@ namespace WindowsForms
 
         public override void btnOK(object sender, EventArgs e)
         {
-            formEntity.CheckNeedControls();
+            if (!formEntity.CheckNeedControls()) 
+                return;
             formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
             formEntity.ec.AddRangeEntity(formEntity.currEntity as Hierarchy, countCopy);
             formEntity.ec.SaveChanges();
@@ -86,7 +87,8 @@ namespace WindowsForms
         }
         public override void btnOK(object sender, EventArgs e)
         {
-            formEntity.CheckNeedControls();
+            if (!formEntity.CheckNeedControls())
+                return;
             formEntity.ec.Entry(formEntity.currEntity).State = EntityState.Modified;
             formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
             formEntity.ec.SaveChanges();

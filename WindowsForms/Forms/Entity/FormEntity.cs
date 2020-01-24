@@ -200,14 +200,15 @@ namespace WindowsForms
             return false;
         }
 
-        public void CheckNeedControls()
+        public bool CheckNeedControls()
         {
             if (EmptyNeedControls())
             {
                 DialogResult = DialogResult.None;
                 MessageBox.Show("Необходимо заполнить все поля");
-                return;
+                return false;
             }
+            return true;
         }
 
         /// <summary>

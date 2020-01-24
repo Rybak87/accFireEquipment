@@ -44,6 +44,17 @@ namespace BL
         public override Location GetLocation => FireCabinet.Location;
 
         /// <summary>
+        /// Первичный ключ пожарного шкафа.
+        /// </summary>
+        public int FireCabinetId { get; set; }
+
+        /// <summary>
+        /// Пожарный шкаф.
+        /// </summary>
+        [Column("Пожарный шкаф")]
+        public virtual FireCabinet FireCabinet { get; set; }
+
+        /// <summary>
         /// Первичный ключ вида огнетушителя.
         /// </summary>
         public int KindExtinguisherId { get; set; }
@@ -139,16 +150,7 @@ namespace BL
         [Control("CheckBox", false, 14)]
         public bool IsLabelDamage { get; set; }
 
-        /// <summary>
-        /// Первичный ключ пожарного шкафа.
-        /// </summary>
-        public int FireCabinetId { get; set; }
 
-        /// <summary>
-        /// Пожарный шкаф.
-        /// </summary>
-        [Column("Пожарный шкаф")]
-        public virtual FireCabinet FireCabinet { get; set; }
 
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.

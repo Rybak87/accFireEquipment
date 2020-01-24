@@ -79,8 +79,6 @@ namespace BL
                     return;
                 }
             }
-            Set(sign.Type).Load();
-            entity = GetEntity(sign);
             Set(sign.Type).Remove(entity);
             SaveChanges();
         }
