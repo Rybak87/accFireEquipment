@@ -39,7 +39,7 @@ namespace WindowsForms
         {
             currEquipment = currEntity as Equipment;
             Text = Strategy.GetFormName(currEntity);
-            Strategy.CreateControls(this);
+            Strategy.CreateControls();
         }
 
         public override void BtnOK_Click(object sender, EventArgs e)

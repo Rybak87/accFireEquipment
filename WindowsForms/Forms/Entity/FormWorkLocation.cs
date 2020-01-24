@@ -44,7 +44,7 @@ namespace WindowsForms
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
             Text = Strategy.GetFormName(currEntity);
-            var yPos = Strategy.CreateControls(this);
+            var yPos = Strategy.CreateControls();
             var halfSize = new Size(75, 25);
             var centerLocation = new Point(200, yPos);
             var centerHalfLocation = new Point(275, yPos);
@@ -87,8 +87,8 @@ namespace WindowsForms
 
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            Strategy.btnOK(sender, e);
             ((Location)currEntity).Plan = currPlan;
+            Strategy.btnOK(sender, e);
             EntityChanged2?.Invoke(currPlan);
         }
 

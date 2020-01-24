@@ -79,6 +79,8 @@ namespace BL
                     return;
                 }
             }
+            Set(sign.Type).Load();
+            entity = GetEntity(sign);
             Set(sign.Type).Remove(entity);
             SaveChanges();
         }
@@ -132,7 +134,11 @@ namespace BL
         /// <summary>Возвращает сущность по его метке.
         /// Второй параметр NoTracking.
         /// </summary>
-        public EntityBase GetEntity(EntitySign sign) => (EntityBase)Set(sign.Type).Find(sign.Id);
+        public EntityBase GetEntity(EntitySign sign)
+        {
+            Set(sign.Type).Load();
+            return (EntityBase)Set(sign.Type).Find(sign.Id);
+        }
 
         /// <summary>
         /// Возвращает родительское помещение.

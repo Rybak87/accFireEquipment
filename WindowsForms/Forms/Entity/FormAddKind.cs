@@ -19,7 +19,7 @@ namespace WindowsForms
             currEntity = ec.CreateEntity(entityType);
             this.entityType = entityType;
             Text = "Добавить новый тип";
-            Strategy.CreateControls(this);
+            Strategy.CreateControls();
         }
 
         /// <summary>

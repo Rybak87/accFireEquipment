@@ -77,6 +77,10 @@ namespace BL
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<History>().HasOptional(h => h.PrevHistory).WithOptionalDependent().Map(m => m.MapKey("PrevHistoryId"));
+            modelBuilder.Entity<FireCabinet>()
+ .HasMany(c => c.Extinguishers)
+ .WithRequired(x => x.FireCabinet)
+ .WillCascadeOnDelete(true);
         }
     }
 

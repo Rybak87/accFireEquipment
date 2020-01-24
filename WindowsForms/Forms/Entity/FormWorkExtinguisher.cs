@@ -58,6 +58,5 @@ namespace WindowsForms
             //this.weight.DataBindings[0].WriteValue();
             //this.pressure.DataBindings[0].WriteValue();
         }
-
     }
 }
