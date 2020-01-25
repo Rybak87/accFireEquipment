@@ -29,13 +29,13 @@ namespace WindowsForms
             DragEnter += treeView_DragEnter;
             DragOver += treeView_DragOver;
             DragDrop += treeView_DragDrop;
-            NodeMouseClick += TreeViewDB_MouseClick;
+            NodeMouseClick += TreeView_NodeMouseClick;
         }
 
         /// <summary>
         /// Событие по левому клику мышью.
         /// </summary>
-        public event Action<EntitySign> LeftMouseClick;
+        public event Action<EntitySign> MouseClickSign;
 
         #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
@@ -100,21 +100,16 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void TreeViewDB_MouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                if (e.Node.Tag != null)
-                    ContextMenuGetter.GetMenu(((EntitySign)e.Node.Tag).Type).Tag = e.Node.Tag;
-                ((TreeView)sender).SelectedNode = e.Node;
-                return;
-            }
-
-            if (e.Button != MouseButtons.Left || e.Node.Tag == null)
-                return;
-            var entitySign = (EntitySign)e.Node.Tag;
             SelectedNode = e.Node;
-            LeftMouseClick?.Invoke(entitySign);
+            var sign = e.Node.Tag as EntitySign;
+            if (sign == null)
+                return;
+            MouseClickSign?.Invoke(sign);
+
+            if (e.Button == MouseButtons.Right)
+                ContextMenuGetter.GetMenu(sign.Type).Tag = e.Node.Tag;
         }
 
         /// <summary>
@@ -200,7 +195,6 @@ namespace WindowsForms
             {
                 var indImage = IconsGetter.GetIndexIcon(entitySign.Type);
                 var child = new TreeNode(text, indImage, indImage);
-                //child.ContextMenuStrip = menu;
                 child.ContextMenuStrip = ContextMenuGetter.GetMenu(entitySign.Type);
                 parent.Nodes.Add(child);
                 child.Tag = entitySign;
@@ -264,8 +258,27 @@ namespace WindowsForms
         /// <param name="entity">Сущность.</param>
         public void NodeRemove(EntityBase entity)
         {
-            Nodes.Remove(dictNodes[entity.GetSign()]);
-            dictNodes.Remove(entity.GetSign());
+            var sign = entity.GetSign();
+            Nodes.Remove(dictNodes[sign]);
+            dictNodes.Remove(sign);
+        }
+
+        /// <summary>
+        /// Возвращает все идентификаторы родителя и его подсущностей.
+        /// </summary>
+        /// <param name="sign"></param>
+        /// <returns></returns>
+        public IEnumerable<EntitySign> GetChildSigns(EntitySign sign)
+        {
+            yield return sign;
+            var parent = dictNodes.SingleOrDefault(d => d.Key == sign);
+            var nodes = parent.Value.Nodes.Cast<TreeNode>();
+            var signs = nodes.Select(n => n.Tag as EntitySign);
+            var moreSigns = signs.SelectMany(s => GetChildSigns(s));
+            foreach (var item in moreSigns)
+            {
+                yield return item;
+            }
         }
     }
 }

@@ -8,7 +8,7 @@ namespace BL
     /// <summary>
     /// Пожарный шкаф.
     /// </summary>
-    [Table("Пожарные шкафы")]
+    [Table("ПожарныеШкафы")]
     public class FireCabinet : Equipment, ISticker
     {
         /// <summary>

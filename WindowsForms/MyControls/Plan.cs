@@ -25,8 +25,8 @@ namespace BL
         public Plan()
         {
             AllowDrop = true;
-            DragEnter += new DragEventHandler(picBoxMain_DragEnter);
-            DragDrop += new DragEventHandler(picBoxMain_DragDrop);
+            DragEnter += picBoxMain_DragEnter;
+            DragDrop += picBoxMain_DragDrop;
             RatioIconSize = Properties.Settings.Default.RatioIconSize;
         }
 

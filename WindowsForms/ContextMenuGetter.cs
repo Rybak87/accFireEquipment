@@ -78,7 +78,6 @@ namespace WindowsForms
                 [typeof(Hose)] = contextMenuHose,
                 [typeof(Hydrant)] = contextMenuHydrant
             };
-
         }
 
         /// <summary>
@@ -89,7 +88,7 @@ namespace WindowsForms
         /// <summary>
         /// Обновляемый план.
         /// </summary>
-        public static Plan PictureContainer { get; set; }
+        public static Plan Plan { get; set; }
 
         /// <summary>
         /// Возвращает ячейку меню.
@@ -139,6 +138,11 @@ namespace WindowsForms
         {
             var menuItem = (ToolStripMenuItem)sender;
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
+
+            var signs = TreeView.GetChildSigns(removeSign);
+            foreach(var sign in signs)
+                Plan.RemoveOfPlan(sign);
+
             using (var ec = new EntityController())
             {
                 ec.EntityRemove += TreeView.NodeRemove;
@@ -155,7 +159,7 @@ namespace WindowsForms
         {
             var menuItem = (ToolStripMenuItem)sender;
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            PictureContainer.RemoveOfPlan(removeSign);
+            Plan.RemoveOfPlan(removeSign);
         }
 
         /// <summary>

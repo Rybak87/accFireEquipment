@@ -23,7 +23,7 @@ namespace WindowsForms
             MyInitializeComponent();
 
             ContextMenuGetter.TreeView = myTreeView;
-            ContextMenuGetter.PictureContainer = picContainer;
+            ContextMenuGetter.Plan = picContainer;
 
             Dialogs.Owner = this;
             Dialogs.TreeView = myTreeView;
@@ -35,7 +35,7 @@ namespace WindowsForms
             }
 
             myTreeView.LoadFromContext();
-            myTreeView.LeftMouseClick += picContainer.LoadImage;
+            myTreeView.MouseClickSign += picContainer.LoadImage;
             ReportMenu.Click += (s, e) => new FormReport().Show(this);
             TypesEquipmentMenu.Click += (s, e) => new FormKinds().ShowDialog(this);
             StickersMenu.Click += (s, e) => new FormStickers().Show(this);

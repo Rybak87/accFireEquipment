@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Reflection;
+using System.Data.SqlClient;
 
 namespace BL
 {
@@ -100,6 +101,26 @@ namespace BL
         /// <param name="db">Контекст БД.</param>
         public static void Seed(BLContext db)
         {
+            ///summary
+            ///В связи с тем что EF6 не поддерживает создания каскадного удаления в ТРТ подходе
+            ///внешние ключи обновляются посредством SQL команд.
+            var commandDeleteForeignKey = @"ALTER TABLE {0}
+                DROP CONSTRAINT ""FK_{0}_dbo.ПожарныеШкафы_FireCabinetId""; ";
+
+            var commandAddForeignKey = @"ALTER TABLE {0}
+                ADD CONSTRAINT ""FK_{0}_dbo.ПожарныеШкафы_FireCabinetId"" FOREIGN KEY(FireCabinetId)
+                REFERENCES dbo.ПожарныеШкафы(Id)
+                ON DELETE CASCADE;";
+
+            db.Database.ExecuteSqlCommand(string.Format(commandDeleteForeignKey, "dbo.Огнетушители"));
+            db.Database.ExecuteSqlCommand(string.Format(commandAddForeignKey, "dbo.Огнетушители"));
+
+            db.Database.ExecuteSqlCommand(string.Format(commandDeleteForeignKey, "dbo.Рукава"));
+            db.Database.ExecuteSqlCommand(string.Format(commandAddForeignKey, "dbo.Рукава"));
+
+            db.Database.ExecuteSqlCommand(string.Format(commandDeleteForeignKey, "dbo.ПожарныеКраны"));
+            db.Database.ExecuteSqlCommand(string.Format(commandAddForeignKey, "dbo.ПожарныеКраны"));
+
             var tf = InitDefaultTypes<KindFireCabinet>(Properties.TypesCSV.typesFireCabinet);
             db.KindFireCabinets.AddRange(tf);
             var te = InitDefaultTypes<KindExtinguisher>(Properties.TypesCSV.typesExtinguisher);
