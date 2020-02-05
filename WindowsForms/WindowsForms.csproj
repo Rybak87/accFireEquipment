@@ -234,7 +234,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
     </Compile>
-    <Compile Include="ContextMenuGetter.cs" />
+    <Compile Include="Other\ContextMenuGetter.cs" />
     <EmbeddedResource Include="Forms\Entity\FormWorkKind.resx">
       <DependentUpon>FormWorkKind.cs</DependentUpon>
     </EmbeddedResource>
