@@ -28,6 +28,19 @@ namespace BL
         public virtual ICollection<History> Histories { get; set; }
 
         private History GetLastHistory(string propertyName) => Histories?.LastOrDefault(h => h.Property == propertyName);
+        private History GetLastHistoryOnDate(string propertyName, DateTime dataChange)
+        {
+            var modeTime = Properties.Settings.Default.UseTime;
+            Func<History, bool> datePicker;
+            if (modeTime)
+                datePicker = h => h.DateChange <= dataChange;
+            else
+                datePicker = h => h.DateChange.Date <= dataChange;
+
+
+            return Histories?.Where(datePicker).LastOrDefault(h => h.Property == propertyName);
+        }
+
         private string GetCurrentValue(PropertyInfo property) => property.GetValue(this).ToString();
 
         /// <summary>
@@ -40,6 +53,12 @@ namespace BL
             var dataChange = DateTime.Now;
             var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p), dataChange));
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
+        }
+
+        public IEnumerable<History> GetHistoriesOnDate(DateTime dataChange)
+        {
+            var properties = Reflection.GetPropertiesWithControlAttribute(this);
+            return properties.Select(p => GetLastHistoryOnDate(p.Name, dataChange));
         }
     }
 }

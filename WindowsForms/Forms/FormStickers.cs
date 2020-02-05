@@ -102,7 +102,7 @@ namespace WindowsForms
                 }
 
             var exl = new Excel.Application();
-            exl.Visible = true;
+            
             //Добавить рабочую книгу
             var workBook = exl.Workbooks.Add(Type.Missing);
             //Отключить отображение окон с сообщениями
@@ -136,6 +136,7 @@ namespace WindowsForms
             double currWidth = sheet.Columns.ColumnWidth;
             var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
             sheet.Columns.Font.Size = sizeFont;
+            exl.Visible = true;
         }
 
         /// <summary>

@@ -30,6 +30,11 @@ namespace WindowsForms
             Text = Strategy.GetFormName(currEntity);
         }
 
+        public override void BtnOK_Click(object sender, EventArgs e)
+        {
+            Strategy.btnOK(sender, e);
+        }
+
         protected override ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
         {
             var cbx = base.CreateComboBox(fullSize, prop, centerLocation);

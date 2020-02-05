@@ -156,32 +156,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\Entity\Dialogs.cs" />
-    <Compile Include="Forms\Entity\FormWorkKind.cs">
+    <Compile Include="Forms\FormsEntityWork\Dialogs.cs" />
+    <Compile Include="Forms\FormsEntityWork\FormWorkKind.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkKind.Designer.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkKind.Designer.cs">
       <DependentUpon>FormWorkKind.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkEquipment.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkEquipment.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkEquipment.Designer.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkEquipment.Designer.cs">
       <DependentUpon>FormWorkEquipment.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkExtinguisher.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkExtinguisher.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkExtinguisher.Designer.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkExtinguisher.Designer.cs">
       <DependentUpon>FormWorkExtinguisher.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkLocation.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkLocation.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormWorkLocation.Designer.cs">
+    <Compile Include="Forms\FormsEntityWork\FormWorkLocation.Designer.cs">
       <DependentUpon>FormWorkLocation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Entity\Strategy.cs" />
+    <Compile Include="Forms\FormsEntityWork\Strategy.cs" />
     <Compile Include="Forms\FormKinds.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -223,10 +223,10 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Forms\Entity\FormEntity.cs">
+    <Compile Include="Forms\FormsEntityWork\FormEntity.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Entity\FormEntity.designer.cs">
+    <Compile Include="Forms\FormsEntityWork\FormEntity.designer.cs">
       <DependentUpon>FormEntity.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
@@ -235,7 +235,7 @@
       <AutoGen>True</AutoGen>
     </Compile>
     <Compile Include="Other\ContextMenuGetter.cs" />
-    <EmbeddedResource Include="Forms\Entity\FormWorkKind.resx">
+    <EmbeddedResource Include="Forms\FormsEntityWork\FormWorkKind.resx">
       <DependentUpon>FormWorkKind.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormKinds.resx">
@@ -263,7 +263,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="Forms\Entity\FormEntity.resx">
+    <EmbeddedResource Include="Forms\FormsEntityWork\FormEntity.resx">
       <DependentUpon>FormEntity.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />

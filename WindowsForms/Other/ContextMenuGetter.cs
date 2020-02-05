@@ -142,6 +142,8 @@ namespace WindowsForms
             var signs = TreeView.GetChildSigns(removeSign);
             foreach(var sign in signs)
                 Plan.RemoveOfPlan(sign);
+            Plan.Image = null;
+            TreeView.SelectedNode = null;
 
             using (var ec = new EntityController())
             {

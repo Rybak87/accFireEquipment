@@ -66,84 +66,44 @@ namespace BL
                 datePicker = h => h.DateChange;
             else
                 datePicker = h => h.DateChange.Date;
-            //var dates = ex.Histories.Select(datePicker).Distinct();
-            var datesHistories = ex.Histories.GroupBy(datePicker);
 
-            foreach (var dateHistories in datesHistories)
+            var dates = ex.Histories.Select(datePicker).Distinct();
+
+            foreach (var date in dates)
             {
                 table.Rows.Add();
                 var tempStatus = "";
-                var date = dateHistories.Key;
 
-                foreach (var hys in dateHistories)
+                var historiesOnDate = ex.GetHistoriesOnDate(date);///////////////
+
+                foreach (var str in historiesOnDate)
                 {
-                    if (hys.Property == "Weight")
-                        table.Cell(row, column["Weight"]).Range.Text = hys.Value + "кг.";
-                    else if (hys.Property == "Pressure")
-                        table.Cell(row, column["Pressure"]).Range.Text = hys.Value + "кгс/см2";
-                    else if (hys.Property == "IsDented" && hys.Value == "True")
+                    if (str.Property == "Weight")
+                        table.Cell(row, column["Weight"]).Range.Text = str.Value + "кг.";
+                    else if (str.Property == "Pressure")
+                        table.Cell(row, column["Pressure"]).Range.Text = str.Value + "кгс/см2";
+                    else if (str.Property == "IsDented" && str.Value == "True")
                         tempStatus += "Поврежден корпус\n";
-                    else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
+                    else if (str.Property == "IsPaintDamage" && str.Value == "True")
                         tempStatus += "Повреждена краска\n";
-                    else if (hys.Property == "IsHandleDamage" && hys.Value == "True")
+                    else if (str.Property == "IsHandleDamage" && str.Value == "True")
                         tempStatus += "Повреждено ЗПУ\n";
-                    else if (hys.Property == "IsHose" && hys.Value == "False")
+                    else if (str.Property == "IsHose" && str.Value == "False")
                         tempStatus += "Отсутствует шланг\n";
-                    else if (hys.Property == "IsPressureGaugeFault" && hys.Value == "True")
+                    else if (str.Property == "IsPressureGaugeFault" && str.Value == "True")
                         tempStatus += "Поврежден манометр\n";
-                    else if (hys.Property == "IsLabelDamage" && hys.Value == "True")
+                    else if (str.Property == "IsLabelDamage" && str.Value == "True")
                         tempStatus += "Повреждена этикетка\n";
                 }
 
                 table.Cell(row, column["Date"]).Range.Text = date.ToShortDateString() + "г.";
+
+
                 if (tempStatus == "")
                     table.Cell(row, column["Status"]).Range.Text = "Норма";
                 else
                     table.Cell(row, column["Status"]).Range.Text = tempStatus.Trim();
                 row++;
-
-                //IEnumerable<History> oldHysOnDate = Enumerable.Empty<History>();
-
-                //foreach (var date in dates)
-                //{
-                //    table.Rows.Add();
-                //    IEnumerable<History> hysOnDate;
-                //    if (modeTime)
-                //        hysOnDate = GetLastHistoriesOnDate(ex, date);
-                //    else
-                //        hysOnDate = GetLastHistoriesOnDate(ex, date.AddDays(1));
-
-                //    if (hysOnDate.SequenceEqual(oldHysOnDate))
-                //        continue;
-                //    oldHysOnDate = hysOnDate;
-                //    var tempStatus = "";
-
-                //    foreach (var hys in hysOnDate)
-                //    {
-                //        if (hys.Property == "Weight")
-                //            table.Cell(row, numberOrderTable["Weight"]).Range.Text = hys.Value + "кг.";
-                //        else if (hys.Property == "Pressure")
-                //            table.Cell(row, numberOrderTable["Pressure"]).Range.Text = hys.Value + "кгс/см2";
-                //        else if (hys.Property == "IsDented" && hys.Value == "True")
-                //            tempStatus += "Поврежден корпус\n";
-                //        else if (hys.Property == "IsPaintDamage" && hys.Value == "True")
-                //            tempStatus += "Повреждена краска\n";
-                //        else if (hys.Property == "IsHandleDamage" && hys.Value == "True")
-                //            tempStatus += "Повреждено ЗПУ\n";
-                //        else if (hys.Property == "IsHose" && hys.Value == "False")
-                //            tempStatus += "Отсутствует шланг\n";
-                //        else if (hys.Property == "IsPressureGaugeFault" && hys.Value == "True")
-                //            tempStatus += "Поврежден манометр\n";
-                //        else if (hys.Property == "IsLabelDamage" && hys.Value == "True")
-                //            tempStatus += "Повреждена этикетка\n";
-                //    }
-                //    table.Cell(row, numberOrderTable["Date"]).Range.Text = date.ToShortDateString() + "г.";
-                //    if (tempStatus == "")
-                //        table.Cell(row, numberOrderTable["Status"]).Range.Text = "Норма";
-                //    else
-                //        table.Cell(row, numberOrderTable["Status"]).Range.Text = tempStatus.Trim();
-                //    row++;
-                //}
             }
         }
         /// <summary>

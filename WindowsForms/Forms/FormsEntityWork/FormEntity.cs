@@ -46,7 +46,7 @@ namespace WindowsForms
         /// Событие по добавлению сущности в БД.
         /// </summary>
         public event Action<EntityBase> EntityChanged;
-
+        #region Создание контролов
         /// <summary>
         /// Создание TextBox
         /// </summary>
@@ -171,6 +171,7 @@ namespace WindowsForms
             cntrl.DataBindings.Add("Value", currEntity, prop.Name);
             return cntrl;
         }
+        #endregion
 
         /// <summary>
         /// Проверка на корректные значения обязательных элементов управления.

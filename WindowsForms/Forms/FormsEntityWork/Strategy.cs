@@ -36,10 +36,8 @@ namespace WindowsForms
             this.formEntity = formEntity;
             this.needCountCopy = needCountCopy;
         }
-        public override string GetFormName(EntityBase entityBase)
-        {
-            return "Добавить " + entityBase.ToString();
-        }
+
+        public override string GetFormName(EntityBase entityBase) => "Добавить " + entityBase.ToString();
 
         public override void btnOK(object sender, EventArgs e)
         {
@@ -93,16 +91,20 @@ namespace WindowsForms
             this.formEntity = formEntity;
         }
 
-        public override string GetFormName(EntityBase entityBase)
-        {
-            return "Изменить " + entityBase.ToString();
-        }
+        public override string GetFormName(EntityBase entityBase) => "Изменить " + entityBase.ToString();
+
         public override void btnOK(object sender, EventArgs e)
         {
             if (!formEntity.CheckNeedControls())
                 return;
             formEntity.ec.Entry(formEntity.currEntity).State = EntityState.Modified;
-            formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
+
+            var eq = formEntity.currEntity as Equipment;
+            if (eq != null)
+            {
+                var histories = eq.GetNewHistories();
+                formEntity.ec.Set<History>().AddRange(histories);
+            }
             formEntity.ec.SaveChanges();
         }
 
