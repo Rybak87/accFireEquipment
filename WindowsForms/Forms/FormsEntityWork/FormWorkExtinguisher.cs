@@ -18,21 +18,16 @@ namespace WindowsForms
         /// </summary>
         private NumericUpDown numPressure;
 
-        public FormWorkExtinguisher(Type childType, EntitySign parentSign) : base(childType, parentSign)
+        public FormWorkExtinguisher(Type childType, EntitySign parentSign, Strategy strategy) : base(childType, parentSign, strategy)
         {
             InitializeComponent();
-            Text = Strategy.GetFormName(currEntity);
+            Text = strategy.GetFormName(currEntity);
         }
 
-        public FormWorkExtinguisher(EntitySign sign):base(sign)
+        public FormWorkExtinguisher(EntitySign sign, Strategy strategy) :base(sign, strategy)
         {
             InitializeComponent();
-            Text = Strategy.GetFormName(currEntity);
-        }
-
-        public override void BtnOK_Click(object sender, EventArgs e)
-        {
-            Strategy.ApplyChanged(sender, e);
+            Text = strategy.GetFormName(currEntity);
         }
 
         protected override ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)

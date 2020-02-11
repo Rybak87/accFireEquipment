@@ -1,13 +1,7 @@
 ﻿using BL;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -19,21 +13,18 @@ namespace WindowsForms
         /// </summary>
         public byte[] currPlan;
 
-        Strategy Strategy;
         Location currLocation;
-        public FormWorkLocation()
+        public FormWorkLocation(Strategy strategy) : base(strategy)
         {
             InitializeComponent();
-            Strategy = new AddStrategy(this);
             entityType = typeof(Location);
             currEntity = ec.CreateEntity(entityType);
             (currEntity as Location).Number = ec.GetNumber(currEntity as Location);
             PostInitialize();
         }
-        public FormWorkLocation(EntitySign locSign)
+        public FormWorkLocation(EntitySign locSign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
-            Strategy = new EditStrategy(this);
             entityType = locSign.Type;
             currEntity = ec.GetEntity(locSign);
             PostInitialize();
@@ -42,19 +33,19 @@ namespace WindowsForms
         /// <summary>
         /// Событие по кнопке ОК.
         /// </summary>
-        public event Action<byte[]> EntityChanged2;
+        public event Action<byte[]> LocationChanged;
 
         private void PostInitialize()
         {
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
-            Text = Strategy.GetFormName(currEntity);
-            var yPos = Strategy.CreateControls();
+            Text = strategy.GetFormName(currEntity);
+            var yPos = CreateControls();
             var halfSize = new Size(75, 25);
             var centerLocation = new Point(200, yPos);
             var centerHalfLocation = new Point(275, yPos);
             CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
-            Height = Height + 25;
+            Height += 25;
         }
 
         /// <summary>
@@ -105,11 +96,16 @@ namespace WindowsForms
             return cntrl;
         }
 
-        public override void BtnOK_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Обработчик события кнопки.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected override void BtnOK_Click(object sender, EventArgs e)
         {
             ((Location)currEntity).Plan = currPlan;
-            Strategy.ApplyChanged(sender, e);
-            EntityChanged2?.Invoke(currPlan);
+            base.BtnOK_Click(sender, e);
+            LocationChanged?.Invoke(currPlan);
         }
     }
 }

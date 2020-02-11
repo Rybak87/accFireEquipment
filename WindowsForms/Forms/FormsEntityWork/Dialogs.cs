@@ -34,38 +34,27 @@ namespace WindowsForms
         /// <param name="parentSign">Идентификатор родителя новой сущности.</param>
         public static void AddDialog(Type typeEntity, EntitySign parentSign = null)
         {
-            if (typeEntity.IsSubclassOf(typeof(KindBase)))
-            {
-                var frmAdd = new FormWorkKind(typeEntity);
-                frmAdd.ShowDialog(Owner);
-                frmAdd.Dispose();
-            }
+            var strategy = new AddStrategy();
+            strategy.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+            FormEntity frmAdd = null;
 
+            if (typeEntity.IsSubclassOf(typeof(KindBase)))
+                frmAdd = new FormWorkKind(typeEntity, strategy);
             else if (typeEntity == typeof(Location))
             {
-                var frmAdd = new FormWorkLocation();
-                frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-                frmAdd.EntityChanged2 += Plan.LoadImage;
-                frmAdd.ShowDialog(Owner);
-                frmAdd.Dispose();
+                frmAdd = new FormWorkLocation(strategy);
+                (frmAdd as FormWorkLocation).LocationChanged += Plan.LoadImage;
             }
             else if (typeEntity.IsSubclassOf(typeof(Equipment)))
             {
                 if (typeEntity == typeof(Extinguisher))
-                {
-                    var frmAdd = new FormWorkExtinguisher(typeEntity, parentSign);
-                    frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-                    frmAdd.ShowDialog(Owner);
-                    frmAdd.Dispose();
-                }
+                    frmAdd = new FormWorkExtinguisher(typeEntity, parentSign, strategy);
                 else
-                {
-                    var frmAdd = new FormWorkEquipment(typeEntity, parentSign);
-                    frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-                    frmAdd.ShowDialog(Owner);
-                    frmAdd.Dispose();
-                }
+                    frmAdd = new FormWorkEquipment(typeEntity, parentSign, strategy);
             }
+
+            frmAdd.ShowDialog(Owner);
+            frmAdd.Dispose();
         }
 
         /// <summary>
@@ -76,35 +65,26 @@ namespace WindowsForms
         {
             if (sign == null)
                 return;
+            var strategy = new EditStrategy();
+            FormEntity frmEdit = null;
+
             if (sign.Type.IsSubclassOf(typeof(KindBase)))
-            {
-                var frmAdd = new FormWorkKind(sign);
-                frmAdd.ShowDialog(Owner);
-                frmAdd.Dispose();
-            }
+                frmEdit = new FormWorkKind(sign, strategy);
             if (sign.Type == typeof(Location))
             {
-                var frmEdit = new FormWorkLocation(sign);
-                frmEdit.EntityChanged2 += Plan.LoadImage;
-                frmEdit.ShowDialog(Owner);
-                frmEdit.Dispose();
+                frmEdit = new FormWorkLocation(sign, strategy);
+                (frmEdit as FormWorkLocation).LocationChanged += Plan.LoadImage;
             }
             else if (sign.Type.IsSubclassOf(typeof(Equipment)))
             {
                 if (sign.Type == typeof(Extinguisher))
-                {
-                    var frmAdd = new FormWorkExtinguisher(sign);
-                    frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-                    frmAdd.ShowDialog(Owner);
-                    frmAdd.Dispose();
-                }
+                    frmEdit = new FormWorkExtinguisher(sign, strategy);
                 else
-                {
-                    var frmEdit = new FormWorkEquipment(sign);
-                    frmEdit.ShowDialog(Owner);
-                    frmEdit.Dispose();
-                }
+                    frmEdit = new FormWorkEquipment(sign, strategy);
             }
+
+            frmEdit.ShowDialog(Owner);
+            frmEdit.Dispose();
         }
     }
 }

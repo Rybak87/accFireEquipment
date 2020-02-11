@@ -181,7 +181,9 @@
     <Compile Include="Forms\FormsEntityWork\FormWorkLocation.Designer.cs">
       <DependentUpon>FormWorkLocation.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormsEntityWork\Strategy.cs" />
+    <Compile Include="Forms\FormsEntityWork\Strategy\AddStrategy.cs" />
+    <Compile Include="Forms\FormsEntityWork\Strategy\EditStrategy.cs" />
+    <Compile Include="Forms\FormsEntityWork\Strategy\Strategy.cs" />
     <Compile Include="Forms\FormKinds.cs">
       <SubType>Form</SubType>
     </Compile>

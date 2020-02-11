@@ -56,6 +56,6 @@ namespace BL
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Image GetIcon(Type type) => IconsImageList.Images[IconsImageIndex[type]];
+        public static Image GetIconImage(Type type) => IconsImageList.Images[IconsImageIndex[type]];
     }
 }

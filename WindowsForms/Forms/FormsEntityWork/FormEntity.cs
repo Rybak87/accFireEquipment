@@ -17,35 +17,36 @@ namespace WindowsForms
         /// <summary>
         /// Коллекция обязательных элементов управления.
         /// </summary>
-        public readonly List<Control> requiredControls = new List<Control>();
+        private readonly List<Control> requiredControls = new List<Control>();
 
         /// <summary>
         /// Текущий контекст.
         /// </summary>
-        public readonly EntityController ec = new EntityController();
+        protected readonly EntityController ec = new EntityController();
 
         /// <summary>
         /// Текущий тип сущности.
         /// </summary>
-        public Type entityType;
+        protected Type entityType;
 
         /// <summary>
         /// Текущая сущность.
         /// </summary>
-        public EntityBase currEntity;
+        protected EntityBase currEntity;
+
+        /// <summary>
+        /// Стратегия работы с сущностью.
+        /// </summary>
+        protected Strategy strategy;
 
         /// <summary>
         /// Конструктор.
         /// </summary>
-        public FormEntity()
+        public FormEntity(Strategy strategy)
         {
             InitializeComponent();
+            this.strategy = strategy;
         }
-
-        ///// <summary>
-        ///// Событие по добавлению сущности в БД.
-        ///// </summary>
-        //public event Action<EntityBase> EntityChanged;
 
         #region Создание контролов
         /// <summary>
@@ -202,7 +203,7 @@ namespace WindowsForms
             return false;
         }
 
-        public bool CheckNeedControls()
+        private bool CheckNeedControls()
         {
             if (EmptyNeedControls())
             {
@@ -217,8 +218,20 @@ namespace WindowsForms
         /// Создание элементов формы.
         /// </summary>
         /// <param name="yPosControl"></param>
-        public virtual int CreateControls(int yPosControl)
+        protected int CreateControls()
         {
+            var beforeControls = strategy.GetBeforeControls();
+            int yPosControl;
+            if (beforeControls != null)
+            {
+                Controls.AddRange(beforeControls);
+                yPosControl = (beforeControls.Length / 2 + 1) * 25;
+            }
+            else
+            {
+                yPosControl = 25;
+            }
+
             var editProperties = Reflection.GetEditProperties(currEntity);
             Control cntrl = null;
             var incSize = new Size(175, 25);
@@ -299,11 +312,11 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public virtual void BtnOK_Click(object sender, EventArgs e)
+        protected virtual void BtnOK_Click(object sender, EventArgs e)
         {
-            CheckNeedControls();
+            if (!CheckNeedControls())
+                return;
+            strategy.ApplyChanged(currEntity, ec);
         }
-
-        //public void EntityChangedInvoke(EntityBase entity) => EntityChanged?.Invoke(entity);
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using BL;
+using System;
 using System.Data.Entity;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace BL
+namespace WindowsForms
 {
     /// <summary>
     /// Иконка на плане.
@@ -11,8 +12,8 @@ namespace BL
     public class IconOnPlan : PictureBox, IDisposable
     {
         private Point MouseDownPosition;
-        private ScalePoint scalePoint;
         private Label label;
+        public ScalePoint scalePoint;
 
         /// <summary>
         /// Конструктор.
@@ -23,7 +24,7 @@ namespace BL
         /// <param name="size">Размер.</param>
         /// <param name="scalePoint">Относительная точка.</param>
         /// <param name="textLabel">Текст под иконкой.</param>
-        public IconOnPlan(Plan parent, Image image, EntitySign sign, Size size, ScalePoint scalePoint, string textLabel)
+        public IconOnPlan(Plan parent, EntitySign sign,  Size size, ScalePoint scalePoint, Image image, string textLabel)
         {
             Sign = sign;
             Parent = parent;
@@ -37,11 +38,53 @@ namespace BL
             Top = (int)(scalePoint.PercentTop * parent.Height);
 
             BringToFront();
-            MouseDown += PictureEntity_DragDropMove;
-            MouseMove += PictureEntity_MouseMove;
+            MouseDown += Icon_DragDropMove;
+            MouseMove += Icon_MouseMove;
+            MouseClick += Icon_MouseClick;
+            MouseDoubleClick += new MouseEventHandler((s2, e2) => Dialogs.EditDialog(sign));
             Resize += (s, e) => LabelRedraw();
             Move += (s, e) => LabelRedraw();
             LabelInit(textLabel);
+        }
+
+        private double ScaleLeft { get => (double)Left / Parent.Width; }
+        private double ScaleTop { get => (double)Top / Parent.Height; }
+
+        /// <summary>
+        /// Идентификатор сущности.
+        /// </summary>
+        public EntitySign Sign { get; }
+
+        private void Icon_DragDropMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+                MouseDownPosition = e.Location;
+        }
+
+        private void Icon_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+                return;
+
+            int dx = e.X - MouseDownPosition.X;
+            int dy = e.Y - MouseDownPosition.Y;
+            if (Math.Abs(dx) >= SystemInformation.DoubleClickSize.Width || Math.Abs(dy) >= SystemInformation.DoubleClickSize.Height)
+                DoDragDrop(sender, DragDropEffects.Move);
+        }
+
+        /// <summary>
+        /// Обработчик события щелка мышкой по иконке.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Icon_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                var icon = (IconOnPlan)sender;
+                var pointContextMenu = icon.PointToScreen(e.Location);
+                ContextMenuGetter.ShowContextMenu(icon.Sign, pointContextMenu);
+            }
         }
 
         private void LabelInit(string textLabel)
@@ -72,47 +115,10 @@ namespace BL
             base.Dispose();
         }
 
-        private double ScaleLeft { get => (double)Left / Parent.Width; }
-        private double ScaleTop { get => (double)Top / Parent.Height; }
-
-        /// <summary>
-        /// Идентификатор сущности.
-        /// </summary>
-        public EntitySign Sign { get; }
-
         /// <summary>
         /// Текст под иконкой.
         /// </summary>
         public string TextIcon { get => label.Text; set => label.Text = value; }
-
-        private void PictureEntity_DragDropMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-                MouseDownPosition = e.Location;
-        }
-        private void PictureEntity_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-                return;
-
-            int dx = e.X - MouseDownPosition.X;
-            int dy = e.Y - MouseDownPosition.Y;
-            if (Math.Abs(dx) >= SystemInformation.DoubleClickSize.Width || Math.Abs(dy) >= SystemInformation.DoubleClickSize.Height)
-                DoDragDrop(sender, DragDropEffects.Move);
-        }
-
-        /// <summary>
-        /// Изменение размера иконки.
-        /// </summary>
-        /// <param name="size">Размер иконки.</param>
-        public void CalcSizePosition(Size size)
-        {
-            if (Parent == null)
-                return;
-            Size = size;
-            Left = (int)(scalePoint.PercentLeft * Parent.Width);
-            Top = (int)(scalePoint.PercentTop * Parent.Height);
-        }
 
         /// <summary>
         /// Перерисовка подписи под иконкой.
@@ -149,7 +155,7 @@ namespace BL
         /// Изменение относительной точки.
         /// </summary>
         /// <param name="point">Расположение иконки на плане.</param>
-        public void NewLocation(Point point)
+        public void NewPosition(Point point)
         {
             Location = point;
             scalePoint.PercentLeft = (double)Left / Parent.Width;

@@ -22,9 +22,9 @@ namespace WindowsForms
         public FormKinds()
         {
             InitializeComponent();
-            FireCabinetsMenu.Image = IconsGetter.GetIcon(typeof(FireCabinet));
-            ExtinguishersMenu.Image = IconsGetter.GetIcon(typeof(Extinguisher));
-            HosesMenu.Image = IconsGetter.GetIcon(typeof(Hose));
+            FireCabinetsMenu.Image = IconsGetter.GetIconImage(typeof(FireCabinet));
+            ExtinguishersMenu.Image = IconsGetter.GetIconImage(typeof(Extinguisher));
+            HosesMenu.Image = IconsGetter.GetIconImage(typeof(Hose));
         }
 
         /// <summary>

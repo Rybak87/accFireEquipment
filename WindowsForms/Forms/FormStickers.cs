@@ -25,8 +25,8 @@ namespace WindowsForms
         public FormStickers()
         {
             InitializeComponent();
-            FireCabinetsMenu.Image = IconsGetter.GetIcon(typeof(FireCabinet));
-            ExtinguishersMenu.Image = IconsGetter.GetIcon(typeof(Extinguisher));
+            FireCabinetsMenu.Image = IconsGetter.GetIconImage(typeof(FireCabinet));
+            ExtinguishersMenu.Image = IconsGetter.GetIconImage(typeof(Extinguisher));
             FireCabinetsMenu.Click += (s, e) => FireCabinetsReport();
             ExtinguishersMenu.Click += (s, e) => ExtinguishersReport();
             txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;

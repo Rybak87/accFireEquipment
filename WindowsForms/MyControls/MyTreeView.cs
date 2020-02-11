@@ -37,6 +37,27 @@ namespace WindowsForms
         /// </summary>
         public event Action<EntitySign> MouseClickSign;
 
+        /// <summary>
+        /// Обрабатывает сообщения Windows.
+        /// </summary>
+        /// <param name="m">Сообщение.</param>
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == 0x203) // определение двойного клика
+            {
+                var localPos = PointToClient(Cursor.Position);
+                var localNode = GetNodeAt(localPos);
+                if (localNode != null)
+                {
+                    SelectedNode = localNode;
+                    Dialogs.EditDialog((EntitySign)localNode.Tag);
+                }
+
+                m.Result = IntPtr.Zero;
+            }
+            else base.WndProc(ref m);
+        }
+
         #region DragDrop
         private void treeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
@@ -88,9 +109,11 @@ namespace WindowsForms
                     }
                     draggedNode.Remove();
                     targetNode.Nodes.Add(draggedNode);
+                    MouseClickSign?.Invoke(sign);
                 }
 
                 targetNode.Expand();
+                
             }
         }
         #endregion
@@ -124,27 +147,6 @@ namespace WindowsForms
                 foreach (var node in nodes)
                     node.Value.Text = ec.GetEntity(node.Key).ToString();
             }
-        }
-
-        /// <summary>
-        /// Обрабатывает сообщения Windows.
-        /// </summary>
-        /// <param name="m">Сообщение.</param>
-        protected override void WndProc(ref Message m)
-        {
-            if (m.Msg == 0x203) // определение двойного клика
-            {
-                var localPos = PointToClient(Cursor.Position);
-                var localNode = GetNodeAt(localPos);
-                if (localNode != null)
-                {
-                    SelectedNode = localNode;
-                    Dialogs.EditDialog((EntitySign)localNode.Tag);
-                }
-
-                m.Result = IntPtr.Zero;
-            }
-            else base.WndProc(ref m);
         }
 
         /// <summary>

@@ -75,8 +75,8 @@ namespace WindowsForms
         {
             var frm = new FormSettings();
             frm.ChangeSample += myTreeView.RenameNodesOfType;
-            frm.ChangeSample += picContainer.DoRenameIcons;
-            frm.ChangeIconSize += picContainer.DoCoerciveResize;
+            frm.ChangeSample += picContainer.RenameIcons;
+            frm.ChangeIconSize += picContainer.ResizeIcons;
             frm.Show(this);
         }
 

@@ -1,5 +1,6 @@
 ﻿using BL;
 using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Sett = BL.Properties.Settings;
 
