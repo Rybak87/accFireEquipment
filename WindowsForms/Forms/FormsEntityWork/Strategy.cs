@@ -12,13 +12,22 @@ namespace WindowsForms
         protected FormEntity formEntity;
 
         public abstract string GetFormName(EntityBase entityBase);
-        public abstract void btnOK(object sender, EventArgs e);
+        public abstract void btnOK_Click(object sender, EventArgs e);
         public abstract int CreateControls();
     }
 
     public class AddStrategy : Strategy
     {
         protected bool needCountCopy;
+        
+        NumericUpDown numCountCopy;
+
+        public AddStrategy(FormEntity formEntity, bool needCountCopy = true)
+        {
+            this.formEntity = formEntity;
+            this.needCountCopy = needCountCopy;
+        }
+
         private int countCopy
         {
             get
@@ -29,17 +38,10 @@ namespace WindowsForms
                     return 1;
             }
         }
-        NumericUpDown numCountCopy;
-
-        public AddStrategy(FormEntity formEntity, bool needCountCopy = true)
-        {
-            this.formEntity = formEntity;
-            this.needCountCopy = needCountCopy;
-        }
 
         public override string GetFormName(EntityBase entityBase) => "Добавить " + entityBase.ToString();
 
-        public override void btnOK(object sender, EventArgs e)
+        public override void btnOK_Click(object sender, EventArgs e)
         {
             if (!formEntity.CheckNeedControls())
                 return;
@@ -93,7 +95,7 @@ namespace WindowsForms
 
         public override string GetFormName(EntityBase entityBase) => "Изменить " + entityBase.ToString();
 
-        public override void btnOK(object sender, EventArgs e)
+        public override void btnOK_Click(object sender, EventArgs e)
         {
             if (!formEntity.CheckNeedControls())
                 return;

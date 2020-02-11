@@ -88,7 +88,7 @@ namespace WindowsForms
         public override void BtnOK_Click(object sender, EventArgs e)
         {
             ((Location)currEntity).Plan = currPlan;
-            Strategy.btnOK(sender, e);
+            Strategy.btnOK_Click(sender, e);
             EntityChanged2?.Invoke(currPlan);
         }
 

@@ -40,7 +40,7 @@ namespace WindowsForms
         /// <param name="e"></param>
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            Strategy.btnOK(sender, e);
+            Strategy.btnOK_Click(sender, e);
             //base.BtnOK_Click(sender, e);
             //ec.AddEntity(currEntity);
         }
