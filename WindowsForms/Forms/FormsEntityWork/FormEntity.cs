@@ -42,10 +42,11 @@ namespace WindowsForms
             InitializeComponent();
         }
 
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<EntityBase> EntityChanged;
+        ///// <summary>
+        ///// Событие по добавлению сущности в БД.
+        ///// </summary>
+        //public event Action<EntityBase> EntityChanged;
+
         #region Создание контролов
         /// <summary>
         /// Создание TextBox
@@ -303,6 +304,6 @@ namespace WindowsForms
             CheckNeedControls();
         }
 
-        public void EntityChangedInvoke(EntityBase entity) => EntityChanged?.Invoke(entity);
+        //public void EntityChangedInvoke(EntityBase entity) => EntityChanged?.Invoke(entity);
     }
 }

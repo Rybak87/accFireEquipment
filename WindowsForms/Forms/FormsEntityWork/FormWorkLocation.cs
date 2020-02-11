@@ -28,7 +28,7 @@ namespace WindowsForms
             entityType = typeof(Location);
             currEntity = ec.CreateEntity(entityType);
             (currEntity as Location).Number = ec.GetNumber(currEntity as Location);
-            PostConstruct();
+            PostInitialize();
         }
         public FormWorkLocation(EntitySign locSign)
         {
@@ -36,10 +36,15 @@ namespace WindowsForms
             Strategy = new EditStrategy(this);
             entityType = locSign.Type;
             currEntity = ec.GetEntity(locSign);
-            PostConstruct();
+            PostInitialize();
         }
 
-        private void PostConstruct()
+        /// <summary>
+        /// Событие по кнопке ОК.
+        /// </summary>
+        public event Action<byte[]> EntityChanged2;
+
+        private void PostInitialize()
         {
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
@@ -51,6 +56,26 @@ namespace WindowsForms
             CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
             Height = Height + 25;
         }
+
+        /// <summary>
+        /// Диалог выбора и загрузки изображения плана.
+        /// </summary>
+        private void ImageDialog()
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    var data = File.ReadAllBytes(dialog.FileName);
+                    currPlan = data;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Удаление изображения с плана.
+        /// </summary>
+        private void ImageClear() => currPlan = null;
 
         /// <summary>
         /// Создание кнопок для загрузки и удаления изображений.
@@ -80,36 +105,11 @@ namespace WindowsForms
             return cntrl;
         }
 
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<byte[]> EntityChanged2;
-
         public override void BtnOK_Click(object sender, EventArgs e)
         {
             ((Location)currEntity).Plan = currPlan;
-            Strategy.btnOK_Click(sender, e);
+            Strategy.ApplyChanged(sender, e);
             EntityChanged2?.Invoke(currPlan);
         }
-
-        /// <summary>
-        /// Диалог выбора и загрузки изображения плана.
-        /// </summary>
-        private void ImageDialog()
-        {
-            using (OpenFileDialog dialog = new OpenFileDialog())
-            {
-                if (dialog.ShowDialog() == DialogResult.OK)
-                {
-                    var data = File.ReadAllBytes(dialog.FileName);
-                    currPlan = data;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Удаление изображения с плана.
-        /// </summary>
-        private void ImageClear() => currPlan = null;
     }
 }

@@ -18,9 +18,9 @@ namespace WindowsForms
         public static MyTreeView TreeView { get; set; }
 
         /// <summary>
-        /// Обновляемый PictureContainer
+        /// Обновляемый Plan
         /// </summary>
-        public static Plan PictureContainer { get; set; }
+        public static Plan Plan { get; set; }
 
         /// <summary>
         ///  Родительская форма для диалоговых окон.
@@ -32,7 +32,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="typeEntity">Тип сущности.</param>
         /// <param name="parentSign">Идентификатор родителя новой сущности.</param>
-        public static void AddDialog(Type typeEntity, EntitySign parentSign=null)
+        public static void AddDialog(Type typeEntity, EntitySign parentSign = null)
         {
             if (typeEntity.IsSubclassOf(typeof(KindBase)))
             {
@@ -45,7 +45,7 @@ namespace WindowsForms
             {
                 var frmAdd = new FormWorkLocation();
                 frmAdd.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
-                frmAdd.EntityChanged2 += PictureContainer.LoadImage;
+                frmAdd.EntityChanged2 += Plan.LoadImage;
                 frmAdd.ShowDialog(Owner);
                 frmAdd.Dispose();
             }
@@ -85,7 +85,7 @@ namespace WindowsForms
             if (sign.Type == typeof(Location))
             {
                 var frmEdit = new FormWorkLocation(sign);
-                frmEdit.EntityChanged2 += PictureContainer.LoadImage;
+                frmEdit.EntityChanged2 += Plan.LoadImage;
                 frmEdit.ShowDialog(Owner);
                 frmEdit.Dispose();
             }

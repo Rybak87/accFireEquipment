@@ -1,11 +1,8 @@
 ﻿using BL;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
 using Sett = BL.Properties.Settings;
 
 namespace WindowsForms
@@ -21,7 +18,6 @@ namespace WindowsForms
         private Filter filterExtinguisherSticker;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
         private Type lastType;
-        //private Task loadListView;
 
         /// <summary>
         /// Конструктор.
@@ -78,6 +74,25 @@ namespace WindowsForms
                 ExtinguishersReport();
         }
 
+
+        private List<string> GetStickers()
+        {
+            List<string> stickers = new List<string>();
+
+            IEnumerable<ListViewItem> listViewCollection;
+            if (listView.SelectedItems.Count == 0)
+                listViewCollection = listView.Items.Cast<ListViewItem>();
+            else
+                listViewCollection = listView.SelectedItems.Cast<ListViewItem>();
+
+            foreach (ListViewItem item in listViewCollection)
+            {
+                var str = item.SubItems[item.SubItems.Count - 1].Text;
+                stickers.Add(str);
+            }
+            return stickers;
+        }
+
         /// <summary>
         /// Обработчик события кнопки.
         /// </summary>
@@ -85,57 +100,20 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void btnOpenExcel_Click(object sender, EventArgs e)
         {
-            var stickers = new List<string>();
             if (listView.Items.Count == 0)
                 return;
-            if (listView.SelectedItems.Count == 0)
-                foreach (var item in listView.Items)
-                {
-                    var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
-                    stickers.Add(str);
-                }
-            else
-                foreach (var item in listView.SelectedItems)
-                {
-                    var str = ((ListViewItem)item).SubItems[((ListViewItem)item).SubItems.Count - 1].Text;
-                    stickers.Add(str);
-                }
 
-            var exl = new Excel.Application();
-            
-            //Добавить рабочую книгу
-            var workBook = exl.Workbooks.Add(Type.Missing);
-            //Отключить отображение окон с сообщениями
-            exl.DisplayAlerts = false;
-            //Получаем первый лист документа (счет начинается с 1)
-            var sheet = (Excel.Worksheet)exl.Worksheets.get_Item(1);
-            //Название листа (вкладки снизу)
-            sheet.Name = "Наклейки";
-
-            //sheet.Columns.ColumnWidth = 80 / numColumns.Value;
-            //sheet.Rows.RowHeight = 732 / numRows.Value;
-            exl.ActiveWindow.Zoom = 70;
-            exl.ActiveWindow.View = Excel.XlWindowView.xlPageLayoutView;
-
-            sheet.Columns.HorizontalAlignment = Excel.XlVAlign.xlVAlignCenter;
-            sheet.Columns.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
-
-            int i = 1;
-            int j = 1;
-            foreach (var item in stickers)
+            ExcelStickers exl;
+            try
             {
-                sheet.Cells[i, j] = string.Format(item);
-                j++;
-                if (j > numColumns.Value)
-                {
-                    j = 1; i++;
-                }
+                exl = new ExcelStickers();
             }
-            SetColumnsWidth(exl, sheet);
-            SetRowssWidth(exl, sheet);
-            double currWidth = sheet.Columns.ColumnWidth;
-            var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
-            sheet.Columns.Font.Size = sizeFont;
+            catch (Exception exept)
+            {
+                MessageBox.Show(exept.Message);
+                return;
+            }
+            exl.FillWorkSheet((int)numColumns.Value, (int)numRows.Value, GetStickers());
             exl.Visible = true;
         }
 
@@ -204,57 +182,6 @@ namespace WindowsForms
             sample = sample.Replace("#L", ((Location)entityBase.Parent).Number.ToString());
             sample = sample.Replace("#F", entityBase.Number.ToString());
             return sample;
-        }
-
-        /// <summary>
-        /// Установка ширины колонок в Excel.
-        /// </summary>
-        /// <param name="exl"></param>
-        /// <param name="sheet"></param>
-        private void SetColumnsWidth(Excel.Application exl, Excel.Worksheet sheet)
-        {
-            var pageWidth = exl.Application.CentimetersToPoints(21);
-            var leftMargin = sheet.PageSetup.LeftMargin;
-            var rightMargin = sheet.PageSetup.RightMargin;
-            var contentWidth = pageWidth - leftMargin - rightMargin;
-            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
-            var rate = (double)firstCell.Width / (double)firstCell.ColumnWidth;
-            sheet.Columns.ColumnWidth = (contentWidth / rate / (double)numColumns.Value);
-        }
-
-        /// <summary>
-        /// Установка высоты строк в Excel.
-        /// </summary>
-        /// <param name="exl"></param>
-        /// <param name="sheet"></param>
-        private void SetRowssWidth(Excel.Application exl, Excel.Worksheet sheet)
-        {
-            var pageHeight = exl.Application.CentimetersToPoints(29.7);
-            var topMargin = sheet.PageSetup.TopMargin;
-            var bottomMargin = sheet.PageSetup.BottomMargin;
-            var contentHeight = pageHeight - topMargin - bottomMargin;
-            var firstCell = (Excel.Range)sheet.Range[sheet.Cells[1, 1], sheet.Cells[1, 1]];
-            var rate = firstCell.Height / firstCell.RowHeight;
-            sheet.Columns.RowHeight = (contentHeight / rate / (double)numRows.Value);
-        }
-
-        /// <summary>
-        /// Вычисление размера шрифта.
-        /// </summary>
-        /// <param name="template"></param>
-        /// <param name="currWidth"></param>
-        /// <returns></returns>
-        private static int CalcFontSize(string template, double currWidth)
-        {
-            int currSizeFont = 8;
-            int len;
-            do
-            {
-                currSizeFont += 2;
-                var f = new Font("Calibri", currSizeFont, FontStyle.Regular);
-                len = TextRenderer.MeasureText(template, f).Width;
-            } while (currWidth * 7 > len);
-            return currSizeFont;
         }
     }
 }

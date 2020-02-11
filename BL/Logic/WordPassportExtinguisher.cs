@@ -10,7 +10,7 @@ namespace BL
     /// </summary>
     public class WordPassportExtinguisher
     {
-        private Word.Application word = new Word.Application();
+        private Word.Application word;
         private Word.Document workBook;
         private IEnumerable<Word.Bookmark> bookmarks;
         private const int ROW_FILL_START = 3;
@@ -27,6 +27,14 @@ namespace BL
         /// </summary>
         public WordPassportExtinguisher()
         {
+            try
+            {
+                word = new Word.Application();
+            }
+            catch
+            {
+                throw new Exception("Приложение Word не найдено");
+            }
             var template = AppDomain.CurrentDomain.BaseDirectory + "Resources\\PassportExtinguisher.dotx";
             workBook = word.Documents.Add(template);
             bookmarks = workBook.Bookmarks.Cast<Word.Bookmark>();
@@ -106,6 +114,7 @@ namespace BL
                 row++;
             }
         }
+
         /// <summary>
         /// Возвращает закладку в документе Word.
         /// </summary>

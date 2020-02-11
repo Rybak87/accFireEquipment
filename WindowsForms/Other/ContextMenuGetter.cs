@@ -22,6 +22,21 @@ namespace WindowsForms
         /// </summary>
         static ContextMenuGetter()
         {
+            dictContextMenu=InitializeDictionary();
+        }
+
+        /// <summary>
+        /// Обновляемый TreeView
+        /// </summary>
+        public static MyTreeView TreeView { get; set; }
+
+        /// <summary>
+        /// Обновляемый план.
+        /// </summary>
+        public static Plan Plan { get; set; }
+
+        private static Dictionary<Type, ContextMenuStrip> InitializeDictionary()
+        {
             //Контекстное меню проекта.
             var contextMenuProject = new ContextMenuStrip();
             contextMenuProject.Items.AddRange(new ToolStripItem[] {
@@ -69,7 +84,7 @@ namespace WindowsForms
                 GetStripMenuItem("Удалить",  MenuRemove_MouseClick),
                 GetStripMenuItem("Удалить с плана",  MenuRemoveIcon_MouseClick)});
 
-            dictContextMenu = new Dictionary<Type, ContextMenuStrip>
+            return new Dictionary<Type, ContextMenuStrip>
             {
                 [typeof(Int32)] = contextMenuProject,
                 [typeof(Location)] = contextMenuLocation,
@@ -79,16 +94,6 @@ namespace WindowsForms
                 [typeof(Hydrant)] = contextMenuHydrant
             };
         }
-
-        /// <summary>
-        /// Обновляемый TreeView
-        /// </summary>
-        public static MyTreeView TreeView { get; set; }
-
-        /// <summary>
-        /// Обновляемый план.
-        /// </summary>
-        public static Plan Plan { get; set; }
 
         /// <summary>
         /// Возвращает ячейку меню.
@@ -140,8 +145,8 @@ namespace WindowsForms
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
 
             var signs = TreeView.GetChildSigns(removeSign);
-            foreach(var sign in signs)
-                Plan.RemoveOfPlan(sign);
+            foreach (var sign in signs)
+                Plan.RemoveIcon(sign);
             Plan.Image = null;
             TreeView.SelectedNode = null;
 
@@ -161,7 +166,7 @@ namespace WindowsForms
         {
             var menuItem = (ToolStripMenuItem)sender;
             var removeSign = FindContextMenuStrip(menuItem).Tag as EntitySign;
-            Plan.RemoveOfPlan(removeSign);
+            Plan.RemoveIcon(removeSign);
         }
 
         /// <summary>
@@ -178,7 +183,16 @@ namespace WindowsForms
                 var ex = ec.GetEntity(sign) as Extinguisher;
 
                 var path = Application.StartupPath.ToString();
-                var wrd = new WordPassportExtinguisher();
+                WordPassportExtinguisher wrd;
+                try
+                {
+                    wrd = new WordPassportExtinguisher();
+                }
+                catch(Exception exept)
+                {
+                    MessageBox.Show(exept.Message);
+                    return;
+                }
                 wrd.CreatePassportExtinguisher(ex);
             }
         }

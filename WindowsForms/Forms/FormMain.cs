@@ -27,7 +27,7 @@ namespace WindowsForms
 
             Dialogs.Owner = this;
             Dialogs.TreeView = myTreeView;
-            Dialogs.PictureContainer = picContainer;
+            Dialogs.Plan = picContainer;
 
             using (var db = new BLContext())
             {

@@ -31,7 +31,7 @@ namespace BL
         }
 
         /// <summary>
-        /// Событие изменения размера текущего экземляра.
+        /// Событие изменения размера.
         /// </summary>
         private event Action<Size> PlanResize;
 
@@ -42,11 +42,12 @@ namespace BL
         {
             var ratioIconSize = Properties.Settings.Default.RatioIconSize;
             int minSize = Math.Min(Width, Height);
-            return new Size(minSize / ratioIconSize, minSize / ratioIconSize);
+            var side = minSize / ratioIconSize;
+            return new Size(side, side);
         }
 
         /// <summary>
-        /// Добавить новую иконку на план.
+        /// Добавить новую иконку на план при перетаскивании.
         /// </summary>
         /// <param name="e"></param>
         /// <param name="sign">Идентификатор сущности.</param>
@@ -85,12 +86,13 @@ namespace BL
         /// <returns></returns>
         private IEnumerable<IconOnPlan> GetIcons()
         {
-            foreach (Control control in Controls)
-            {
-                if (!(control is IconOnPlan))
-                    continue;
-                yield return control as IconOnPlan;
-            }
+            //foreach (Control control in Controls)
+            //{
+            //    if (!(control is IconOnPlan))
+            //        continue;
+            //    yield return control as IconOnPlan;
+            //}
+            return Controls.Cast<Control>().Where(c => c is IconOnPlan).Cast<IconOnPlan>().ToArray();
         }
 
         /// <summary>
@@ -213,7 +215,7 @@ namespace BL
         }
 
         /// <summary>
-        /// Загрузить изображение.
+        /// Загрузка изображения.
         /// </summary>
         /// <param name="sign">Идентификатор сущности.</param>
         public void LoadImage(EntitySign sign)
@@ -245,14 +247,17 @@ namespace BL
         }
 
         /// <summary>
-        /// Загрузить изображение.
+        /// Загрузка изображения.
         /// </summary>
         /// <param name="byteImage">Изображение.</param>
         public void LoadImage(byte[] byteImage)
         {
             this.SuspendDrawing();
             if (byteImage == null)
+            {
                 Image = null;
+                RemoveAllIcons();
+            }
             else
                 Image = Image.FromStream(new MemoryStream(byteImage));
             ResizeRelativePosition();
@@ -263,10 +268,19 @@ namespace BL
         /// Удалить иконку с плана.
         /// </summary>
         /// <param name="removeSign">Идентификатор.</param>
-        public void RemoveOfPlan(EntitySign removeSign)
+        public void RemoveIcon(EntitySign removeSign)
         {
             var icon = GetIcons().FirstOrDefault(i => i.Sign == removeSign);
             if (icon != null)
+                icon.Dispose();
+        }
+
+        /// <summary>
+        /// Удаление всех иконок с плана.
+        /// </summary>
+        public void RemoveAllIcons()
+        {
+            foreach (var icon in GetIcons())
                 icon.Dispose();
         }
 

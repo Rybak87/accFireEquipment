@@ -12,7 +12,7 @@ namespace WindowsForms
         protected FormEntity formEntity;
 
         public abstract string GetFormName(EntityBase entityBase);
-        public abstract void btnOK_Click(object sender, EventArgs e);
+        public abstract void ApplyChanged(object sender, EventArgs e);
         public abstract int CreateControls();
     }
 
@@ -39,13 +39,18 @@ namespace WindowsForms
             }
         }
 
+        /// <summary>
+        /// Событие по добавлению сущности в БД.
+        /// </summary>
+        public event Action<EntityBase> EntityAdd;
+
         public override string GetFormName(EntityBase entityBase) => "Добавить " + entityBase.ToString();
 
-        public override void btnOK_Click(object sender, EventArgs e)
+        public override void ApplyChanged(object sender, EventArgs e)
         {
             if (!formEntity.CheckNeedControls())
                 return;
-            formEntity.ec.EntityAdd += formEntity.EntityChangedInvoke;
+            formEntity.ec.EntityAdd += EntityAdd;//formEntity.EntityChangedInvoke;
             if (formEntity.currEntity as Hierarchy != null)
                 formEntity.ec.AddRangeEntity(formEntity.currEntity as Hierarchy, countCopy);
             else
@@ -95,7 +100,7 @@ namespace WindowsForms
 
         public override string GetFormName(EntityBase entityBase) => "Изменить " + entityBase.ToString();
 
-        public override void btnOK_Click(object sender, EventArgs e)
+        public override void ApplyChanged(object sender, EventArgs e)
         {
             if (!formEntity.CheckNeedControls())
                 return;

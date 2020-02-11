@@ -44,7 +44,7 @@ namespace WindowsForms
 
         public override void BtnOK_Click(object sender, EventArgs e)
         {
-            Strategy.btnOK_Click(sender, e);
+            Strategy.ApplyChanged(sender, e);
         }
     }
 }

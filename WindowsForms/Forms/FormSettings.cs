@@ -1,6 +1,5 @@
 ﻿using BL;
 using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 using Sett = BL.Properties.Settings;
 
@@ -11,6 +10,8 @@ namespace WindowsForms
     /// </summary>
     public partial class FormSettings : Form
     {
+
+        private int prevAbsoluteIconsSize;
 
         /// <summary>
         /// Конструктор.
@@ -41,8 +42,6 @@ namespace WindowsForms
         /// Событие по изменению настроек размеров иконок.
         /// </summary>
         public event Action ChangeIconSize;
-
-        private int prevAbsoluteIconsSize;
 
         /// <summary>
         /// Обработчик события кнопки.
@@ -87,17 +86,6 @@ namespace WindowsForms
             Sett.Default.RatioIconSize = InverseIconSize(scrIconSize.Value);
             ChangeIconSize?.Invoke();
             lblIconSize.Text = scrIconSize.Value.ToString();
-        }
-
-        /// <summary>
-        /// Обработчик события закрытия формы.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
-            //ChangeIconSize?.Invoke();
         }
 
         /// <summary>
