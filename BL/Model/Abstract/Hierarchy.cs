@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BL
@@ -8,6 +9,8 @@ namespace BL
     /// </summary>
     public abstract class Hierarchy : EntityBase
     {
+        
+
         /// <summary>
         /// Порядковый номер.
         /// </summary>
@@ -20,7 +23,5 @@ namespace BL
         /// </summary>
         [NotMapped]
         public abstract Location GetLocation { get; }
-
-        public abstract Hierarchy Clone();
     }
 }

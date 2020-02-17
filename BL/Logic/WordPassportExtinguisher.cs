@@ -82,7 +82,7 @@ namespace BL
                 table.Rows.Add();
                 var tempStatus = "";
 
-                var historiesOnDate = ex.GetHistoriesOnDate(date);///////////////
+                var historiesOnDate = ex.HistoriesOnDate(date);///////////////
 
                 foreach (var str in historiesOnDate)
                 {

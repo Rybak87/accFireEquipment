@@ -17,6 +17,8 @@ namespace WindowsForms
         private Filter filterFireCabinetSticker;
         private Filter filterExtinguisherSticker;
         private Func<EntityBase, bool> NeedSticker = ent => !((ISticker)ent).IsSticker;
+        private Func<Equipment, string> fireCabinetFunc;
+        private Func<Equipment, string> extinguisherFunc;
         private Type lastType;
         Dictionary<Type, Action> dictReport;
         Dictionary<Type, Action> dictInitColums;
@@ -42,44 +44,27 @@ namespace WindowsForms
             ExtinguishersMenu.Image = IconsGetter.GetIconImage(typeof(Extinguisher));
             FireCabinetsMenu.Click += (s, e) => Report(typeof(FireCabinet));
             ExtinguishersMenu.Click += (s, e) => Report(typeof(Extinguisher));
-            txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
-            txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
-            filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
-            filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
 
             txbFireCabinets.Tag = typeof(FireCabinet);
             txbExtinguishers.Tag = typeof(Extinguisher);
+            txbFireCabinets.Text = Sett.Default.SampleNameFireCabinets;
+            txbExtinguishers.Text = Sett.Default.SampleNameExtinguishers;
 
+            fireCabinetFunc = eq => GetterOfType.GetName(eq, txbFireCabinets.Text);
+            extinguisherFunc = eq => GetterOfType.GetName(eq, txbExtinguishers.Text);
+
+            filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, fireCabinetFunc));
+            filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, extinguisherFunc));
         }
 
         private void Report(Type type)
         {
+            if (type == null)
+                return;
             dictInitColums[type].Invoke();
             lastType = type;
             dictReport[type].Invoke();
         }
-
-
-
-        ///// <summary>
-        ///// Вывод пожарных шкафов в ListView.
-        ///// </summary>
-        //private void FireCabinetsReport()
-        //{
-        //    listView.InitColumns("Тип", "Наклейка");
-        //    lastType = typeof(FireCabinet);
-        //    listView.EntityReport(typeof(FireCabinet), fName, filterFireCabinetSticker);
-        //}
-
-        ///// <summary>
-        ///// Вывод огнетушителей в ListView.
-        ///// </summary>
-        //private void ExtinguishersReport()
-        //{
-        //    listView.InitColumns("Тип", "Пожарный шкаф", "Наклейка");
-        //    lastType = typeof(Extinguisher);
-        //    listView.EntityReport(typeof(Extinguisher), fName, fParent, filterExtinguisherSticker);
-        //}
 
         /// <summary>
         /// Обработчик события кнопки.
@@ -88,13 +73,10 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void btnApply_Click(object sender, EventArgs e)
         {
-            if (Helper.CorrectSample(new TextBox[] { txbFireCabinets, txbExtinguishers }) == 0)
+            var textBoxes = new TextBox[] { txbFireCabinets, txbExtinguishers };
+            if (!Helper.CorrectSample(textBoxes))
                 return;
 
-            //if (lastType == typeof(FireCabinet))
-            //    FireCabinetsReport();
-            //else if (lastType == typeof(Extinguisher))
-            //    ExtinguishersReport();
             Report(lastType);
         }
 
@@ -163,49 +145,36 @@ namespace WindowsForms
         {
             if (chkWithoutStickers.Checked)
             {
-                filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerFireCabinet));
-                filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, CreateStickerExtinguisher));
+                filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, fireCabinetFunc));
+                filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, extinguisherFunc));
             }
             else
             {
-                filterFireCabinetSticker = new Filter(true, new Instruction(CreateStickerFireCabinet));
-                filterExtinguisherSticker = new Filter(true, new Instruction(CreateStickerExtinguisher));
+                filterFireCabinetSticker = new Filter(true, new Instruction(fireCabinetFunc));
+                filterExtinguisherSticker = new Filter(true, new Instruction(extinguisherFunc));
             }
 
-            //if (lastType == typeof(FireCabinet))
-            //    FireCabinetsReport();
-            //else if (lastType == typeof(Extinguisher))
-            //    ExtinguishersReport();
             Report(lastType);
         }
 
-        /// <summary>
-        /// Возвращает строку шаблона именования огнетушителя.
-        /// </summary>
-        /// <param name="entityBase"></param>
-        /// <returns></returns>
-        private string CreateStickerExtinguisher(EntityBase entityBase)
-        {
-            Extinguisher ex = (Extinguisher)entityBase;
-            var sample = txbExtinguishers.Text;
-            sample = sample.Replace("#L", (ex.GetLocation).Number.ToString());
-            sample = sample.Replace("#F", ((FireCabinet)(ex.Parent)).Number.ToString());
-            sample = sample.Replace("#E", ex.Number.ToString());
-            return sample;
-        }
+        ///// <summary>
+        ///// Возвращает строку шаблона именования огнетушителя.
+        ///// </summary>
+        ///// <param name="entityBase"></param>
+        ///// <returns></returns>
+        //private string CreateStickerExtinguisher(EntityBase entityBase)
+        //{
+        //    return GetterOfType.GetName(entityBase as Hierarchy, txbExtinguishers.Text);
+        //}
 
-        /// <summary>
-        /// Возвращает строку шаблона именования пожарного шкафа.
-        /// </summary>
-        /// <param name="entityBase"></param>
-        /// <returns></returns>
-        private string CreateStickerFireCabinet(EntityBase entityBase)
-        {
-            FireCabinet fc = (FireCabinet)entityBase;
-            var sample = txbFireCabinets.Text;
-            sample = sample.Replace("#L", ((Location)fc.Parent).Number.ToString());
-            sample = sample.Replace("#F", fc.Number.ToString());
-            return sample;
-        }
+        ///// <summary>
+        ///// Возвращает строку шаблона именования пожарного шкафа.
+        ///// </summary>
+        ///// <param name="entityBase"></param>
+        ///// <returns></returns>
+        //private string CreateStickerFireCabinet(EntityBase entityBase)
+        //{
+        //    return GetterOfType.GetName(entityBase as Hierarchy, txbFireCabinets.Text);
+        //}
     }
 }

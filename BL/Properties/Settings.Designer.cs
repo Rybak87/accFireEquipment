@@ -12,7 +12,7 @@ namespace BL.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.3.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,7 +37,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ПК-#L.#F")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ПК-#L.#N")]
         public string SampleNameFireCabinets {
             get {
                 return ((string)(this["SampleNameFireCabinets"]));
@@ -49,7 +49,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#L.#F/#E")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#L.#F/#N")]
         public string SampleNameExtinguishers {
             get {
                 return ((string)(this["SampleNameExtinguishers"]));
@@ -61,7 +61,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Рукав №#N")]
         public string SampleNameHoses {
             get {
                 return ((string)(this["SampleNameHoses"]));
@@ -73,7 +73,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ПК-#L.#F")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ПК-#L.#N")]
         public string DefaultSampleNameFireCabinets {
             get {
                 return ((string)(this["DefaultSampleNameFireCabinets"]));
@@ -82,7 +82,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#L.#F/#E")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#L.#F/#N")]
         public string DefaultSampleNameExtinguishers {
             get {
                 return ((string)(this["DefaultSampleNameExtinguishers"]));
@@ -91,7 +91,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Рукав №#H")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Рукав №#N")]
         public string DefaultSampleNameHoses {
             get {
                 return ((string)(this["DefaultSampleNameHoses"]));
@@ -100,7 +100,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Пожарный кран №#D")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Пожарный кран №#N")]
         public string SampleNameHydrants {
             get {
                 return ((string)(this["SampleNameHydrants"]));
@@ -112,7 +112,7 @@ namespace BL.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Пожарный кран №#D")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Пожарный кран №#N")]
         public string DefaultSampleNameHydrants {
             get {
                 return ((string)(this["DefaultSampleNameHydrants"]));

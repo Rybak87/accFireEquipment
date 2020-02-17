@@ -19,7 +19,7 @@ namespace BL
         public event Action<EntityBase> EntityAdd;
 
         /// <summary>
-        /// Событие по добавлению сущностей в БД.
+        /// Событие по добавлению иерархических сущностей в БД.
         /// </summary>
         public event Action<Hierarchy[]> HierarchyAddRange;
 
@@ -32,15 +32,9 @@ namespace BL
         /// Добавляет сущность в БД.
         /// Вызывает событие по добавлению сущности.
         /// </summary>
-        public void AddEntity2(EntityBase entity)
+        public void AddEntity(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
-            var eq = entity as Equipment;
-            if (eq != null)
-            {
-                var histories = eq.GetNewHistories();
-                Set<History>().AddRange(histories);
-            }
             SaveChanges();
             EntityAdd?.Invoke(entity);
         }
@@ -50,76 +44,41 @@ namespace BL
         /// </summary>
         /// <param name="entity">Иерархическая сущность.</param>
         /// <param name="count">Количество копий.</param>
-        public void AddRangeEntity2(Hierarchy entity, int count)
+        public void AddRangeHierarchy(Hierarchy entity, int count = 1)
         {
-            AddEntity2(entity);
-            var sign = entity.GetSign();
-            var table = Set(sign.Type);
-            int currNumber = entity.Number;
-            var temp = (Hierarchy)Entry(entity).CurrentValues.ToObject();//Сохранят значения уже добавленной 1-ой сущности
-            temp.Id = 0;
-            for (int i = 1; i < count; i++)
-            {
-                currNumber++;
-                var newEntity = (Hierarchy)table.Create();
-                table.Attach(newEntity);
-                Entry(newEntity).CurrentValues.SetValues(temp);//Устанавливает значения уже добавленной 1-ой сущности в новую копию
-                newEntity.Number = currNumber;
-                AddEntity2(newEntity);
-            }
-        }
-
-        public void AddEntity(DbSet table, EntityBase entity)
-        {
-            table.Add(entity);
-            var eq = entity as Equipment;
-            if (eq != null)
-            {
-                var histories = eq.GetCreateHistories();
-                Set<History>().AddRange(histories);
-            }
-            //SaveChanges();
-            //EntityAdd?.Invoke(entity);
-        }
-
-        public void AddRangeEntity(Hierarchy entity, int count)
-        {
-            var list = new List<Hierarchy>(count);
-            var table = Set(entity.GetType());
-            int currNumber = entity.Number;
-            list.Add(entity);
-            IEnumerable<History> histories = null;
+            var list = GetCopies(entity, count);
+            Set(entity.GetType()).AddRange(list);
             if (entity is Equipment)
             {
-                histories = (entity as Equipment).GetCreateHistories();
+                var histories = list.Cast<Equipment>().SelectMany(e => e.CreateHistories());
                 Set<History>().AddRange(histories);
             }
-            for (int i = 1; i < count; i++)
-            {
-                currNumber++;
-                var newEntity = entity.Clone();
-                list.Add(newEntity);
-                newEntity.Number = currNumber;
-                if (newEntity is Equipment)
-                {
-                    var newHistories = histories.Select(h => new History
-                    {
-                        DateChange = h.DateChange,
-                        Property = h.Property,
-                        Value = h.Value,
-                        Equipment = newEntity as Equipment
-                    });
-                    Set<History>().AddRange(newHistories);
-                }
-            }
-            table.AddRange(list);
+
             SaveChanges();
             HierarchyAddRange?.Invoke(list.ToArray());
         }
 
-        void asdf()
+        private IEnumerable<Hierarchy> GetCopies(Hierarchy entity, int count)
         {
+            var properties = Reflection.GetPropertiesWithCopyingAttribute(entity.GetType());
+            var entities = new List<Hierarchy>(count);
+            var values = new List<object>(properties.Count);
+            int currNumber = entity.Number;
 
+            entities.Add(entity);
+            foreach (var prop in properties)
+                values.Add(prop.GetValue(entity));
+
+            for (int i = 1; i < count; i++)
+            {
+                currNumber++;
+                var newEntity = Set(entity.GetType()).Create() as Hierarchy;
+                entities.Add(newEntity);
+                for (int j = 0; j < properties.Count; j++)
+                    properties[j].SetValue(newEntity, values[j]);
+                newEntity.Number = currNumber;
+            }
+            return entities;
         }
 
         /// <summary>

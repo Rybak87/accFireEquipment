@@ -6,28 +6,28 @@
       <Value Profile="(Default)">20</Value>
     </Setting>
     <Setting Name="SampleNameFireCabinets" Type="System.String" Scope="User">
-      <Value Profile="(Default)">ПК-#L.#F</Value>
+      <Value Profile="(Default)">ПК-#L.#N</Value>
     </Setting>
     <Setting Name="SampleNameExtinguishers" Type="System.String" Scope="User">
-      <Value Profile="(Default)">#L.#F/#E</Value>
+      <Value Profile="(Default)">#L.#F/#N</Value>
     </Setting>
     <Setting Name="SampleNameHoses" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Рукав №#N</Value>
     </Setting>
     <Setting Name="DefaultSampleNameFireCabinets" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">ПК-#L.#F</Value>
+      <Value Profile="(Default)">ПК-#L.#N</Value>
     </Setting>
     <Setting Name="DefaultSampleNameExtinguishers" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">#L.#F/#E</Value>
+      <Value Profile="(Default)">#L.#F/#N</Value>
     </Setting>
     <Setting Name="DefaultSampleNameHoses" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Рукав №#H</Value>
+      <Value Profile="(Default)">Рукав №#N</Value>
     </Setting>
     <Setting Name="SampleNameHydrants" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Пожарный кран №#D</Value>
+      <Value Profile="(Default)">Пожарный кран №#N</Value>
     </Setting>
     <Setting Name="DefaultSampleNameHydrants" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Пожарный кран №#D</Value>
+      <Value Profile="(Default)">Пожарный кран №#N</Value>
     </Setting>
     <Setting Name="UseTime" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

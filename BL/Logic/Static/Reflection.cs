@@ -13,6 +13,8 @@ namespace BL
     /// </summary>
     public static class Reflection
     {
+        static Dictionary<Type, (List<PropertyInfo> control, List<PropertyInfo> copying)> dictProperty = new Dictionary<Type, (List<PropertyInfo>, List<PropertyInfo>)>();
+
         /// <summary>
         /// Поиск аттрибута конкретного типа.
         /// </summary>
@@ -43,8 +45,27 @@ namespace BL
         /// <summary>
         /// Возвращает свойства пожарного инвентаря с атрибутом создания элементов.
         /// </summary>
-        /// <param name="entity">Пожарный инвентарь.</param>
-        public static List<PropertyInfo> GetPropertiesWithControlAttribute(Equipment entity) =>
-            entity?.GetType().GetProperties().Where(p => GetAttribute<ControlAttribute>(p) != null).ToList();
+        /// <param name="type">Тип.</param>
+        public static List<PropertyInfo> GetPropertiesWithControlAttribute(Type type) => FindOrCreate(type).control;
+
+        /// <summary>
+        /// Возвращает свойства пожарного инвентаря с атрибутом копирования.
+        /// </summary>
+        /// <param name="type">Тип.</param>
+        public static List<PropertyInfo> GetPropertiesWithCopyingAttribute(Type type) => FindOrCreate(type).copying;
+
+        private static (List<PropertyInfo> control, List<PropertyInfo> copying) FindOrCreate(Type type)
+        {
+            if (dictProperty.Keys.Contains(type))
+                return dictProperty[type];
+            else
+            {
+                var newControlProperties = type.GetProperties().Where(p => GetAttribute<ControlAttribute>(p) != null).ToList();
+                var newCopyingProperties = type.GetProperties().Where(p => GetAttribute<CopyingAttribute>(p) != null).ToList();
+                var tuple = (newControlProperties, newCopyingProperties);
+                dictProperty.Add(type, tuple);
+                return tuple;
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BL
@@ -70,7 +71,7 @@ namespace BL
             sheet.Columns.RowHeight = (contentHeight / rate / numRows);
         }
 
-        public void FillWorkSheet(int numColumns, int numRows, List<string> stickers)
+        public void FillWorkSheet(int numColumns, int numRows, IEnumerable<string> stickers)
         {
             SetColumnsWidth(numColumns);
             SetRowssWidth(numRows);
@@ -86,7 +87,7 @@ namespace BL
                 }
             }
             double currWidth = sheet.Columns.ColumnWidth;
-            var sizeFont = CalcFontSize(string.Format(stickers[0]), currWidth);
+            var sizeFont = CalcFontSize(string.Format(stickers.Last()), currWidth);
             sheet.Columns.Font.Size = sizeFont;
         }
 

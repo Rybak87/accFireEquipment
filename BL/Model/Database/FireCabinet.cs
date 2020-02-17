@@ -49,6 +49,7 @@ namespace BL
         /// Вид пожарного шкафа.
         /// </summary>
         [Column("Тип пожарного шкафа")]
+        [Copying]
         [Control("ComboBox", true, 1)]
         public virtual KindFireCabinet KindFireCabinet { get; set; }
 
@@ -56,6 +57,7 @@ namespace BL
         /// Повреждение корпуса
         /// </summary>
         [Column("Повреждение")]
+        [Copying]
         [Control("CheckBox", false, 3)]
         public bool IsDented { get; set; }
 
@@ -63,6 +65,7 @@ namespace BL
         /// Наличие наклейки
         /// </summary>
         [Column("Наклейка")]
+        [Copying]
         [Control("CheckBox", false, 4)]
         public bool IsSticker { get; set; }
 
@@ -75,6 +78,7 @@ namespace BL
         /// Помещение.
         /// </summary>
         [Column("Помещение")]
+        [Copying]
         public virtual Location Location { get; set; }
 
         /// <summary>
@@ -92,21 +96,10 @@ namespace BL
         /// </summary>
         public virtual ICollection<Hydrant> Hydrants { get; set; }
 
-        public override Hierarchy Clone()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>
-        public override string ToString()
-        {
-            var sample = Properties.Settings.Default.SampleNameFireCabinets;
-            sample = sample.Replace("#L", Location.Number.ToString());
-            sample = sample.Replace("#F", Number.ToString());
-            return sample;
-        }
+        public override string ToString() => GetterOfType.GetName(this);
     }
 }
 

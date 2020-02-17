@@ -1,6 +1,7 @@
 ﻿using BL;
 using System;
-using System.Drawing;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 using Sett = BL.Properties.Settings;
 
@@ -51,12 +52,10 @@ namespace WindowsForms
         /// <param name="e"></param>
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
-            if (Helper.CorrectSample(new TextBox[] { txbFireCabinets, txbExtinguishers, txbHoses, txbHydrants }) == 0)
+            var textBoxes = new TextBox[] { txbFireCabinets, txbExtinguishers, txbHoses, txbHydrants };
+            if (!Helper.CorrectSample(textBoxes))
                 return;
-            SetSampleName(txbFireCabinets);
-            SetSampleName(txbExtinguishers);
-            SetSampleName(txbHoses);
-            SetSampleName(txbHydrants);
+            SetSampleName(textBoxes);
 
             prevAbsoluteIconsSize = scrIconSize.Value;
             Sett.Default.RatioIconSize = InverseIconSize(prevAbsoluteIconsSize);
@@ -65,15 +64,18 @@ namespace WindowsForms
             Close();
         }
 
-        private void SetSampleName(TextBox textBox)
+        private void SetSampleName(IEnumerable<TextBox> textBoxes)
         {
-            var type = textBox.Tag as Type;
-            var value = textBox.Text.Trim();
-            if (value != GetterOfType.GetSampleNaming(type))
+            foreach (var textBox in textBoxes)
             {
-                var sample = value == string.Empty ? GetterOfType.GetDefaultSampleNaming(type) : textBox.Text;
-                GetterOfType.SetSampleNaming(type, sample);
-                ChangeSample?.Invoke(type);
+                var type = textBox.Tag as Type;
+                var value = textBox.Text.Trim();
+                if (value != GetterOfType.GetSampleNaming(type))
+                {
+                    var sample = value == string.Empty ? GetterOfType.GetDefaultSampleNaming(type) : textBox.Text;
+                    GetterOfType.SetSampleNaming(type, sample);
+                    ChangeSample?.Invoke(type);
+                }
             }
         }
 

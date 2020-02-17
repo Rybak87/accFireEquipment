@@ -34,7 +34,7 @@ namespace WindowsForms
             var eq = entity as Equipment;
             if (eq != null)
             {
-                var histories = eq.GetNewHistories();
+                var histories = eq.AddHistories();
                 ec.Set<History>().AddRange(histories);
             }
             ec.SaveChanges();

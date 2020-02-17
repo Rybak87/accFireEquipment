@@ -48,10 +48,10 @@ namespace WindowsForms
             ec.EntityAdd += EntityChanged;
             ec.HierarchyAddRange += HierarchyChangedRange;
             if (entity as Hierarchy != null)
-                ec.AddRangeEntity(entity as Hierarchy, countCopy);
+                ec.AddRangeHierarchy(entity as Hierarchy, countCopy);
             else
-                //ec.AddEntity(entity);
-                ec.AddRangeEntity(entity as Hierarchy, 1);
+                ec.AddEntity(entity);
+            //ec.AddRangeEntity(entity as Hierarchy);
             ec.SaveChanges();
         }
 

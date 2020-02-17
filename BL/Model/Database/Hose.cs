@@ -47,6 +47,7 @@ namespace BL
         /// Вид рукава.
         /// </summary>
         [Column("Тип рукава")]
+        [Copying]
         [Control("ComboBox", true, 1)]
         public virtual KindHose KindHose { get; set; }
 
@@ -54,6 +55,7 @@ namespace BL
         /// Дата производства
         /// </summary>
         [Column("Дата производства")]
+        [Copying]
         [Control("DateTimePicker", false, 3)]
         public DateTime DateProduction { get; set; }
 
@@ -61,6 +63,7 @@ namespace BL
         /// Дата перекатки
         /// </summary>
         [Column("Дата перекатки")]
+        [Copying]
         [Control("DateTimePicker", false, 4)]
         public DateTime DateRolling { get; set; }
 
@@ -68,6 +71,7 @@ namespace BL
         /// Повреждения
         /// </summary>
         [Column("Повреждения")]
+        [Copying]
         [Control("CheckBox", false, 5)]
         public bool IsRagged { get; set; }
 
@@ -80,24 +84,13 @@ namespace BL
         /// Пожарный шкаф.
         /// </summary>
         [Column("Пожарный шкаф")]
+        [Copying]
         public virtual FireCabinet FireCabinet { get; set; }
-
-        public override Hierarchy Clone()
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>
-        public override string ToString()
-        {
-            var sample = Properties.Settings.Default.SampleNameHoses;
-            sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
-            sample = sample.Replace("#F", FireCabinet.Number.ToString());
-            sample = sample.Replace("#H", Number.ToString());
-            return sample;
-        }
+        public override string ToString() => GetterOfType.GetName(this);
 
     }
 }

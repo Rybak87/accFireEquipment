@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Sett = BL.Properties.Settings;
 
 namespace BL
@@ -14,22 +12,22 @@ namespace BL
     {
         private static Dictionary<Type, DataOfType> dictOfType = new Dictionary<Type, DataOfType>()
         {
-            [typeof(FireCabinet)] = new DataOfType("LF", "Пожарный шкаф", "Пожарные шкафы",
+            [typeof(FireCabinet)] = new DataOfType("NL", "Пожарный шкаф", "Пожарные шкафы",
                 () => Sett.Default.SampleNameFireCabinets,
                 (str) => Sett.Default.SampleNameFireCabinets = str,
                 () => Sett.Default.DefaultSampleNameFireCabinets),
 
-            [typeof(Extinguisher)] = new DataOfType("LFE", "Огнетушитель", "Огнетушители",
+            [typeof(Extinguisher)] = new DataOfType("NLF", "Огнетушитель", "Огнетушители",
                 () => Sett.Default.SampleNameExtinguishers,
                 (str) => Sett.Default.SampleNameExtinguishers = str,
                 () => Sett.Default.DefaultSampleNameExtinguishers),
 
-            [typeof(Hose)] = new DataOfType("LFH", "Рукав", "Рукава",
+            [typeof(Hose)] = new DataOfType("NLF", "Рукав", "Рукава",
                 () => Sett.Default.SampleNameHoses,
                 (str) => Sett.Default.SampleNameHoses = str,
                 () => Sett.Default.DefaultSampleNameHoses),
 
-            [typeof(Hydrant)] = new DataOfType("LFD", "Пожарный кран", "Пожарные краны",
+            [typeof(Hydrant)] = new DataOfType("NLF", "Пожарный кран", "Пожарные краны",
                 () => Sett.Default.SampleNameHydrants,
                 (str) => Sett.Default.SampleNameHydrants = str,
                 () => Sett.Default.DefaultSampleNameHydrants),
@@ -42,6 +40,59 @@ namespace BL
         //    ['F'] = (eq) => (eq.Parent as FireCabinet).Number.ToString()
         //};
 
+        private static Dictionary<char, Func<Hierarchy, string>> dictSampleFunctions = new Dictionary<char, Func<Hierarchy, string>>()
+        {
+            ['N'] = ent => ent.Number.ToString(),
+            ['L'] = ent => ent.GetLocation.Number.ToString(),
+            ['F'] = ent => (ent as Equipment).Parent.Number.ToString()
+        };
+
+        /// <summary>
+        /// Возвращает имя.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
+        /// <returns></returns>
+        public static string GetName(Hierarchy entity)
+        {
+            var sample = dictOfType[entity.GetType()].getSampleNaming();
+            return GetName(entity, sample);
+        }
+
+        /// <summary>
+        /// Возвращает имя.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
+        /// <returns></returns>
+        public static string GetName(Hierarchy entity, string sample)
+        {
+            var chars = dictOfType[entity.GetType()].sampleChars;
+            var result = sample;
+
+            foreach (char ch in chars)
+                result = result.Replace("#" + ch, dictSampleFunctions[ch].Invoke(entity));
+            return result;
+        }
+
+        /// <summary>
+        /// Проверяет корректность шаблона именования.
+        /// </summary>
+        public static bool CorrectSample(string text, Type type)
+        {
+            var chars = GetSampleChars(type);
+            text = text.Trim();
+            for (int i = 0; i < text.Length; i++)
+            {
+                var ch = text[i];
+                if (ch == '#')
+                {
+                    if (i + 1 == text.Length)
+                        return false;
+                    if (!chars.Contains(text[i + 1]))
+                        return false;
+                }
+            }
+            return true;
+        }
 
         static GetterOfType()
         {
@@ -56,13 +107,13 @@ namespace BL
         public static string GetSampleChars(Type type) => dictOfType[type].sampleChars;
 
         /// <summary>
-        /// Возвращает русский перевод имени класса в единственном числе.
+        /// Возвращает перевод имени класса в единственном числе.
         /// </summary>
         /// <param name="type">Тип.</param>
         public static string GetTraslateOne(Type type) => dictOfType[type].traslateOne;
 
         /// <summary>
-        /// Возвращает русский перевод имени класса во множественном числе.
+        /// Возвращает перевод имени класса во множественном числе.
         /// </summary>
         /// <param name="type">Тип.</param>
         public static string GetTraslateMany(Type type) => dictOfType[type].traslateMany;

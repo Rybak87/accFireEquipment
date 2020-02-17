@@ -52,6 +52,7 @@ namespace BL
         /// Пожарный шкаф.
         /// </summary>
         [Column("Пожарный шкаф")]
+        [Copying]
         public virtual FireCabinet FireCabinet { get; set; }
 
         /// <summary>
@@ -63,6 +64,7 @@ namespace BL
         /// Вид огнетушителя.
         /// </summary>
         [Column("Тип огнетушителя")]
+        [Copying]
         [Control("ComboBox", true, 1)]
         public virtual KindExtinguisher KindExtinguisher { get; set; }
 
@@ -70,6 +72,7 @@ namespace BL
         /// Наличие наклейки.
         /// </summary>
         [Column("Наклейка")]
+        [Copying]
         [Control("CheckBox", false, 8)]
         public bool IsSticker { get; set; }
 
@@ -77,6 +80,7 @@ namespace BL
         /// Дата производства.
         /// </summary>
         [Column("Дата производства")]
+        [Copying]
         [Control("DateTimePicker", false, 6)]
         public DateTime DateProduction { get; set; }
 
@@ -84,6 +88,7 @@ namespace BL
         ///Дата перезарядки.
         /// </summary>
         [Column("Дата следующей перезарядки")]
+        [Copying]
         [Control("DateTimePicker", false, 7)]
         public DateTime DateRecharge { get; set; }
 
@@ -91,6 +96,7 @@ namespace BL
         /// Масса.
         /// </summary>
         [Column("Масса")]
+        [Copying]
         [Control("NumericUpDownDecimal", false, 4)]
         public double Weight { get; set; }
 
@@ -98,6 +104,7 @@ namespace BL
         /// Давление.
         /// </summary>
         [Column("Давление")]
+        [Copying]
         [Control("NumericUpDownDecimal", false, 5)]
         public double Pressure { get; set; }
 
@@ -105,6 +112,7 @@ namespace BL
         /// Заводской номер.
         /// </summary>
         [Column("Заводской номер")]
+        [Copying]
         [Control("NumericUpDown", false, 3)]
         public int SerialNumber { get; set; }
 
@@ -112,6 +120,7 @@ namespace BL
         /// Повреждение корпуса.
         /// </summary>
         [Column("Повреждение корпуса")]
+        [Copying]
         [Control("CheckBox", false, 11)]
         public bool IsDented { get; set; }
 
@@ -119,6 +128,7 @@ namespace BL
         /// Повреждение краски.
         /// </summary>
         [Column("Повреждение краски")]
+        [Copying]
         [Control("CheckBox", false, 12)]
         public bool IsPaintDamage { get; set; }
 
@@ -126,6 +136,7 @@ namespace BL
         /// Повреждение ЗПУ.
         /// </summary>
         [Column("Повреждение ЗПУ")]
+        [Copying]
         [Control("CheckBox", false, 13)]
         public bool IsHandleDamage { get; set; }
 
@@ -133,6 +144,7 @@ namespace BL
         /// Наличие шланга.
         /// </summary>
         [Column("Наличие шланга")]
+        [Copying]
         [Control("CheckBox", false, 9)]
         public bool IsHose { get; set; }
 
@@ -140,6 +152,7 @@ namespace BL
         /// Неисправность манометра.
         /// </summary>
         [Column("Неисправность манометра")]
+        [Copying]
         [Control("CheckBox", false, 10)]
         public bool IsPressureGaugeFault { get; set; }
 
@@ -147,26 +160,13 @@ namespace BL
         /// Повреждение этикетки.
         /// </summary>
         [Column("Повреждение этикетки")]
+        [Copying]
         [Control("CheckBox", false, 14)]
         public bool IsLabelDamage { get; set; }
-
-        public override Hierarchy Clone()
-        {
-            throw new NotImplementedException();
-        }
-
-
 
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>
-        public override string ToString()
-        {
-            var sample = Properties.Settings.Default.SampleNameExtinguishers;
-            sample = sample.Replace("#L", FireCabinet.Location.Number.ToString());
-            sample = sample.Replace("#F", FireCabinet.Number.ToString());
-            sample = sample.Replace("#E", Number.ToString());
-            return sample;
-        }
+        public override string ToString() => GetterOfType.GetName(this);
     }
 }

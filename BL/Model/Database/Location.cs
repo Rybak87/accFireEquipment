@@ -24,6 +24,7 @@ namespace BL
         /// Название.
         /// </summary>
         [Column("Имя")]
+        [Copying]
         [Control("TextBox", true, 3)]
         public string Name { get; set; }
 
@@ -31,6 +32,7 @@ namespace BL
         /// План (изображение).
         /// </summary>
         [Column("Изображение")]
+        [Copying]
         [Control("Image", false, 4)]
         public virtual byte[] Plan { get; set; }
 
@@ -38,17 +40,6 @@ namespace BL
         /// Пожарные шкафы.
         /// </summary>
         public virtual ICollection<FireCabinet> FireCabinets { get; set; }
-
-        public override Hierarchy Clone()
-        {
-            return new Location
-            {
-                Id = 0,
-                Number = this.Number,
-                Name = this.Name,
-                Plan = this.Plan
-            };
-        }
 
         /// <summary>
         /// Возвращает именование.

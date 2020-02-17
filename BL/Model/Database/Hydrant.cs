@@ -42,6 +42,7 @@ namespace BL
         /// Повреждение.
         /// </summary>
         [Column("Повреждение")]
+        [Copying]
         [Control("CheckBox", false, 3)]
         public bool IsDamage { get; set; }
 
@@ -50,40 +51,17 @@ namespace BL
         /// </summary>
         public int FireCabinetId { get; set; }
 
+        [Copying]
         /// <summary>
         /// Пожарный шкаф.
         /// </summary>
         [Column("Пожарный шкаф")]
         public virtual FireCabinet FireCabinet { get; set; }
 
-        public override Hierarchy Clone()
-        {
-            var hyd=  new Hydrant
-            {
-                Id = 0,
-                FireCabinetId = this.FireCabinetId,
-                FireCabinet = this.FireCabinet,
-                IsDamage = this.IsDamage,
-                Number = this.Number,
-                Point = this.Point,
-                //Histories = CloneHistories()
-               
-            };
-            //hyd.Histories = hyd.GetNewHistories().ToList();
-            return hyd;
-        }
-
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>
-        public override string ToString()
-        {
-            var sample = Properties.Settings.Default.SampleNameHydrants;
-            sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
-            sample = sample.Replace("#F", FireCabinet.Number.ToString());
-            sample = sample.Replace("#D", Number.ToString());
-            return sample;
-        }
+        public override string ToString() => GetterOfType.GetName(this);
 
     }
 }

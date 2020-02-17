@@ -257,6 +257,7 @@ namespace WindowsForms
             }
             nodeParent.Nodes.AddRange(newNodes.ToArray());
             SelectedNode = newNodes.First();
+            Sort();
         }
 
         /// <summary>
