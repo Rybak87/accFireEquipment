@@ -92,6 +92,11 @@ namespace BL
         /// </summary>
         public virtual ICollection<Hydrant> Hydrants { get; set; }
 
+        public override Hierarchy Clone()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>

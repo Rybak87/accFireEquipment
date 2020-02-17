@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace BL
 {
@@ -54,6 +55,23 @@ namespace BL
         /// </summary>
         [Column("Пожарный шкаф")]
         public virtual FireCabinet FireCabinet { get; set; }
+
+        public override Hierarchy Clone()
+        {
+            var hyd=  new Hydrant
+            {
+                Id = 0,
+                FireCabinetId = this.FireCabinetId,
+                FireCabinet = this.FireCabinet,
+                IsDamage = this.IsDamage,
+                Number = this.Number,
+                Point = this.Point,
+                //Histories = CloneHistories()
+               
+            };
+            //hyd.Histories = hyd.GetNewHistories().ToList();
+            return hyd;
+        }
 
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.

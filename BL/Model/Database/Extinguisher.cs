@@ -150,6 +150,11 @@ namespace BL
         [Control("CheckBox", false, 14)]
         public bool IsLabelDamage { get; set; }
 
+        public override Hierarchy Clone()
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         /// <summary>
@@ -158,7 +163,7 @@ namespace BL
         public override string ToString()
         {
             var sample = Properties.Settings.Default.SampleNameExtinguishers;
-            sample = sample.Replace("#L", ((Location)FireCabinet.Parent).Number.ToString());
+            sample = sample.Replace("#L", FireCabinet.Location.Number.ToString());
             sample = sample.Replace("#F", FireCabinet.Number.ToString());
             sample = sample.Replace("#E", Number.ToString());
             return sample;

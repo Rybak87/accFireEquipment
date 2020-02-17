@@ -46,10 +46,12 @@ namespace WindowsForms
         public override void ApplyChanged(EntityBase entity, EntityController ec)
         {
             ec.EntityAdd += EntityChanged;
+            ec.HierarchyAddRange += HierarchyChangedRange;
             if (entity as Hierarchy != null)
                 ec.AddRangeEntity(entity as Hierarchy, countCopy);
             else
-                ec.AddEntity(entity);
+                //ec.AddEntity(entity);
+                ec.AddRangeEntity(entity as Hierarchy, 1);
             ec.SaveChanges();
         }
 

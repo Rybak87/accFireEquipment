@@ -82,6 +82,11 @@ namespace BL
         [Column("Пожарный шкаф")]
         public virtual FireCabinet FireCabinet { get; set; }
 
+        public override Hierarchy Clone()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Возвращает именование в соответствии с шаблоном.
         /// </summary>

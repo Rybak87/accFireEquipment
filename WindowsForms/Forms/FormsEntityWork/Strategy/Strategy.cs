@@ -33,6 +33,11 @@ namespace WindowsForms
         public Action<EntityBase> EntityChanged;
 
         /// <summary>
+        /// Событие по добавлению/изменению сущности в БД.
+        /// </summary>
+        public Action<Hierarchy[]> HierarchyChangedRange;
+
+        /// <summary>
         /// Возможность добавить контролы на форму перед основными.
         /// </summary>
         /// <returns></returns>

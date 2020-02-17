@@ -19,6 +19,11 @@ namespace BL
         public event Action<EntityBase> EntityAdd;
 
         /// <summary>
+        /// Событие по добавлению сущностей в БД.
+        /// </summary>
+        public event Action<Hierarchy[]> HierarchyAddRange;
+
+        /// <summary>
         /// Событие по удалению сущности в БД.
         /// </summary>
         public event Action<EntityBase> EntityRemove;
@@ -27,7 +32,7 @@ namespace BL
         /// Добавляет сущность в БД.
         /// Вызывает событие по добавлению сущности.
         /// </summary>
-        public void AddEntity(EntityBase entity)
+        public void AddEntity2(EntityBase entity)
         {
             Set(entity.GetType()).Add(entity);
             var eq = entity as Equipment;
@@ -45,9 +50,9 @@ namespace BL
         /// </summary>
         /// <param name="entity">Иерархическая сущность.</param>
         /// <param name="count">Количество копий.</param>
-        public void AddRangeEntity(Hierarchy entity, int count)
+        public void AddRangeEntity2(Hierarchy entity, int count)
         {
-            AddEntity(entity);
+            AddEntity2(entity);
             var sign = entity.GetSign();
             var table = Set(sign.Type);
             int currNumber = entity.Number;
@@ -60,8 +65,61 @@ namespace BL
                 table.Attach(newEntity);
                 Entry(newEntity).CurrentValues.SetValues(temp);//Устанавливает значения уже добавленной 1-ой сущности в новую копию
                 newEntity.Number = currNumber;
-                AddEntity(newEntity);
+                AddEntity2(newEntity);
             }
+        }
+
+        public void AddEntity(DbSet table, EntityBase entity)
+        {
+            table.Add(entity);
+            var eq = entity as Equipment;
+            if (eq != null)
+            {
+                var histories = eq.GetCreateHistories();
+                Set<History>().AddRange(histories);
+            }
+            //SaveChanges();
+            //EntityAdd?.Invoke(entity);
+        }
+
+        public void AddRangeEntity(Hierarchy entity, int count)
+        {
+            var list = new List<Hierarchy>(count);
+            var table = Set(entity.GetType());
+            int currNumber = entity.Number;
+            list.Add(entity);
+            IEnumerable<History> histories = null;
+            if (entity is Equipment)
+            {
+                histories = (entity as Equipment).GetCreateHistories();
+                Set<History>().AddRange(histories);
+            }
+            for (int i = 1; i < count; i++)
+            {
+                currNumber++;
+                var newEntity = entity.Clone();
+                list.Add(newEntity);
+                newEntity.Number = currNumber;
+                if (newEntity is Equipment)
+                {
+                    var newHistories = histories.Select(h => new History
+                    {
+                        DateChange = h.DateChange,
+                        Property = h.Property,
+                        Value = h.Value,
+                        Equipment = newEntity as Equipment
+                    });
+                    Set<History>().AddRange(newHistories);
+                }
+            }
+            table.AddRange(list);
+            SaveChanges();
+            HierarchyAddRange?.Invoke(list.ToArray());
+        }
+
+        void asdf()
+        {
+
         }
 
         /// <summary>

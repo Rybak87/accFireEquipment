@@ -28,6 +28,7 @@ namespace BL
         public virtual ICollection<History> Histories { get; set; }
 
         private History GetLastHistory(string propertyName) => Histories?.LastOrDefault(h => h.Property == propertyName);
+
         private History GetLastHistoryOnDate(string propertyName, DateTime dataChange)
         {
             var modeTime = Properties.Settings.Default.UseTime;
@@ -43,6 +44,17 @@ namespace BL
 
         private string GetCurrentValue(PropertyInfo property) => property.GetValue(this).ToString();
 
+        //public string SampleName(string sample)
+        //{
+        //    var type = this.GetType();
+        //    var chars = GetterOfType.GetSampleChars(type);
+        //    foreach (var ch in chars)
+        //    {
+        //        sample = sample.Replace("#" + ch, GetterOfType.charsSampleNaming[ch](this));
+        //    }
+        //    return sample;
+        //}
+
         /// <summary>
         /// Возвращает изменения свойств.
         /// </summary>
@@ -55,10 +67,36 @@ namespace BL
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
         }
 
+        public IEnumerable<History> GetCreateHistories()
+        {
+            var properties = Reflection.GetPropertiesWithControlAttribute(this);
+            var dataChange = DateTime.Now;
+            var newHistories = properties.Select(p => new History(this, p.Name, null, GetCurrentValue(p), dataChange));
+            return newHistories;
+        }
+
         public IEnumerable<History> GetHistoriesOnDate(DateTime dataChange)
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(this);
             return properties.Select(p => GetLastHistoryOnDate(p.Name, dataChange));
+        }
+
+        public ICollection<History> CloneHistories()
+        {
+            var cloneHistories = new List<History>(Histories.Count);
+            foreach (var hys in Histories)
+            {
+                var newHistory = new History
+                {
+                    Id = 0,
+                    DateChange = hys.DateChange,
+                    //Equipment = this,
+                    //EquipmentId = this.Id,
+                    Property = hys.Property,
+                    Value = hys.Value
+                };
+            }
+            return cloneHistories;
         }
     }
 }

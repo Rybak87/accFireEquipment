@@ -39,6 +39,17 @@ namespace BL
         /// </summary>
         public virtual ICollection<FireCabinet> FireCabinets { get; set; }
 
+        public override Hierarchy Clone()
+        {
+            return new Location
+            {
+                Id = 0,
+                Number = this.Number,
+                Name = this.Name,
+                Plan = this.Plan
+            };
+        }
+
         /// <summary>
         /// Возвращает именование.
         /// </summary>

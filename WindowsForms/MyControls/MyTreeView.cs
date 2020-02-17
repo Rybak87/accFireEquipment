@@ -113,7 +113,7 @@ namespace WindowsForms
                 }
 
                 targetNode.Expand();
-                
+
             }
         }
         #endregion
@@ -189,6 +189,7 @@ namespace WindowsForms
                     }
                 }
             }
+            //TreeViewNodeSorter = new SortOfSign();
             Sort();
             Nodes[0].Expand();
             this.ResumeDrawing();
@@ -226,6 +227,36 @@ namespace WindowsForms
             nodeParent.Nodes.Add(newNode);
             dictNodes.Add(entity.GetSign(), newNode);
             SelectedNode = newNode;
+        }
+
+        /// <summary>
+        /// Добавить узлы.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
+        public void NodeAddRange(Hierarchy[] entities)
+        {
+            TreeNode nodeParent;
+            if (entities[0] is Location)
+                nodeParent = Nodes[0];
+            else if (entities[0] is Equipment)
+                nodeParent = dictNodes[((Equipment)entities[0]).Parent.GetSign()];
+            else
+                return;
+
+            var indImage = IconsGetter.GetIndexIcon(entities[0].GetType());
+            var contextMenuStrip = ContextMenuGetter.GetMenu(entities[0].GetType());
+
+            var newNodes = new List<TreeNode>(entities.Length);
+            foreach (var entity in entities)
+            {
+                var newNode = new TreeNode(entity.ToString(), indImage, indImage);
+                newNode.ContextMenuStrip = contextMenuStrip;
+                newNode.Tag = entity.GetSign();
+                dictNodes.Add(entity.GetSign(), newNode);
+                newNodes.Add(newNode);
+            }
+            nodeParent.Nodes.AddRange(newNodes.ToArray());
+            SelectedNode = newNodes.First();
         }
 
         /// <summary>

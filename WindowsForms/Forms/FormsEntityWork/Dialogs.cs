@@ -36,6 +36,7 @@ namespace WindowsForms
         {
             var strategy = new AddStrategy();
             strategy.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
+            strategy.HierarchyChangedRange += TreeView.NodeAddRange;
             FormEntity frmAdd = null;
 
             if (typeEntity.IsSubclassOf(typeof(KindBase)))

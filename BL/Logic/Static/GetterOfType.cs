@@ -34,6 +34,15 @@ namespace BL
                 (str) => Sett.Default.SampleNameHydrants = str,
                 () => Sett.Default.DefaultSampleNameHydrants),
         };
+
+        //public static Dictionary<char, Func<Equipment, string>> charsSampleNaming = new Dictionary<char, Func<Equipment, string>>()
+        //{
+        //    ['N'] = (eq) => eq.Number.ToString(),
+        //    ['L'] = (eq) => eq.GetLocation.Number.ToString(),
+        //    ['F'] = (eq) => (eq.Parent as FireCabinet).Number.ToString()
+        //};
+
+
         static GetterOfType()
         {
 
