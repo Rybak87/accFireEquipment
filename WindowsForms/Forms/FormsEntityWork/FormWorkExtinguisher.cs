@@ -54,9 +54,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="centerLocation">Расположение.</param>
         /// <returns></returns>
-        protected override ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
+        protected override ComboBox CreateComboBox(PropertyInfo prop, Size fullSize, Point centerLocation)
         {
-            var cbx = base.CreateComboBox(fullSize, prop, centerLocation);
+            var cbx = base.CreateComboBox(prop, fullSize, centerLocation);
             (cbx).SelectedIndexChanged += (s, e) => GetWeightPressure(cbx);
             kindComboBox = cbx;
             return cbx;
@@ -69,9 +69,9 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected override NumericUpDown CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
+        protected override NumericUpDown CreateNumericUpDownDecimal(PropertyInfo prop, Size fullSize, Point location)
         {
-            var num = base.CreateNumericUpDownDecimal(fullSize, prop, location);
+            var num = base.CreateNumericUpDownDecimal(prop, fullSize, location);
 
             if (prop.Name == "Weight")
                 numWeight = num;
