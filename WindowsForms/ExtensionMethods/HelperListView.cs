@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace BL
@@ -15,7 +12,7 @@ namespace BL
         /// <summary>
         /// Заполняет TreeView данными из БД.
         /// </summary>
-        public static void EntityReport(this ListView listView, Type type, params Filter[] filterSet)
+        public static void FillListView(this ListView listView, Type type, params Filter[] filterSet)
         {
             if (filterSet.Length == 0)
                 return;
@@ -48,7 +45,7 @@ namespace BL
         /// <param name="entity"></param>
         /// <param name="filterSet"></param>
         /// <returns></returns>
-        public static string[] CreateFiltersStrings(Equipment entity, Filter[] filterSet)
+        private static string[] CreateFiltersStrings(Equipment entity, Filter[] filterSet)
         {
             var calcStrings = filterSet.Select(f => (f.Required, calcString: f.CreateResultString(entity)));
             bool requiredFilterCalcEmpty = calcStrings.Any(h => h.Required && h.calcString == string.Empty);

@@ -57,7 +57,6 @@ namespace WindowsForms
             this.myTreeView.Size = new System.Drawing.Size(290, 720);
             this.myTreeView.TabIndex = 0;
 
-            //this.picContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.picContainer.Location = new System.Drawing.Point(352, 221);
             this.picContainer.Name = "picContainer";
             this.picContainer.Size = new System.Drawing.Size(407, 209);

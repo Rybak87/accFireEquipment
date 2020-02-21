@@ -58,7 +58,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Logic\ExcelStickers.cs" />
-    <Compile Include="Logic\ExtensionMethods\HelperListView.cs" />
     <Compile Include="Logic\Filter\Filter.cs" />
     <Compile Include="Logic\Filter\Filters.cs" />
     <Compile Include="Logic\Static\GetterOfType.cs" />

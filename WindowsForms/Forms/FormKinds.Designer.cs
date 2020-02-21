@@ -156,7 +156,7 @@
             this.btnImport.TabIndex = 3;
             this.btnImport.Text = "Импорт...";
             this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            this.btnImport.Click += new System.EventHandler(this.BtnImport_Click);
             // 
             // btnExport
             // 
@@ -167,7 +167,7 @@
             this.btnExport.TabIndex = 3;
             this.btnExport.Text = "Экспорт...";
             this.btnExport.UseVisualStyleBackColor = true;
-            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            this.btnExport.Click += new System.EventHandler(this.BtnExport_Click);
             // 
             // FormEditTypes
             // 

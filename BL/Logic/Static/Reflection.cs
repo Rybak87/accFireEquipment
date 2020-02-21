@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BL
 {
@@ -13,7 +11,8 @@ namespace BL
     /// </summary>
     public static class Reflection
     {
-        static Dictionary<Type, (List<PropertyInfo> control, List<PropertyInfo> copying)> dictProperty = new Dictionary<Type, (List<PropertyInfo>, List<PropertyInfo>)>();
+        private static Dictionary<Type, (List<PropertyInfo> control, List<PropertyInfo> copying)> dictProperty = 
+                new Dictionary<Type, (List<PropertyInfo>, List<PropertyInfo>)>();
 
         /// <summary>
         /// Поиск аттрибута конкретного типа.
@@ -21,12 +20,26 @@ namespace BL
         private static TAttr GetAttribute<TAttr>(PropertyInfo pi) where TAttr : Attribute =>
             pi.GetCustomAttributes().FirstOrDefault(a => a.GetType() == typeof(TAttr)) as TAttr;
 
+        private static (List<PropertyInfo> control, List<PropertyInfo> copying) FindOrCreate(Type type)
+        {
+            if (dictProperty.Keys.Contains(type))
+                return dictProperty[type];
+            else
+            {
+                var newControlProperties = type.GetProperties().Where(p => GetAttribute<ControlAttribute>(p) != null).ToList();
+                var newCopyingProperties = type.GetProperties().Where(p => GetAttribute<CopyingAttribute>(p) != null).ToList();
+                var tuple = (newControlProperties, newCopyingProperties);
+                dictProperty.Add(type, tuple);
+                return tuple;
+            }
+        }
+
         /// <summary>
         /// Возвращает коллекцию кортежей (свойство, атрибут элементов управления, название свойства)
         /// </summary>
         /// <param name="entity">Сущность.</param>
         /// <returns></returns>
-        public static IEnumerable<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)> GetEditProperties(EntityBase entity)
+        public static IEnumerable<(PropertyInfo property, ControlAttribute cntrlAttr, string name)> GetEditProperties(EntityBase entity)
         {
             var result = new List<(PropertyInfo prop, ControlAttribute cntrlAttr, string name)>();
             foreach (PropertyInfo prop in entity?.GetType().GetProperties())
@@ -53,19 +66,5 @@ namespace BL
         /// </summary>
         /// <param name="type">Тип.</param>
         public static List<PropertyInfo> GetPropertiesWithCopyingAttribute(Type type) => FindOrCreate(type).copying;
-
-        private static (List<PropertyInfo> control, List<PropertyInfo> copying) FindOrCreate(Type type)
-        {
-            if (dictProperty.Keys.Contains(type))
-                return dictProperty[type];
-            else
-            {
-                var newControlProperties = type.GetProperties().Where(p => GetAttribute<ControlAttribute>(p) != null).ToList();
-                var newCopyingProperties = type.GetProperties().Where(p => GetAttribute<CopyingAttribute>(p) != null).ToList();
-                var tuple = (newControlProperties, newCopyingProperties);
-                dictProperty.Add(type, tuple);
-                return tuple;
-            }
-        }
     }
 }
