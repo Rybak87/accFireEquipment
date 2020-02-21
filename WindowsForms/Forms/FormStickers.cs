@@ -31,8 +31,8 @@ namespace WindowsForms
             InitializeComponent();
             dictReport = new Dictionary<Type, Action>
             {
-                [typeof(FireCabinet)] = () => listView.EntityReport(typeof(FireCabinet), fName, filterFireCabinetSticker),
-                [typeof(Extinguisher)] = () => listView.EntityReport(typeof(Extinguisher), fName, fParent, filterExtinguisherSticker)
+                [typeof(FireCabinet)] = () => listView.FillListView(typeof(FireCabinet), fName, filterFireCabinetSticker),
+                [typeof(Extinguisher)] = () => listView.FillListView(typeof(Extinguisher), fName, fParent, filterExtinguisherSticker)
             };
             dictInitColums = new Dictionary<Type, Action>
             {
@@ -42,8 +42,8 @@ namespace WindowsForms
 
             FireCabinetsMenu.Image = IconsGetter.GetIconImage(typeof(FireCabinet));
             ExtinguishersMenu.Image = IconsGetter.GetIconImage(typeof(Extinguisher));
-            FireCabinetsMenu.Click += (s, e) => Report(typeof(FireCabinet));
-            ExtinguishersMenu.Click += (s, e) => Report(typeof(Extinguisher));
+            FireCabinetsMenu.Click += (s, e) => FillListView(typeof(FireCabinet));
+            ExtinguishersMenu.Click += (s, e) => FillListView(typeof(Extinguisher));
 
             txbFireCabinets.Tag = typeof(FireCabinet);
             txbExtinguishers.Tag = typeof(Extinguisher);
@@ -57,7 +57,7 @@ namespace WindowsForms
             filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, extinguisherFunc));
         }
 
-        private void Report(Type type)
+        private void FillListView(Type type)
         {
             if (type == null)
                 return;
@@ -74,10 +74,10 @@ namespace WindowsForms
         private void btnApply_Click(object sender, EventArgs e)
         {
             var textBoxes = new TextBox[] { txbFireCabinets, txbExtinguishers };
-            if (!Helper.CorrectSample(textBoxes))
+            if (!HelperControl.CorrectSample(textBoxes))
                 return;
 
-            Report(lastType);
+            FillListView(lastType);
         }
 
         private List<string> GetStickers()
@@ -154,7 +154,7 @@ namespace WindowsForms
                 filterExtinguisherSticker = new Filter(true, new Instruction(extinguisherFunc));
             }
 
-            Report(lastType);
+            FillListView(lastType);
         }
 
         ///// <summary>

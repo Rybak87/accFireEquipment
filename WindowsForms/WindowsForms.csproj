@@ -156,6 +156,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExtensionMethods\HelperControl.cs" />
+    <Compile Include="ExtensionMethods\HelperListView.cs" />
     <Compile Include="Forms\FormsEntityWork\Dialogs.cs" />
     <Compile Include="Forms\FormsEntityWork\FormWorkKind.cs">
       <SubType>Form</SubType>

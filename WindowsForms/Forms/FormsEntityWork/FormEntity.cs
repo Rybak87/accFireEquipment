@@ -39,6 +39,10 @@ namespace WindowsForms
         /// </summary>
         protected Strategy strategy;
 
+        protected Size halfSize = new Size(75, 25);
+        protected Size fullSize = new Size(150, 25);
+        protected Size incSize = new Size(175, 25);
+
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -56,7 +60,7 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected virtual TextBox CreateTextBox(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual TextBox CreateTextBox(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new TextBox
             {
@@ -75,7 +79,7 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected virtual CheckBox CreateCheckBox(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual CheckBox CreateCheckBox(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new CheckBox
             {
@@ -94,11 +98,11 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="centerLocation">Расположение.</param>
         /// <returns></returns>
-        protected virtual ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
+        protected virtual ComboBox CreateComboBox(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new ComboBox
             {
-                Location = centerLocation,
+                Location = location,
                 Size = fullSize,
                 Sorted = true
             };
@@ -122,7 +126,7 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected virtual NumericUpDown CreateNumericUpDown(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual NumericUpDown CreateNumericUpDown(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new NumericUpDown
             {
@@ -142,7 +146,7 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected virtual NumericUpDown CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual NumericUpDown CreateNumericUpDownDecimal(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new NumericUpDown
             {
@@ -162,7 +166,7 @@ namespace WindowsForms
         /// <param name="prop">Свойство привязки.</param>
         /// <param name="location">Расположение.</param>
         /// <returns></returns>
-        protected virtual DateTimePicker CreateDateTimePicker(Size fullSize, PropertyInfo prop, Point location)
+        protected virtual DateTimePicker CreateDateTimePicker(PropertyInfo prop, Size fullSize, Point location)
         {
             var cntrl = new DateTimePicker
             {
@@ -173,7 +177,131 @@ namespace WindowsForms
             cntrl.DataBindings.Add("Value", currEntity, prop.Name);
             return cntrl;
         }
+
+        /// <summary>
+        /// Создание метки названия.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="fullSize"></param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        protected virtual Label CreateHeaderLabel(string name, Size fullSize, Point location)
+        {
+            var cntrl = new Label
+            {
+                Text = name,
+                Location = location,
+                Size = fullSize
+            };
+            Controls.Add(cntrl);
+            return cntrl;
+        }
+
+        /// <summary>
+        /// Создание метки обязательного заполнения.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        protected virtual Label CreateRequiredLabel(Point location)
+        {
+            var cntrl = new Label
+            {
+                Text = "Обязательно заполнить",
+                AutoSize = true,
+                Location = location
+            };
+            Controls.Add(cntrl);
+            requiredControls.Add(cntrl);
+            return cntrl;
+        }
+
+        protected virtual int CreateBeforeControls()
+        {
+            var beforeControls = strategy.GetBeforeControls();
+            int yPos = 25;
+            if (beforeControls != null)
+            {
+                Controls.AddRange(beforeControls);
+                yPos = (beforeControls.Length / 2 + 1) * 25;
+            }
+            return yPos;
+        }
+
+        protected virtual int CreateAfterControls(int yPos)
+        {
+            return yPos;
+        }
+
+        protected Point LeftLocation(int yPos) => new Point(25, yPos);
+
+        protected Point CenterLocation(int yPos) => new Point(200, yPos);
+
+        protected Point CenterHalfLocation(int yPos) => new Point(275, yPos);
+
+        protected Point RightLocation(int yPos) => new Point(400, yPos);
         #endregion
+
+        /// <summary>
+        /// Создание элементов формы.
+        /// </summary>
+        /// <param name="yPosControl"></param>
+        protected void CreateControls()
+        {
+            int yPos = CreateBeforeControls();
+
+            var editProperties = Reflection.GetEditProperties(currEntity);
+            foreach (var item in editProperties)
+            {
+                var property = item.property;
+                var attr = item.cntrlAttr;
+                var name = item.name;
+
+                var centerLocation = CenterLocation(yPos);
+                if (name == null)
+                    name = property.Name;
+
+                CreateHeaderLabel(name, incSize, LeftLocation(yPos));
+                switch (attr.control)
+                {
+                    case "TextBox":
+                        {
+                            CreateTextBox(property, fullSize, centerLocation);
+                            break;
+                        }
+                    case "ComboBox":
+                        {
+                            CreateComboBox(property, fullSize, centerLocation);
+                            break;
+                        }
+                    case "CheckBox":
+                        {
+                            CreateCheckBox(property, fullSize, centerLocation);
+                            break;
+                        }
+                    case "NumericUpDown":
+                        {
+                            CreateNumericUpDown(property, fullSize, centerLocation);
+                            break;
+                        }
+                    case "NumericUpDownDecimal":
+                        {
+                            CreateNumericUpDownDecimal(property, fullSize, centerLocation);
+                            break;
+                        }
+                    case "DateTimePicker":
+                        {
+                            CreateDateTimePicker(property, fullSize, centerLocation);
+                            break;
+                        }
+                }
+
+                if (attr.isRequired)
+                    CreateRequiredLabel(RightLocation(yPos));
+                yPos += 25;
+            }
+            yPos = CreateAfterControls(yPos);
+            Height = yPos + 100;
+        }
 
         /// <summary>
         /// Проверка на корректные значения обязательных элементов управления.
@@ -212,99 +340,6 @@ namespace WindowsForms
                 return false;
             }
             return true;
-        }
-
-        /// <summary>
-        /// Создание элементов формы.
-        /// </summary>
-        /// <param name="yPosControl"></param>
-        protected int CreateControls()
-        {
-            var beforeControls = strategy.GetBeforeControls();
-            int yPosControl;
-            if (beforeControls != null)
-            {
-                Controls.AddRange(beforeControls);
-                yPosControl = (beforeControls.Length / 2 + 1) * 25;
-            }
-            else
-            {
-                yPosControl = 25;
-            }
-
-            var editProperties = Reflection.GetEditProperties(currEntity);
-            Control cntrl = null;
-            var incSize = new Size(175, 25);
-            var fullSize = new Size(150, 25);
-            foreach (var item in editProperties)
-            {
-                var prop = item.prop;
-                var attr = item.cntrlAttr;
-                var name = item.name;
-                var leftLocation = new Point(25, yPosControl);
-                var centerLocation = new Point(200, yPosControl);
-                var centerHalfLocation = new Point(275, yPosControl);
-                var rightLocation = new Point(400, yPosControl);
-                if (name == null)
-                    name = prop.Name;
-
-                var lbl = new Label
-                {
-                    Text = name,
-                    Location = leftLocation,
-                    Size = incSize
-                };
-                Controls.Add(lbl);
-
-                switch (attr.control)
-                {
-                    case "TextBox":
-                        {
-                            cntrl = CreateTextBox(fullSize, prop, centerLocation);
-                            break;
-                        }
-                    case "ComboBox":
-                        {
-                            cntrl = CreateComboBox(fullSize, prop, centerLocation);
-                            break;
-                        }
-                    case "CheckBox":
-                        {
-                            cntrl = CreateCheckBox(fullSize, prop, centerLocation);
-                            break;
-                        }
-                    case "NumericUpDown":
-                        {
-                            cntrl = CreateNumericUpDown(fullSize, prop, centerLocation);
-                            break;
-                        }
-                    case "NumericUpDownDecimal":
-                        {
-                            cntrl = CreateNumericUpDownDecimal(fullSize, prop, centerLocation);
-                            break;
-                        }
-                    case "DateTimePicker":
-                        {
-                            cntrl = CreateDateTimePicker(fullSize, prop, centerLocation);
-                            break;
-                        }
-                }
-
-                if (attr.isRequired)
-                {
-                    lbl = new Label
-                    {
-                        Text = "Обязательно заполнить",
-                        AutoSize = true,
-                        Location = rightLocation
-                    };
-                    Controls.Add(lbl);
-                    requiredControls.Add(cntrl);
-                }
-                yPosControl += 25;
-            }
-            Height = yPosControl + 100;
-            return yPosControl - 25;
         }
 
         /// <summary>

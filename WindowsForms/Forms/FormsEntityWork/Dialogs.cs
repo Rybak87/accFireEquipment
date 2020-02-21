@@ -35,7 +35,6 @@ namespace WindowsForms
         public static void AddDialog(Type typeEntity, EntitySign parentSign = null)
         {
             var strategy = new AddStrategy();
-            strategy.EntityChanged += ent => TreeView.NodeAdd(ent as Hierarchy);
             strategy.HierarchyChangedRange += TreeView.NodeAddRange;
             FormEntity frmAdd = null;
 
@@ -44,7 +43,7 @@ namespace WindowsForms
             else if (typeEntity == typeof(Location))
             {
                 frmAdd = new FormWorkLocation(strategy);
-                (frmAdd as FormWorkLocation).LocationChanged += Plan.LoadImage;
+                (frmAdd as FormWorkLocation).LocationEntityChanged += Plan.LoadImage;
             }
             else if (typeEntity.IsSubclassOf(typeof(Equipment)))
             {
@@ -74,7 +73,7 @@ namespace WindowsForms
             if (sign.Type == typeof(Location))
             {
                 frmEdit = new FormWorkLocation(sign, strategy);
-                (frmEdit as FormWorkLocation).LocationChanged += Plan.LoadImage;
+                (frmEdit as FormWorkLocation).LocationEntityChanged += Plan.LoadImage;
             }
             else if (sign.Type.IsSubclassOf(typeof(Equipment)))
             {

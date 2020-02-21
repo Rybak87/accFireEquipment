@@ -14,6 +14,11 @@ namespace WindowsForms
         public byte[] currPlan;
 
         Location currLocation;
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="strategy"></param>
         public FormWorkLocation(Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -22,6 +27,12 @@ namespace WindowsForms
             (currEntity as Location).Number = ec.GetNumber(currEntity as Location);
             PostInitialize();
         }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="strategy"></param>
+        /// <param name="locSign"></param>
         public FormWorkLocation(EntitySign locSign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -33,19 +44,21 @@ namespace WindowsForms
         /// <summary>
         /// Событие по кнопке ОК.
         /// </summary>
-        public event Action<byte[]> LocationChanged;
+        public event Action<byte[]> LocationEntityChanged;
 
         private void PostInitialize()
         {
             currLocation = currEntity as Location;
             currPlan = currLocation.Plan;
             Text = strategy.GetFormName(currEntity);
-            var yPos = CreateControls();
-            var halfSize = new Size(75, 25);
-            var centerLocation = new Point(200, yPos);
-            var centerHalfLocation = new Point(275, yPos);
-            CreateButtonsForImage(halfSize, centerLocation, centerHalfLocation);
+            CreateControls();
             Height += 25;
+        }
+
+        protected override int CreateAfterControls(int yPos)
+        {
+            CreateButtonsForImage(halfSize, CenterLocation(yPos - 25), CenterHalfLocation(yPos - 25));
+            return yPos;
         }
 
         /// <summary>
@@ -105,7 +118,7 @@ namespace WindowsForms
         {
             ((Location)currEntity).Plan = currPlan;
             base.BtnOK_Click(sender, e);
-            LocationChanged?.Invoke(currPlan);
+            LocationEntityChanged?.Invoke(currPlan);
         }
     }
 }

@@ -18,6 +18,12 @@ namespace WindowsForms
         /// </summary>
         private NumericUpDown numPressure;
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="childType"></param>
+        /// <param name="parentSign"></param>
+        /// <param name="strategy"></param>
         public FormWorkExtinguisher(Type childType, EntitySign parentSign, Strategy strategy) : base(childType, parentSign, strategy)
         {
             InitializeComponent();
@@ -30,16 +36,16 @@ namespace WindowsForms
             Text = strategy.GetFormName(currEntity);
         }
 
-        protected override ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
+        protected override ComboBox CreateComboBox(PropertyInfo prop, Size fullSize,  Point centerLocation)
         {
-            var cbx = base.CreateComboBox(fullSize, prop, centerLocation);
+            var cbx = base.CreateComboBox(prop, fullSize,  centerLocation);
             (cbx).SelectedIndexChanged += (s, e) => GetWeightPressure(cbx);
             return cbx;
         }
 
-        protected override NumericUpDown CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
+        protected override NumericUpDown CreateNumericUpDownDecimal(PropertyInfo prop, Size fullSize,  Point location)
         {
-            var num = base.CreateNumericUpDownDecimal(fullSize, prop, location);
+            var num = base.CreateNumericUpDownDecimal(prop, fullSize,  location);
 
             if (prop.Name == "Weight")
                 numWeight = num;

@@ -33,7 +33,7 @@ namespace WindowsForms
         public Action<EntityBase> EntityChanged;
 
         /// <summary>
-        /// Событие по добавлению/изменению сущности в БД.
+        /// Событие по добавлению/изменению группы сущностей в БД.
         /// </summary>
         public Action<Hierarchy[]> HierarchyChangedRange;
 
@@ -42,6 +42,5 @@ namespace WindowsForms
         /// </summary>
         /// <returns></returns>
         public abstract Control[] GetBeforeControls();
-
     }
 }

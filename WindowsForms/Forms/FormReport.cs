@@ -24,6 +24,7 @@ namespace WindowsForms
         public FormReport()
         {
             InitializeComponent();
+
             FullMenu.Image = IconsGetter.GetIconImage(typeof(Location));
             FireCabinetsMenu.Image = IconsGetter.GetIconImage(typeof(FireCabinet));
             ExtinguishersMenu.Image = IconsGetter.GetIconImage(typeof(Extinguisher));
@@ -61,10 +62,10 @@ namespace WindowsForms
         private void FullReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), fName, fName, fFireCabinetFault);
-            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
-            listView.EntityReport(typeof(Hose), fName, fParent, fHoseFault);
-            listView.EntityReport(typeof(Hydrant), fName, fParent, fHydrantFault);
+            listView.FillListView(typeof(FireCabinet), fName, fName, fFireCabinetFault);
+            listView.FillListView(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
+            listView.FillListView(typeof(Hose), fName, fParent, fHoseFault);
+            listView.FillListView(typeof(Hydrant), fName, fParent, fHydrantFault);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace WindowsForms
         private void FireCabinetsReport()
         {
             listView.InitColumns("Тип", "Недостатки");
-            listView.EntityReport(typeof(FireCabinet), fName, fFireCabinetFault);
+            listView.FillListView(typeof(FireCabinet), fName, fFireCabinetFault);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace WindowsForms
         private void ExtinguishersReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
+            listView.FillListView(typeof(Extinguisher), fName, fParent, fExtinguisherFault);
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace WindowsForms
         private void HosesReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hose), fName, fParent, fHoseFault);
+            listView.FillListView(typeof(Hose), fName, fParent, fHoseFault);
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace WindowsForms
         private void HydrantsReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Недостатки");
-            listView.EntityReport(typeof(Hydrant), fName, fParent, fHydrantFault);
+            listView.FillListView(typeof(Hydrant), fName, fParent, fHydrantFault);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace WindowsForms
         private void RechargeExtinguishersReport()
         {
             listView.InitColumns("Тип", "Пожарный шкаф", "Оставшийся срок (в месяцах)");
-            listView.EntityReport(typeof(Extinguisher), fName, fParent, fExtinguisherRecharge);
+            listView.FillListView(typeof(Extinguisher), fName, fParent, fExtinguisherRecharge);
         }
 
         /// <summary>

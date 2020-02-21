@@ -53,7 +53,7 @@ namespace WindowsForms
         private void btnSaveSettings_Click(object sender, EventArgs e)
         {
             var textBoxes = new TextBox[] { txbFireCabinets, txbExtinguishers, txbHoses, txbHydrants };
-            if (!Helper.CorrectSample(textBoxes))
+            if (!HelperControl.CorrectSample(textBoxes))
                 return;
             SetSampleName(textBoxes);
 

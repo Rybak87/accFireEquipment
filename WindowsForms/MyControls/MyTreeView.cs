@@ -66,16 +66,13 @@ namespace WindowsForms
             if (sign?.Type == null || sign.Type == typeof(Location))
                 return;
 
-
             if (e.Button == MouseButtons.Left)
                 DoDragDrop(e.Item, DragDropEffects.Move);
         }
         private void treeView_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(typeof(TreeNode)))
-            {
                 e.Effect = DragDropEffects.Move;
-            }
         }
         private void treeView_DragOver(object sender, DragEventArgs e)
         {

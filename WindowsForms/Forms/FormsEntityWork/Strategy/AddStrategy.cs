@@ -51,7 +51,6 @@ namespace WindowsForms
                 ec.AddRangeHierarchy(entity as Hierarchy, countCopy);
             else
                 ec.AddEntity(entity);
-            //ec.AddRangeEntity(entity as Hierarchy);
             ec.SaveChanges();
         }
 

@@ -124,7 +124,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnImport_Click(object sender, EventArgs e)
+        private void BtnImport_Click(object sender, EventArgs e)
         {
             using (var od = new OpenFileDialog())
             {
@@ -148,7 +148,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnExport_Click(object sender, EventArgs e)
+        private void BtnExport_Click(object sender, EventArgs e)
         {
             if (saveType == null)
                 return;
@@ -249,8 +249,6 @@ namespace WindowsForms
                 }
                 return 0;
             }
-
-            //TODO: изза перестановок заголовков не будет правильно читаться
         }
 
         /// <summary>
