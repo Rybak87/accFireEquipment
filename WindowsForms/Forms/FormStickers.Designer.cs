@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormStickers));
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.FireCabinetsMenu = new System.Windows.Forms.ToolStripButton();
@@ -42,10 +43,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txbExtinguishers = new System.Windows.Forms.TextBox();
             this.txbFireCabinets = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.btnApply = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numColumns)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numRows)).BeginInit();
@@ -188,12 +190,11 @@
             // 
             this.groupBox1.Controls.Add(this.txbExtinguishers);
             this.groupBox1.Controls.Add(this.txbFireCabinets);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Location = new System.Drawing.Point(344, 175);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 123);
+            this.groupBox1.Size = new System.Drawing.Size(304, 77);
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Правила именования наклеек";
@@ -212,14 +213,6 @@
             this.txbFireCabinets.Size = new System.Drawing.Size(174, 20);
             this.txbFireCabinets.TabIndex = 1;
             this.txbFireCabinets.Tag = "";
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(6, 71);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(281, 49);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "#L - номер локации\n#F - номер пожарного шкафа\n#E - номер огнетушителя\";";
             // 
             // label7
             // 
@@ -248,6 +241,10 @@
             this.btnApply.Text = "Применить";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ToolTipTitle = "#N - номер локации\n#F - номер пожарного шкафа\n#E - номер огнетушителя\";";
             // 
             // FormStickers
             // 
@@ -294,9 +291,10 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txbExtinguishers;
         private System.Windows.Forms.TextBox txbFireCabinets;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnApply;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ToolTip toolTip2;
     }
 }

@@ -34,7 +34,6 @@
             this.txbHoses = new System.Windows.Forms.TextBox();
             this.txbExtinguishers = new System.Windows.Forms.TextBox();
             this.txbFireCabinets = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -52,13 +51,12 @@
             this.groupBox1.Controls.Add(this.txbHoses);
             this.groupBox1.Controls.Add(this.txbExtinguishers);
             this.groupBox1.Controls.Add(this.txbFireCabinets);
-            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(13, 13);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(304, 205);
+            this.groupBox1.Size = new System.Drawing.Size(304, 139);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Правила именования";
@@ -100,15 +98,6 @@
             this.txbFireCabinets.Size = new System.Drawing.Size(174, 20);
             this.txbFireCabinets.TabIndex = 1;
             // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(6, 130);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(281, 68);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "#L - номер локации\n#F - номер пожарного шкафа\n#E - номер огнетушителя\n#H - номер " +
-    "рукава\n#D - номер пожарного крана";
-            // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(7, 70);
@@ -138,7 +127,7 @@
             // 
             // btnSaveSettings
             // 
-            this.btnSaveSettings.Location = new System.Drawing.Point(242, 253);
+            this.btnSaveSettings.Location = new System.Drawing.Point(242, 190);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(75, 23);
             this.btnSaveSettings.TabIndex = 2;
@@ -149,7 +138,7 @@
             // scrIconSize
             // 
             this.scrIconSize.LargeChange = 1;
-            this.scrIconSize.Location = new System.Drawing.Point(23, 257);
+            this.scrIconSize.Location = new System.Drawing.Point(23, 194);
             this.scrIconSize.Maximum = 70;
             this.scrIconSize.Minimum = 20;
             this.scrIconSize.Name = "scrIconSize";
@@ -161,7 +150,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(20, 234);
+            this.label5.Location = new System.Drawing.Point(20, 171);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(88, 13);
             this.label5.TabIndex = 4;
@@ -170,7 +159,7 @@
             // lblIconSize
             // 
             this.lblIconSize.AutoSize = true;
-            this.lblIconSize.Location = new System.Drawing.Point(112, 234);
+            this.lblIconSize.Location = new System.Drawing.Point(112, 171);
             this.lblIconSize.Name = "lblIconSize";
             this.lblIconSize.Size = new System.Drawing.Size(35, 13);
             this.lblIconSize.TabIndex = 5;
@@ -206,7 +195,6 @@
         private System.Windows.Forms.TextBox txbHoses;
         private System.Windows.Forms.TextBox txbExtinguishers;
         private System.Windows.Forms.TextBox txbFireCabinets;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSaveSettings;
         private System.Windows.Forms.HScrollBar scrIconSize;
         private System.Windows.Forms.Label label5;

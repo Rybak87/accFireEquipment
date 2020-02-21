@@ -31,7 +31,6 @@ namespace WindowsForms
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.OpenProjectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TypesEquipmentMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.ReportMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.StickersMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -58,22 +57,15 @@ namespace WindowsForms
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenProjectToolStripMenuItem,
             this.TypesEquipmentMenu});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(63, 20);
             this.toolStripMenuItem1.Text = "Главная";
             // 
-            // OpenProjectToolStripMenuItem
-            // 
-            this.OpenProjectToolStripMenuItem.Name = "OpenProjectToolStripMenuItem";
-            this.OpenProjectToolStripMenuItem.Size = new System.Drawing.Size(171, 22);
-            this.OpenProjectToolStripMenuItem.Text = "Открыть проект...";
-            // 
             // TypesEquipmentMenu
             // 
             this.TypesEquipmentMenu.Name = "TypesEquipmentMenu";
-            this.TypesEquipmentMenu.Size = new System.Drawing.Size(171, 22);
+            this.TypesEquipmentMenu.Size = new System.Drawing.Size(180, 22);
             this.TypesEquipmentMenu.Text = "Типы оснащения";
             // 
             // ReportMenu
@@ -124,13 +116,11 @@ namespace WindowsForms
             this.ResumeLayout(false);
             this.PerformLayout();
 
-            //this.rightPanel.Controls.Add(this.picContainer);
         }
 
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.Panel rightPanel;
-        private System.Windows.Forms.ToolStripMenuItem OpenProjectToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ReportMenu;
         private System.Windows.Forms.ToolStripMenuItem SettingsMenu;
         private System.Windows.Forms.ToolStripMenuItem TypesEquipmentMenu;

@@ -122,7 +122,7 @@
             this.RechargeExtinguishersMenu.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.RechargeExtinguishersMenu.Name = "RechargeExtinguishersMenu";
             this.RechargeExtinguishersMenu.Size = new System.Drawing.Size(23, 22);
-            this.RechargeExtinguishersMenu.Text = "Перезарядка огнетушителей";
+            this.RechargeExtinguishersMenu.Text = "Перезарядка огнетушителей (менее года)";
             // 
             // FormReport
             // 

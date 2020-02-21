@@ -1,5 +1,6 @@
 ﻿using BL;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsForms
@@ -45,13 +46,20 @@ namespace WindowsForms
         /// <param name="ec"></param>
         public override void ApplyChanged(EntityBase entity, EntityController ec)
         {
-            ec.EntityAdd += EntityChanged;
-            ec.HierarchyAddRange += HierarchyChangedRange;
+            //ec.EntityAdd += EntityChanged;
+            //ec.HierarchyAddRange += HierarchyChangedRange;
             if (entity as Hierarchy != null)
-                ec.AddRangeHierarchy(entity as Hierarchy, countCopy);
+            {
+                var entities = ec.AddRangeHierarchy(entity as Hierarchy, countCopy).ToArray();
+                ec.SaveChanges();
+                HierarchyChangedRange?.Invoke(entities);
+            }
             else
+            {
                 ec.AddEntity(entity);
-            ec.SaveChanges();
+                ec.SaveChanges();
+                EntityChanged?.Invoke(entity);
+            }
         }
 
         /// <summary>

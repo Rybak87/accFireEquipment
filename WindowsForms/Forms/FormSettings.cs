@@ -33,6 +33,12 @@ namespace WindowsForms
             txbExtinguishers.Tag = typeof(Extinguisher);
             txbHoses.Tag = typeof(Hose);
             txbHydrants.Tag = typeof(Hydrant);
+
+            var t = new ToolTip();
+            t.SetToolTip(txbFireCabinets, "#N - номер пожарного шкафа\n#L - номер помещения");
+            t.SetToolTip(txbExtinguishers, "#N - номер огнетушителя\n#L - номер помещения\n#F - номер пожарного шкафа");
+            t.SetToolTip(txbHoses, "#N - номер рукава\n#L - номер помещения\n#F - номер пожарного шкафа");
+            t.SetToolTip(txbHydrants, "#N - номер пожарного крана\n#L - номер помещения\n#F - номер пожарного шкафа");
         }
 
         /// <summary>

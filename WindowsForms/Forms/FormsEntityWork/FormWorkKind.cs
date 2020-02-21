@@ -12,7 +12,7 @@ namespace WindowsForms
         /// Конструктор.
         /// </summary>
         /// <param name="entityType">Тип.</param>
-        public FormWorkKind(Type entityType, Strategy strategy):base(strategy)
+        public FormWorkKind(Type entityType, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
             currEntity = ec.CreateEntity(entityType);

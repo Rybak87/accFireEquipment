@@ -22,7 +22,7 @@ namespace WindowsForms
         /// </summary>
         static ContextMenuGetter()
         {
-            dictContextMenu=InitializeDictionary();
+            dictContextMenu = InitializeDictionary();
         }
 
         /// <summary>
@@ -147,13 +147,16 @@ namespace WindowsForms
             var signs = TreeView.GetChildSigns(removeSign);
             foreach (var sign in signs)
                 Plan.RemoveIcon(sign);
-            Plan.Image = null;
-            TreeView.SelectedNode = null;
+            if (removeSign.Type == typeof(Location))
+                Plan.Image = null;
+            if (TreeView.SelectedNode.Tag as EntitySign == removeSign)
+                TreeView.SelectedNode = null;
 
             using (var ec = new EntityController())
             {
-                ec.EntityRemove += TreeView.NodeRemove;
+                TreeView.NodeRemove(removeSign);
                 ec.RemoveEntity(removeSign);
+                ec.SaveChanges();
             }
         }
 
@@ -188,7 +191,7 @@ namespace WindowsForms
                 {
                     wrd = new WordPassportExtinguisher();
                 }
-                catch(Exception exept)
+                catch (Exception exept)
                 {
                     MessageBox.Show(exept.Message);
                     return;

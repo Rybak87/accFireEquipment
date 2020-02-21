@@ -23,6 +23,8 @@ namespace WindowsForms
         Dictionary<Type, Action> dictReport;
         Dictionary<Type, Action> dictInitColums;
 
+        ExcelStickers exl;
+
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -55,6 +57,10 @@ namespace WindowsForms
 
             filterFireCabinetSticker = new Filter(true, new Instruction(NeedSticker, fireCabinetFunc));
             filterExtinguisherSticker = new Filter(true, new Instruction(NeedSticker, extinguisherFunc));
+
+            var t = new ToolTip();
+            t.SetToolTip(txbFireCabinets, "#N - номер пожарного шкафа\n#L - номер помещения");
+            t.SetToolTip(txbExtinguishers, "#N - номер огнетушителя\n#L - номер помещения\n#F - номер пожарного шкафа");
         }
 
         private void FillListView(Type type)
@@ -108,7 +114,7 @@ namespace WindowsForms
             if (listView.Items.Count == 0)
                 return;
 
-            ExcelStickers exl;
+            //ExcelStickers exl;
             try
             {
                 exl = new ExcelStickers();

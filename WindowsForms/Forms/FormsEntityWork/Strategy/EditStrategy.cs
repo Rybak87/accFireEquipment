@@ -29,15 +29,9 @@ namespace WindowsForms
         /// <param name="ec"></param>
         public override void ApplyChanged(EntityBase entity, EntityController ec)
         {
-            ec.Entry(entity).State = EntityState.Modified;
-
-            var eq = entity as Equipment;
-            if (eq != null)
-            {
-                var histories = eq.AddHistories();
-                ec.Set<History>().AddRange(histories);
-            }
+            ec.EditEntity(entity);
             ec.SaveChanges();
+            EntityChanged?.Invoke(entity);
         }
 
         /// <summary>

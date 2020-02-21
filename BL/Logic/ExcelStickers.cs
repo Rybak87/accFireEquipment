@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace BL
@@ -15,6 +17,15 @@ namespace BL
         private Excel.Workbook workBook;
         private Excel.Worksheet sheet;
         int numColumns;
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
+
+        static Process GetExcelProcess(Excel.Application excelApp)
+        {
+            GetWindowThreadProcessId(excelApp.Hwnd, out int id);
+            return Process.GetProcessById(id);
+        }
 
         /// <summary>
         /// Конструктор.

@@ -13,38 +13,33 @@ namespace BL
     /// </summary>
     public class EntityController : BLContext
     {
-        /// <summary>
-        /// Событие по добавлению сущности в БД.
-        /// </summary>
-        public event Action<EntityBase> EntityAdd;
+        ///// <summary>
+        ///// Событие по добавлению сущности в БД.
+        ///// </summary>
+        //public event Action<EntityBase> EntityAdd;
 
-        /// <summary>
-        /// Событие по добавлению иерархических сущностей в БД.
-        /// </summary>
-        public event Action<Hierarchy[]> HierarchyAddRange;
+        ///// <summary>
+        ///// Событие по добавлению иерархических сущностей в БД.
+        ///// </summary>
+        //public event Action<Hierarchy[]> HierarchyAddRange;
 
-        /// <summary>
-        /// Событие по удалению сущности в БД.
-        /// </summary>
-        public event Action<EntityBase> EntityRemove;
+        ///// <summary>
+        ///// Событие по удалению сущности в БД.
+        ///// </summary>
+        //public event Action<EntityBase> EntityRemove;
 
         /// <summary>
         /// Добавляет сущность в БД.
         /// Вызывает событие по добавлению сущности.
         /// </summary>
-        public void AddEntity(EntityBase entity)
-        {
-            Set(entity.GetType()).Add(entity);
-            SaveChanges();
-            EntityAdd?.Invoke(entity);
-        }
+        public void AddEntity(EntityBase entity) => Set(entity.GetType()).Add(entity);
 
         /// <summary>
         /// Добавляет сущности в БД.
         /// </summary>
         /// <param name="entity">Иерархическая сущность.</param>
         /// <param name="count">Количество копий.</param>
-        public void AddRangeHierarchy(Hierarchy entity, int count = 1)
+        public IEnumerable<Hierarchy> AddRangeHierarchy(Hierarchy entity, int count = 1)
         {
             var list = GetCopies(entity, count);
             Set(entity.GetType()).AddRange(list);
@@ -53,9 +48,19 @@ namespace BL
                 var histories = list.Cast<Equipment>().SelectMany(e => e.CreateHistories());
                 Set<History>().AddRange(histories);
             }
+            return list.ToArray();
+        }
 
-            SaveChanges();
-            HierarchyAddRange?.Invoke(list.ToArray());
+        public void EditEntity(EntityBase entity)
+        {
+            Entry(entity).State = EntityState.Modified;
+
+            var eq = entity as Equipment;
+            if (eq != null)
+            {
+                var histories = eq.AddHistories();
+                Set<History>().AddRange(histories);
+            }
         }
 
         private IEnumerable<Hierarchy> GetCopies(Hierarchy entity, int count)
@@ -87,7 +92,6 @@ namespace BL
         public void RemoveEntity(EntitySign sign)
         {
             var entity = GetEntity(sign);
-            EntityRemove?.Invoke(entity);
             if (sign.Type.IsSubclassOf(typeof(KindBase)))
             {
                 if (((KindBase)entity).Childs.Count != 0)//Не используем каскадное удаление
@@ -97,7 +101,6 @@ namespace BL
                 }
             }
             Set(sign.Type).Remove(entity);
-            SaveChanges();
         }
 
         /// <summary>

@@ -106,6 +106,7 @@ namespace WindowsForms
                         var entity = ec.GetEntity(sign) as Equipment;
                         entity.Parent = (Hierarchy)ec.GetEntity(signNewParent);
                         entity.Point.Displayed = false;
+                        ec.EditEntity(entity);
                         ec.SaveChanges();
                         draggedNode.Text = entity.ToString();
                     }
@@ -207,32 +208,9 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Добавить узел.
-        /// </summary>
-        /// <param name="entity">Сущность.</param>
-        public void NodeAdd(Hierarchy entity)
-        {
-            TreeNode nodeParent;
-            if (entity is Location)
-                nodeParent = Nodes[0];
-            else if (entity is Equipment)
-                nodeParent = dictNodes[((Equipment)entity).Parent.GetSign()];
-            else
-                return;
-
-            var indImage = IconsGetter.GetIndexIcon(entity.GetType());
-            var newNode = new TreeNode(entity.ToString(), indImage, indImage);
-            newNode.ContextMenuStrip = ContextMenuGetter.GetMenu(entity.GetType());
-            newNode.Tag = entity.GetSign();
-            nodeParent.Nodes.Add(newNode);
-            dictNodes.Add(entity.GetSign(), newNode);
-            SelectedNode = newNode;
-        }
-
-        /// <summary>
         /// Добавить узлы.
         /// </summary>
-        /// <param name="entity">Сущность.</param>
+        /// <param name="entities">Сущности.</param>
         public void NodeAddRange(Hierarchy[] entities)
         {
             TreeNode nodeParent;
@@ -287,18 +265,31 @@ namespace WindowsForms
         }
 
         /// <summary>
-        /// Удалить узел.
+        /// Переименовать узел.
         /// </summary>
         /// <param name="entity">Сущность.</param>
-        public void NodeRemove(EntityBase entity)
+        public void NodeRename(Hierarchy entity)
         {
-            var sign = entity.GetSign();
+            if (entity == null)
+                return;
+            var saveSelectedNode = SelectedNode;
+            var currNode = dictNodes[entity.GetSign()];
+            currNode.Text = entity.ToString();
+            SelectedNode = saveSelectedNode;
+        }
+
+        /// <summary>
+        /// Удалить узел.
+        /// </summary>
+        /// <param name="sign"></param>
+        public void NodeRemove(EntitySign sign)
+        {
             Nodes.Remove(dictNodes[sign]);
             dictNodes.Remove(sign);
         }
 
         /// <summary>
-        /// Возвращает все идентификаторы родителя и его подсущностей.
+        /// Возвращает идентификаторы: родителя и его подсущностей.
         /// </summary>
         /// <param name="sign"></param>
         /// <returns></returns>

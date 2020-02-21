@@ -66,6 +66,7 @@ namespace WindowsForms
             if (sign == null)
                 return;
             var strategy = new EditStrategy();
+            strategy.EntityChanged += ent => TreeView.NodeRename(ent as Hierarchy);
             FormEntity frmEdit = null;
 
             if (sign.Type.IsSubclassOf(typeof(KindBase)))

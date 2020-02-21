@@ -52,7 +52,7 @@ namespace BL
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(GetType());
             var dataChange = DateTime.Now;
-            var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p), dataChange));
+            var newHistories = properties.Select(p => new History(this, p.Name, GetLastHistory(p.Name), GetCurrentValue(p), dataChange)).ToList();
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
         }
 

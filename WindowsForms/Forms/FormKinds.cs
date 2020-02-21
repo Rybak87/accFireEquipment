@@ -56,10 +56,10 @@ namespace WindowsForms
         {
             if (!type.IsSubclassOf(typeof(KindBase)))
                 return;
+
             listView.Items.Clear();
             using (var ec = new EntityController())
             {
-
                 foreach (KindBase species in ec.Set(type))
                 {
                     var item = new ListViewItem(species.Name);
@@ -115,6 +115,7 @@ namespace WindowsForms
             using (var ec = new EntityController())
             {
                 ec.RemoveEntity(sign);
+                ec.SaveChanges();
             }
             LoadKinds(saveType);
         }
@@ -210,7 +211,7 @@ namespace WindowsForms
                             else if (properties[i].PropertyType == typeof(double))
                                 properties[i].SetValue(curr, Double.Parse(values[i]));
                         }
-                        if (!ec.GetIQueryable(table).Any(ent => ((KindBase)ent).EqualsValues(curr)))
+                        if (!ec.GetIQueryable(table).ToArray().Any(ent => (ent as KindBase).EqualsValues(curr)))
                             table.Add(curr);
                     }
                     ec.SaveChanges();
