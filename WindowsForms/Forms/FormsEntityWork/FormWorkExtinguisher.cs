@@ -18,25 +18,57 @@ namespace WindowsForms
         /// </summary>
         private NumericUpDown numPressure;
 
+        /// <summary>
+        /// Вид огнетушителя.
+        /// </summary>
+        private ComboBox kindComboBox;
+
+        /// <summary>
+        /// Конструктор по добавлению нового огнетушителя.
+        /// </summary>
+        /// <param name="childType"></param>
+        /// <param name="parentSign"></param>
+        /// <param name="strategy"></param>
         public FormWorkExtinguisher(Type childType, EntitySign parentSign, Strategy strategy) : base(childType, parentSign, strategy)
         {
             InitializeComponent();
             Text = strategy.GetFormName(currEntity);
+            Load += (s, e) => GetWeightPressure(kindComboBox);
         }
 
-        public FormWorkExtinguisher(EntitySign sign, Strategy strategy) :base(sign, strategy)
+        /// <summary>
+        /// Конструктор по редактирования огнетушителя.
+        /// </summary>
+        /// <param name="sign"></param>
+        /// <param name="strategy"></param>
+        public FormWorkExtinguisher(EntitySign sign, Strategy strategy) : base(sign, strategy)
         {
             InitializeComponent();
             Text = strategy.GetFormName(currEntity);
         }
 
+        /// <summary>
+        /// Создание ComboBox
+        /// </summary>
+        /// <param name="fullSize">Размер.</param>
+        /// <param name="prop">Свойство привязки.</param>
+        /// <param name="centerLocation">Расположение.</param>
+        /// <returns></returns>
         protected override ComboBox CreateComboBox(Size fullSize, PropertyInfo prop, Point centerLocation)
         {
             var cbx = base.CreateComboBox(fullSize, prop, centerLocation);
             (cbx).SelectedIndexChanged += (s, e) => GetWeightPressure(cbx);
+            kindComboBox = cbx;
             return cbx;
         }
 
+        /// <summary>
+        /// Создание NumericUpDownDecimal
+        /// </summary>
+        /// <param name="fullSize">Размер.</param>
+        /// <param name="prop">Свойство привязки.</param>
+        /// <param name="location">Расположение.</param>
+        /// <returns></returns>
         protected override NumericUpDown CreateNumericUpDownDecimal(Size fullSize, PropertyInfo prop, Point location)
         {
             var num = base.CreateNumericUpDownDecimal(fullSize, prop, location);
@@ -48,6 +80,10 @@ namespace WindowsForms
             return num;
         }
 
+        /// <summary>
+        /// Загрузка типовых массы и давления.
+        /// </summary>
+        /// <param name="cntrl">ComboBox определяющий вид огнетушителя.</param>
         protected void GetWeightPressure(ComboBox cntrl)
         {
             double weight = ((KindExtinguisher)cntrl.SelectedItem).NominalWeight;
@@ -55,8 +91,6 @@ namespace WindowsForms
             cntrl.DataBindings[0].WriteValue();
             numWeight.Value = (decimal)weight;
             numPressure.Value = (decimal)pressure;
-            //this.weight.DataBindings[0].WriteValue();
-            //this.pressure.DataBindings[0].WriteValue();
         }
     }
 }

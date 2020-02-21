@@ -85,35 +85,38 @@ namespace WindowsForms
         private void treeView_DragDrop(object sender, DragEventArgs e)
         {
             Point targetPoint = PointToClient(new Point(e.X, e.Y));
-            TreeNode targetNode = GetNodeAt(targetPoint);
-            TreeNode draggedNode = (TreeNode)e.Data.GetData(typeof(TreeNode));
 
-            var targetType = ((EntitySign)targetNode.Tag).Type;
-            var draggedType = ((EntitySign)draggedNode.Tag).Type;
+            TreeNode targetNode = GetNodeAt(targetPoint);
+            TreeNode draggedNode = e.Data.GetData(typeof(TreeNode)) as TreeNode;
+
+            var targetType = (targetNode.Tag as EntitySign).Type;
+            var draggedType = (draggedNode.Tag as EntitySign).Type;
             Type draggedTypeParent;
+
             if (draggedType == typeof(FireCabinet))
                 draggedTypeParent = typeof(Location);
             else
                 draggedTypeParent = typeof(FireCabinet);
+
             if (targetType == draggedTypeParent)
             {
                 if (e.Effect == DragDropEffects.Move)
                 {
-                    var sign = (EntitySign)draggedNode.Tag;
-                    var signNewParent = (EntitySign)targetNode.Tag;
+                    var sign = draggedNode.Tag as EntitySign;
+                    var signNewParent = targetNode.Tag as EntitySign;
                     using (var ec = new EntityController())
                     {
                         var entity = ec.GetEntity(sign) as Equipment;
                         entity.Parent = (Hierarchy)ec.GetEntity(signNewParent);
+                        entity.Point.Displayed = false;
                         ec.SaveChanges();
+                        draggedNode.Text = entity.ToString();
                     }
                     draggedNode.Remove();
                     targetNode.Nodes.Add(draggedNode);
                     MouseClickSign?.Invoke(sign);
                 }
-
                 targetNode.Expand();
-
             }
         }
         #endregion

@@ -217,7 +217,6 @@ namespace WindowsForms
         /// <summary>
         /// Создание элементов формы.
         /// </summary>
-        /// <param name="yPosControl"></param>
         protected int CreateControls()
         {
             var beforeControls = strategy.GetBeforeControls();

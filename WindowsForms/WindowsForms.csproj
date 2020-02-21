@@ -223,7 +223,6 @@
     <Compile Include="MyControls\IconOnPlan.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Other\Class1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\FormsEntityWork\FormEntity.cs">

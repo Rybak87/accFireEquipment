@@ -14,6 +14,8 @@ namespace WindowsForms
         public byte[] currPlan;
 
         Location currLocation;
+
+
         public FormWorkLocation(Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -22,6 +24,8 @@ namespace WindowsForms
             (currEntity as Location).Number = ec.GetNumber(currEntity as Location);
             PostInitialize();
         }
+
+
         public FormWorkLocation(EntitySign locSign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -34,6 +38,7 @@ namespace WindowsForms
         /// Событие по кнопке ОК.
         /// </summary>
         public event Action<byte[]> LocationChanged;
+
 
         private void PostInitialize()
         {

@@ -138,8 +138,8 @@ namespace BL
                     return;
                 Tag = parentLocation.GetSign();
                 var byteImage = parentLocation.Plan;
-                this.SuspendDrawing();
                 Controls.Clear();
+                this.SuspendDrawing();
                 if (byteImage == null)
                 {
                     Image = null;
@@ -153,8 +153,8 @@ namespace BL
                     foreach (var eq in drawEquipment)
                         new IconOnPlan(this, eq.GetSign(), sizeIcons, eq.Point, IconsGetter.GetIconImage(eq.GetType()), eq.ToString());
                 }
+                this.ResumeDrawing();
             }
-            this.ResumeDrawing();
         }
 
         /// <summary>

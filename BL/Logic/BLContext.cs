@@ -128,23 +128,23 @@ namespace BL
             var th = InitDefaultTypes<KindHose>(Properties.TypesCSV.typesHose);
             db.KindHoses.AddRange(th);
 
-            Location l1 = new Location { Name = "Блок 1", Number = 1 };
-            Location l2 = new Location { Name = "Блок 2", Number = 2 };
-            Location l3 = new Location { Name = "Блок 3", Number = 3 };
-            Location l4 = new Location { Name = "Блок 4", Number = 4 };
-            db.Locations.AddRange(new Location[] { l1, l2, l3, l4 });
+            //Location l1 = new Location { Name = "Блок 1", Number = 1 };
+            //Location l2 = new Location { Name = "Блок 2", Number = 2 };
+            //Location l3 = new Location { Name = "Блок 3", Number = 3 };
+            //Location l4 = new Location { Name = "Блок 4", Number = 4 };
+            //db.Locations.AddRange(new Location[] { l1, l2, l3, l4 });
 
-            FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, KindFireCabinet = tf[0] };
-            FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, KindFireCabinet = tf[0] };
-            FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, KindFireCabinet = tf[0] };
-            db.FireCabinets.AddRange(new FireCabinet[] { f1, f2, f3 });
+            //FireCabinet f1 = new FireCabinet { Location = l1, Number = 1, KindFireCabinet = tf[0] };
+            //FireCabinet f2 = new FireCabinet { Location = l1, Number = 2, KindFireCabinet = tf[0] };
+            //FireCabinet f3 = new FireCabinet { Location = l2, Number = 1, KindFireCabinet = tf[0] };
+            //db.FireCabinets.AddRange(new FireCabinet[] { f1, f2, f3 });
 
-            Extinguisher e1 = new Extinguisher { FireCabinet = f1, Number = 1, KindExtinguisher = te[0] };
-            Extinguisher e2 = new Extinguisher { FireCabinet = f2, Number = 1, KindExtinguisher = te[1] };
-            db.Extinguishers.AddRange(new Extinguisher[] { e1, e2 });
+            //Extinguisher e1 = new Extinguisher { FireCabinet = f1, Number = 1, KindExtinguisher = te[0] };
+            //Extinguisher e2 = new Extinguisher { FireCabinet = f2, Number = 1, KindExtinguisher = te[1] };
+            //db.Extinguishers.AddRange(new Extinguisher[] { e1, e2 });
 
-            Hose h1 = new Hose { FireCabinet = f1, Number = 1, KindHose = th[0] };
-            db.Hoses.Add(h1);
+            //Hose h1 = new Hose { FireCabinet = f1, Number = 1, KindHose = th[0] };
+            //db.Hoses.Add(h1);
             db.SaveChanges();
         }
 
