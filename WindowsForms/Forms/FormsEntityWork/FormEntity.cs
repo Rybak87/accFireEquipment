@@ -211,7 +211,7 @@ namespace WindowsForms
                 Location = location
             };
             Controls.Add(cntrl);
-            requiredControls.Add(cntrl);
+
             return cntrl;
         }
 
@@ -241,9 +241,11 @@ namespace WindowsForms
         protected Point RightLocation(int yPos) => new Point(400, yPos);
         #endregion
 
+
         /// <summary>
         /// Создание элементов формы.
         /// </summary>
+        /// 
         protected void CreateControls()
         {
             int yPos = BeforeCreateControls();
@@ -260,42 +262,47 @@ namespace WindowsForms
                     name = property.Name;
 
                 CreateHeaderLabel(name, incSize, LeftLocation(yPos));
+                Control cntl = null;
                 switch (attr.control)
                 {
                     case "TextBox":
                         {
-                            CreateTextBox(property, fullSize, centerLocation);
+                            cntl = CreateTextBox(property, fullSize, centerLocation);
                             break;
                         }
                     case "ComboBox":
                         {
-                            CreateComboBox(property, fullSize, centerLocation);
+                            cntl = CreateComboBox(property, fullSize, centerLocation);
                             break;
                         }
                     case "CheckBox":
                         {
-                            CreateCheckBox(property, fullSize, centerLocation);
+                            cntl = CreateCheckBox(property, fullSize, centerLocation);
                             break;
                         }
                     case "NumericUpDown":
                         {
-                            CreateNumericUpDown(property, fullSize, centerLocation);
+                            cntl = CreateNumericUpDown(property, fullSize, centerLocation);
                             break;
                         }
                     case "NumericUpDownDecimal":
                         {
-                            CreateNumericUpDownDecimal(property, fullSize, centerLocation);
+                            cntl = CreateNumericUpDownDecimal(property, fullSize, centerLocation);
                             break;
                         }
                     case "DateTimePicker":
                         {
-                            CreateDateTimePicker(property, fullSize, centerLocation);
+                            cntl = CreateDateTimePicker(property, fullSize, centerLocation);
                             break;
                         }
                 }
 
                 if (attr.isRequired)
+                {
+                    requiredControls.Add(cntl);
                     CreateRequiredLabel(RightLocation(yPos));
+                }
+
                 yPos += 25;
             }
             yPos = AfterCreateControls(yPos);
@@ -330,6 +337,9 @@ namespace WindowsForms
             return false;
         }
 
+        /// <summary>
+        /// Проверка на корректные значения обязательных элементов управления.
+        /// </summary>
         private bool CheckNeedControls()
         {
             if (EmptyNeedControls())

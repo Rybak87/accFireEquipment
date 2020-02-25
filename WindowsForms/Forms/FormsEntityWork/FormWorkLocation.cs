@@ -71,9 +71,20 @@ namespace WindowsForms
         {
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
+                //dialog.Filter = "Изображения (*.bmp;*.png;*.jpg)|*.bmp;*.png;*.jpg";
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     var data = File.ReadAllBytes(dialog.FileName);
+
+                    try
+                    {
+                        Image.FromStream(new MemoryStream(data));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Файл изображения не может быть прочитан.");
+                        return;
+                    }
                     currPlan = data;
                 }
             }

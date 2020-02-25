@@ -170,7 +170,10 @@ namespace BL
                 RemoveAllIcons();
             }
             else
+            {
                 Image = Image.FromStream(new MemoryStream(byteImage));
+            }
+
             ResizeRelativePosition();
             this.ResumeDrawing();
         }
