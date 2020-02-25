@@ -190,7 +190,6 @@ namespace WindowsForms
                     }
                 }
             }
-            //TreeViewNodeSorter = new SortOfSign();
             Sort();
             Nodes[0].Expand();
             this.ResumeDrawing();

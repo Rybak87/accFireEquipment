@@ -51,10 +51,10 @@ namespace BL
         /// </summary>
         public int FireCabinetId { get; set; }
 
-        [Copying]
         /// <summary>
         /// Пожарный шкаф.
         /// </summary>
+        [Copying]
         [Column("Пожарный шкаф")]
         public virtual FireCabinet FireCabinet { get; set; }
 

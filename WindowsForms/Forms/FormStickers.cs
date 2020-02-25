@@ -114,7 +114,6 @@ namespace WindowsForms
             if (listView.Items.Count == 0)
                 return;
 
-            //ExcelStickers exl;
             try
             {
                 exl = new ExcelStickers();
@@ -162,25 +161,5 @@ namespace WindowsForms
 
             FillListView(lastType);
         }
-
-        ///// <summary>
-        ///// Возвращает строку шаблона именования огнетушителя.
-        ///// </summary>
-        ///// <param name="entityBase"></param>
-        ///// <returns></returns>
-        //private string CreateStickerExtinguisher(EntityBase entityBase)
-        //{
-        //    return GetterOfType.GetName(entityBase as Hierarchy, txbExtinguishers.Text);
-        //}
-
-        ///// <summary>
-        ///// Возвращает строку шаблона именования пожарного шкафа.
-        ///// </summary>
-        ///// <param name="entityBase"></param>
-        ///// <returns></returns>
-        //private string CreateStickerFireCabinet(EntityBase entityBase)
-        //{
-        //    return GetterOfType.GetName(entityBase as Hierarchy, txbFireCabinets.Text);
-        //}
     }
 }

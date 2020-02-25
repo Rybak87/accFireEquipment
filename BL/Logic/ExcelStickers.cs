@@ -18,15 +18,6 @@ namespace BL
         private Excel.Worksheet sheet;
         int numColumns;
 
-        [DllImport("user32.dll")]
-        static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
-
-        static Process GetExcelProcess(Excel.Application excelApp)
-        {
-            GetWindowThreadProcessId(excelApp.Hwnd, out int id);
-            return Process.GetProcessById(id);
-        }
-
         /// <summary>
         /// Конструктор.
         /// </summary>
@@ -52,8 +43,15 @@ namespace BL
             sheet.Columns.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
         }
 
+        /// <summary>
+        /// Видимость.
+        /// </summary>
         public bool Visible { get => excel.Visible; set => excel.Visible = value; }
 
+        /// <summary>
+        /// Установка высоты строк в Excel.
+        /// </summary>
+        /// <param name="numColumns">Количество столбцов.</param>
         private void SetColumnsWidth(int numColumns)
         {
             this.numColumns = numColumns;
@@ -69,8 +67,7 @@ namespace BL
         /// <summary>
         /// Установка высоты строк в Excel.
         /// </summary>
-        /// <param name="exl"></param>
-        /// <param name="sheet"></param>
+        /// <param name="numRows">Количество строк.</param>
         private void SetRowssWidth(int numRows)
         {
             var pageHeight = excel.Application.CentimetersToPoints(29.7);
@@ -82,6 +79,12 @@ namespace BL
             sheet.Columns.RowHeight = (contentHeight / rate / numRows);
         }
 
+        /// <summary>
+        /// Заполнение листа Excel.
+        /// </summary>
+        /// <param name="numColumns">Количество столбцов.</param>
+        /// <param name="numRows">Количество строк.</param>
+        /// <param name="stickers">Наклейки.</param>
         public void FillWorkSheet(int numColumns, int numRows, IEnumerable<string> stickers)
         {
             SetColumnsWidth(numColumns);
@@ -105,9 +108,9 @@ namespace BL
         /// <summary>
         /// Вычисление размера шрифта.
         /// </summary>
-        /// <param name="template"></param>
-        /// <param name="currWidth"></param>
-        /// <returns></returns>
+        /// <param name="template">Пример текста.</param>
+        /// <param name="currWidth">Ширина столбцов.</param>
+        /// <returns>Размера шрифта.</returns>
         private static int CalcFontSize(string template, double currWidth)
         {
             int currSizeFont = 8;

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace BL
 {
+    /// <summary>
+    /// Аттрибут для указания свойств, которые будут устанавливаться при создании копий.
+    /// </summary>
     public class CopyingAttribute : Attribute
     {
     }

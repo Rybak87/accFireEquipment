@@ -9,10 +9,14 @@ namespace WindowsForms
     /// <summary>
     /// Иконка на плане.
     /// </summary>
-    public class IconOnPlan : PictureBox, IDisposable
+    public class IconOnPlan : PictureBox
     {
         private Point MouseDownPosition;
         private Label label;
+
+        /// <summary>
+        /// Относительная точка.
+        /// </summary>
         public ScalePoint scalePoint;
 
         /// <summary>

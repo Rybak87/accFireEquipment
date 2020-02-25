@@ -4,7 +4,7 @@ using System;
 namespace WindowsForms
 {
     /// <summary>
-    /// Форма добавления вида пожарного инвентаря.
+    /// Форма для работы с видами пожарного инвентаря.
     /// </summary>
     public partial class FormWorkKind : FormEntity
     {
@@ -12,6 +12,7 @@ namespace WindowsForms
         /// Конструктор.
         /// </summary>
         /// <param name="entityType">Тип.</param>
+        /// /// <param name="strategy">Стратегия.</param>
         public FormWorkKind(Type entityType, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -21,6 +22,11 @@ namespace WindowsForms
             CreateControls();
         }
 
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="sign">Идентификатор сущности.</param>
+        /// /// <param name="strategy">Стратегия.</param>
         public FormWorkKind(EntitySign sign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -29,17 +35,5 @@ namespace WindowsForms
             Text = "Изменить тип";
             CreateControls();
         }
-
-        /// <summary>
-        /// Обработчик события кнопки.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        //public override void BtnOK_Click(object sender, EventArgs e)
-        //{
-        //    strategy.ApplyChanged(sender, e);
-        //    //base.BtnOK_Click(sender, e);
-        //    //ec.AddEntity(currEntity);
-        //}
     }
 }

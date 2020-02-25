@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Форма для работы с огнетушителем.
+    /// </summary>
     public partial class FormWorkExtinguisher : FormWorkEquipment
     {
         /// <summary>

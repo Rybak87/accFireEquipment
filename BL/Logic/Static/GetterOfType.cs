@@ -33,13 +33,6 @@ namespace BL
                 () => Sett.Default.DefaultSampleNameHydrants),
         };
 
-        //public static Dictionary<char, Func<Equipment, string>> charsSampleNaming = new Dictionary<char, Func<Equipment, string>>()
-        //{
-        //    ['N'] = (eq) => eq.Number.ToString(),
-        //    ['L'] = (eq) => eq.GetLocation.Number.ToString(),
-        //    ['F'] = (eq) => (eq.Parent as FireCabinet).Number.ToString()
-        //};
-
         private static Dictionary<char, Func<Hierarchy, string>> dictSampleFunctions = new Dictionary<char, Func<Hierarchy, string>>()
         {
             ['N'] = ent => ent.Number.ToString(),
@@ -62,6 +55,7 @@ namespace BL
         /// Возвращает имя.
         /// </summary>
         /// <param name="entity">Сущность.</param>
+        /// /// <param name="sample">Шаблон.</param>
         /// <returns></returns>
         public static string GetName(Hierarchy entity, string sample)
         {

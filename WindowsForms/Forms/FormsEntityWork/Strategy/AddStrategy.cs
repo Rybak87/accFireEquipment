@@ -46,8 +46,6 @@ namespace WindowsForms
         /// <param name="ec"></param>
         public override void ApplyChanged(EntityBase entity, EntityController ec)
         {
-            //ec.EntityAdd += EntityChanged;
-            //ec.HierarchyAddRange += HierarchyChangedRange;
             if (entity as Hierarchy != null)
             {
                 var entities = ec.AddRangeHierarchy(entity as Hierarchy, countCopy).ToArray();

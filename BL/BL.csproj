@@ -74,7 +74,6 @@
     <Compile Include="Logic\EntityController.cs" />
     <Compile Include="Logic\Interfaces.cs" />
     <Compile Include="Model\ControlAttribute.cs" />
-    <Compile Include="Logic\Repository.cs" />
     <Compile Include="Model\Abstract\EntityBase.cs" />
     <Compile Include="Model\Database\Extinguisher.cs" />
     <Compile Include="Model\Database\FireCabinet.cs" />

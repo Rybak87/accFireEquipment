@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Методы расширения для элементов формы.
+    /// </summary>
     public static class HelperControl
     {
         /// <summary>

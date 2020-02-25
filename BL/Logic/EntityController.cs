@@ -13,21 +13,6 @@ namespace BL
     /// </summary>
     public class EntityController : BLContext
     {
-        ///// <summary>
-        ///// Событие по добавлению сущности в БД.
-        ///// </summary>
-        //public event Action<EntityBase> EntityAdd;
-
-        ///// <summary>
-        ///// Событие по добавлению иерархических сущностей в БД.
-        ///// </summary>
-        //public event Action<Hierarchy[]> HierarchyAddRange;
-
-        ///// <summary>
-        ///// Событие по удалению сущности в БД.
-        ///// </summary>
-        //public event Action<EntityBase> EntityRemove;
-
         /// <summary>
         /// Добавляет сущность в БД.
         /// Вызывает событие по добавлению сущности.
@@ -51,6 +36,10 @@ namespace BL
             return list.ToArray();
         }
 
+        /// <summary>
+        /// Редактирование сущности.
+        /// </summary>
+        /// <param name="entity">Сущность.</param>
         public void EditEntity(EntityBase entity)
         {
             Entry(entity).State = EntityState.Modified;

@@ -27,8 +27,19 @@ namespace BL
         /// </summary>
         public virtual ICollection<History> Histories { get; set; }
 
+        /// <summary>
+        /// Возвращает последнее изменение указанного свойства.
+        /// </summary>
+        /// <param name="propertyName">Имя свойства.</param>
+        /// <returns></returns>
         private History GetLastHistory(string propertyName) => Histories?.LastOrDefault(h => h.Property == propertyName);
 
+        /// <summary>
+        /// Возвращает последнее изменение указанного свойства на дату.
+        /// </summary>
+        /// <param name="propertyName">Имя свойства.</param>
+        /// <param name="dataChange">Дата.</param>
+        /// <returns></returns>
         private History GetLastHistoryOnDate(string propertyName, DateTime dataChange)
         {
             var modeTime = Properties.Settings.Default.UseTime;
@@ -56,6 +67,10 @@ namespace BL
             return newHistories.Where(h => h.PrevHistory?.Value != h.Value);
         }
 
+        /// <summary>
+        /// Возвращает начальные свойства созданной сущности.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<History> CreateHistories()
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(GetType());
@@ -64,6 +79,11 @@ namespace BL
             return newHistories;
         }
 
+        /// <summary>
+        /// Возвращает последнее изменение всех свойства на дату.
+        /// </summary>
+        /// <param name="dataChange">Дата.</param>
+        /// <returns></returns>
         public IEnumerable<History> HistoriesOnDate(DateTime dataChange)
         {
             var properties = Reflection.GetPropertiesWithControlAttribute(GetType());

@@ -96,7 +96,7 @@ namespace WindowsForms
         /// </summary>
         /// <param name="fullSize">Размер.</param>
         /// <param name="prop">Свойство привязки.</param>
-        /// <param name="centerLocation">Расположение.</param>
+        /// <param name="location">Расположение.</param>
         /// <returns></returns>
         protected virtual ComboBox CreateComboBox(PropertyInfo prop, Size fullSize, Point location)
         {
@@ -215,7 +215,7 @@ namespace WindowsForms
             return cntrl;
         }
 
-        protected virtual int CreateBeforeControls()
+        protected virtual int BeforeCreateControls()
         {
             var beforeControls = strategy.GetBeforeControls();
             int yPos = 25;
@@ -227,7 +227,7 @@ namespace WindowsForms
             return yPos;
         }
 
-        protected virtual int CreateAfterControls(int yPos)
+        protected virtual int AfterCreateControls(int yPos)
         {
             return yPos;
         }
@@ -244,10 +244,9 @@ namespace WindowsForms
         /// <summary>
         /// Создание элементов формы.
         /// </summary>
-        /// <param name="yPosControl"></param>
         protected void CreateControls()
         {
-            int yPos = CreateBeforeControls();
+            int yPos = BeforeCreateControls();
 
             var editProperties = Reflection.GetEditProperties(currEntity);
             foreach (var item in editProperties)
@@ -299,7 +298,7 @@ namespace WindowsForms
                     CreateRequiredLabel(RightLocation(yPos));
                 yPos += 25;
             }
-            yPos = CreateAfterControls(yPos);
+            yPos = AfterCreateControls(yPos);
             Height = yPos + 100;
         }
 

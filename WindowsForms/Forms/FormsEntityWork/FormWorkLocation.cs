@@ -6,6 +6,9 @@ using System.Windows.Forms;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Форма для работы с помещением.
+    /// </summary>
     public partial class FormWorkLocation : FormEntity
     {
         /// <summary>
@@ -55,7 +58,7 @@ namespace WindowsForms
             Height += 25;
         }
 
-        protected override int CreateAfterControls(int yPos)
+        protected override int AfterCreateControls(int yPos)
         {
             CreateButtonsForImage(halfSize, CenterLocation(yPos - 25), CenterHalfLocation(yPos - 25));
             return yPos;

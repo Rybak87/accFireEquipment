@@ -3,8 +3,17 @@ using System;
 
 namespace WindowsForms
 {
+    /// <summary>
+    /// Форма для работы с пожарным инвентарем.
+    /// </summary>
     public partial class FormWorkEquipment : FormEntity
     {
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="childType"></param>
+        /// <param name="parentSign"></param>
+        /// <param name="strategy"></param>
         public FormWorkEquipment(Type childType, EntitySign parentSign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
@@ -15,6 +24,12 @@ namespace WindowsForms
             (currEntity as Equipment).Parent = parent;
             PostConstruct();
         }
+
+        /// <summary>
+        /// Конструктор.
+        /// </summary>
+        /// <param name="sign"></param>
+        /// <param name="strategy"></param>
         public FormWorkEquipment(EntitySign sign, Strategy strategy) : base(strategy)
         {
             InitializeComponent();
